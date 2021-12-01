@@ -1,0 +1,4 @@
+# Custom configs.
+/lua/custom/init.lua
+# Generate by packer.
+/plugin
