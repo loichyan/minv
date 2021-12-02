@@ -18,13 +18,11 @@ if not present then
 end
 
 packer.init({
-  init = {
-    display = {
-      open_fn = function()
-        return require("packer.util").float({ border = "single" })
-      end,
-      prompt_border = "single",
-    },
+  display = {
+    open_fn = function()
+      return require("packer.util").float({ border = "single" })
+    end,
+    prompt_border = "single",
   },
 })
 
