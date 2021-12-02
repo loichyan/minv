@@ -3,11 +3,11 @@ local M = {
   -- Builtin plugins.
   builtin = require("preset.builtin"),
   -- Vim settings.
-  settings = require("preset.settings"),
+  settings = require("preset.settings").preset(),
   -- Auto commands.
-  autocmds = require("preset.autocmds"),
+  autocmds = require("preset.autocmds").preset(),
   -- Keymaps.
-  keymaps = require("preset.keymaps"),
+  keymaps = require("preset.keymaps").preset(),
   -- Extra plugins.
   ---@type table[]|nil
   extra = nil,

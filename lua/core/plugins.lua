@@ -4,9 +4,8 @@ local M = {}
 ---@param extra table[]|nil
 function M.setup(builtin, extra)
   local packer = require("core.packer")
-  packer.init(builtin.packer.init)
+  require("plugins.packer").setup(packer, builtin.packer)
   -- Load plugins.
-  -- TODO: move configs to files
   packer.startup(function(use)
     ------------
     -- Packer --
@@ -41,7 +40,7 @@ function M.setup(builtin, extra)
       "nvim-treesitter/nvim-treesitter",
       event = "BufEnter",
       config = function()
-        require("nvim-treesitter").setup(_MINV.builtin.treesitter.setup)
+        require("plugins.treesitter").setup(require("nvim-treesitter"), _MINV.builtin.treesitter)
       end,
     })
     use({
@@ -63,27 +62,7 @@ function M.setup(builtin, extra)
       "numToStr/Comment.nvim",
       after = "nvim-treesitter",
       config = function()
-        require("Comment").setup({
-          toggler = {
-            line = "<Plug>CommentToggleLine",
-            block = "<Plug>CommentToggleBlock",
-          },
-          opleader = {
-            line = "<Plug>CommentOpLine",
-            block = "<Plug>CommentOpBlock",
-          },
-          mappings = {
-            basic = true,
-            extra = false,
-            extended = false,
-          },
-        })
-        local utils = require("utils")
-        local keymaps = _MINV.builtin.comment.keymaps
-        utils.map("n", keymaps.toggle_line, "<Plug>CommentToggleLine", { noremap = false })
-        utils.map("n", keymaps.toggle_block, "<Plug>CommentToggleBlock", { noremap = false })
-        utils.map({ "n", "x" }, keymaps.op_line, "<Plug>CommentOpLine", { noremap = false })
-        utils.map({ "n", "x" }, keymaps.op_block, "<Plug>CommentOpBlock", { noremap = false })
+        require("plugins.comment").setup(require("Comment"), _MINV.builtin.comment)
       end,
     })
     ------------
@@ -92,10 +71,7 @@ function M.setup(builtin, extra)
     use({
       "romgrk/barbar.nvim",
       config = function()
-        local utils = require("utils")
-        local keymaps = _MINV.builtin.buffer.keymaps
-        utils.map("n", keymaps.next, ":BufferNext<CR>")
-        utils.map("n", keymaps.previous, ":BufferPrevious<CR>")
+        require("plugins.buffer").setup(_MINV.builtin.buffer)
       end,
     })
     -------------
@@ -104,7 +80,7 @@ function M.setup(builtin, extra)
     use({
       "nvim-lualine/lualine.nvim",
       config = function()
-        require("lualine").setup(_MINV.builtin.lualine.setup)
+        require("plugins.lualine").setup(require("lualine"), _MINV.builtin.lualine)
       end,
     })
     -------------------
