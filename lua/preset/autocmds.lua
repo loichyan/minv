@@ -4,7 +4,10 @@ function M.preset()
   ---@class MiNVAutocmds
   local preset = {
     --- Hightlight yanked text.
-    hl_yank = true,
+    hl_yank = {
+      highgroup = "Search",
+      timeout = 200,
+    },
     --- Remove trailing spaces.
     trim_spaces = true,
   }
@@ -20,12 +23,17 @@ function M.setup(autocmds)
     end
   end
 
-  au(
-    autocmds.hl_yank,
-    "TextYankPost",
-    "*",
-    [[lua require("vim.highlight").on_yank({higroup = "Search", timeout = 200})]]
-  )
+  if autocmds.hl_yank ~= nil then
+    utils.autocmd(
+      "TextYankPost",
+      "*",
+      string.format(
+        [[lua require("vim.highlight").on_yank({higroup = "%s", timeout = %d})]],
+        autocmds.hl_yank.highgroup,
+        autocmds.hl_yank.timeout
+      )
+    )
+  end
   au(autocmds.trim_spaces, "BufWritePre", "*", [[:%s/\s\+$//e]])
 end
 
