@@ -36,23 +36,27 @@ function M.setup(builtin, extra)
     -----------------
     -- Tree Sitter --
     -----------------
+    local ts = builtin.treesitter
     use({
       "nvim-treesitter/nvim-treesitter",
       event = "BufEnter",
       config = function()
-        require("plugins.treesitter").setup(require("nvim-treesitter"), _MINV.builtin.treesitter)
+        require("plugins.treesitter").setup(require("nvim-treesitter.configs"), _MINV.builtin.treesitter)
       end,
     })
     use({
       "andymass/vim-matchup",
+      disable = not ts.setup.matchup.enable,
       after = "nvim-treesitter",
     })
     use({
       "p00f/nvim-ts-rainbow",
+      disable = not ts.setup.rainbow.enable,
       after = "nvim-treesitter",
     })
     use({
       "JoosepAlviste/nvim-ts-context-commentstring",
+      disable = not ts.setup.context_commentstring.enable,
       after = "nvim-treesitter",
     })
     -------------

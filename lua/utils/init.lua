@@ -1,5 +1,13 @@
 local M = {}
 
+--- Merge two tables.
+---@param lhs table
+---@param rhs table
+---@return table
+function M.merge(lhs, rhs)
+  return vim.tbl_extend("force", lhs, rhs)
+end
+
 --- Set Vim options.
 ---@param opts table<string, any>
 function M.o(opts)
@@ -36,7 +44,7 @@ function M.map(mode, lhs, rhs, opts)
   -- Merge options.
   local options = { noremap = true, silent = true }
   if opts ~= nil then
-    options = vim.tbl_extend("force", options, opts)
+    options = M.merge(options, opts)
   end
   -- Flatten modes.
   local modes = {}

@@ -7,13 +7,9 @@ function M.preset()
       ensure_installed = {
         "bash",
         "c",
-        "javascript",
         "json",
         "lua",
         "python",
-        "rust",
-        "toml",
-        "yaml",
       },
       highlight = {
         enable = true,
@@ -39,8 +35,8 @@ function M.preset()
 end
 
 ---@param preset MiNVPresetTreesitter
-function M.setup(plug, preset)
-  plug.setup(preset.setup)
+function M.setup(treesitter, preset)
+  treesitter.setup(preset.setup)
 end
 
 return M
