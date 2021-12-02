@@ -9,7 +9,7 @@ local M = {
   -- Vim options.
   o = settings.o,
   -- Auto commands.
-  au = require("preset.autocmds"),
+  autocmds = require("preset.autocmds"),
   -- Keymaps.
   keymaps = require("preset.keymaps"),
   -- Extra plugins.

@@ -1,13 +1,9 @@
 ---@class MiNVAutocmds
 local M = {
   -- Hightlight yanked text.
-  hl_yank = {
-    "TextYankPost",
-    "*",
-    [[lua require("vim.highlight").on_yank({higroup = "Search", timeout = 200})]],
-  },
+  hl_yank = true,
   -- Remove trailing spaces.
-  trim_spaces = { "BufWritePre", "*", [[:%s/\s\+$//e]] },
+  trim_spaces = true,
 }
 
 return M

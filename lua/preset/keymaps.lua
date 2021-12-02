@@ -1,8 +1,7 @@
 ---@class MiNVKeymaps
 local M = {
-  save = { "n", "<C-s>", ":write<CR>" },
-  esc_jk = { "i", "jk", "<Esc>" },
-  esc_kj = { "i", "kj", "<Esc>" },
+  save = "<C-s>",
+  esc_insert = { "jk", "kj" },
 }
 
 return M

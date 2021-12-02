@@ -1,7 +1,3 @@
-----------------------
--- Type definitions --
-----------------------
-
 local M = {}
 
 --- Set Vim options.
@@ -24,19 +20,22 @@ end
 ---@param event string
 ---@param pat string
 ---@param cmd string
-function M.au(event, pat, cmd)
+function M.autocmd(event, pat, cmd)
   vim.cmd(string.format("au %s %s %s", event, pat, cmd))
 end
 
 --- Set keymap.
 ---@param mode string|string[]
----@param lhs string|string[]
+---@param lhs string|string[]|nil
 ---@param rhs string
 ---@param opts table|nil
 function M.map(mode, lhs, rhs, opts)
+  if lhs == nil then
+    return
+  end
   -- Merge options.
   local options = { noremap = true, silent = true }
-  if opts then
+  if opts ~= nil then
     options = vim.tbl_extend("force", options, opts)
   end
   -- Flatten modes.

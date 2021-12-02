@@ -110,7 +110,7 @@ function M.setup(builtin, extra)
     -------------------
     -- Extra plugins --
     -------------------
-    if extra then
+    if extra ~= nil then
       for _, plug in pairs(extra) do
         use(plug)
       end

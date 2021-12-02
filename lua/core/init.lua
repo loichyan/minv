@@ -10,13 +10,9 @@ function M.setup(minv)
   -- Options.
   utils.o(minv.o)
   -- Keymaps.
-  for _, map in pairs(minv.keymaps) do
-    utils.map(map[1], map[2], map[3], map[4])
-  end
+  require("core.keymaps").setup(minv.keymaps)
   -- Auto commands.
-  for _, au in pairs(minv.au) do
-    utils.au(au[1], au[2], au[3])
-  end
+  require("core.autocmds").setup(minv.autocmds)
 end
 
 return M
