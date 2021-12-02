@@ -1,7 +1,7 @@
 local M = {}
 
 function M.preset()
-  ---@class MiNVPlugBuffer
+  ---@class MiNVPresetBuffer
   local preset = {
     keymaps = {
       previous = "<S-h>",
@@ -11,7 +11,7 @@ function M.preset()
   return preset
 end
 
----@param preset MiNVPlugBuffer
+---@param preset MiNVPresetBuffer
 function M.setup(preset)
   local utils = require("utils")
   local keymaps = preset.keymaps

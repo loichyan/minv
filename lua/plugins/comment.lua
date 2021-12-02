@@ -1,7 +1,7 @@
 local M = {}
 
 function M.preset()
-  ---@class MiNVPlugComment
+  ---@class MiNVPresetComment
   local preset = {
     keymaps = {
       toggle_line = "gcc",
@@ -13,7 +13,7 @@ function M.preset()
   return preset
 end
 
----@param preset MiNVPlugComment
+---@param preset MiNVPresetComment
 function M.setup(comment, preset)
   comment.setup({
     toggler = {
