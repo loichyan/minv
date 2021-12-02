@@ -9,8 +9,8 @@ function M.preset()
 end
 
 ---@param preset MiNVPresetLualine
-function M.setup(plug, preset)
-  plug.setup(preset.setup)
+function M.setup(lualine, preset)
+  lualine.setup(preset.setup)
 end
 
 return M

@@ -13,9 +13,9 @@ function M.preset()
   return preset
 end
 
----@param comment MiNVPlugComment
-function M.setup(plug, comment)
-  plug.setup({
+---@param preset MiNVPlugComment
+function M.setup(comment, preset)
+  comment.setup({
     toggler = {
       line = "<Plug>CommentToggleLine",
       block = "<Plug>CommentToggleBlock",
@@ -31,7 +31,7 @@ function M.setup(plug, comment)
     },
   })
   local utils = require("utils")
-  local keymaps = comment.keymaps
+  local keymaps = preset.keymaps
   utils.map("n", keymaps.toggle_line, "<Plug>CommentToggleLine", { noremap = false })
   utils.map("n", keymaps.toggle_block, "<Plug>CommentToggleBlock", { noremap = false })
   utils.map({ "n", "x" }, keymaps.op_line, "<Plug>CommentOpLine", { noremap = false })

@@ -11,10 +11,10 @@ function M.preset()
   return preset
 end
 
----@param buffer MiNVPlugBuffer
-function M.setup(buffer)
+---@param preset MiNVPlugBuffer
+function M.setup(preset)
   local utils = require("utils")
-  local keymaps = _MINV.builtin.buffer.keymaps
+  local keymaps = preset.keymaps
   utils.map("n", keymaps.next, ":BufferNext<CR>")
   utils.map("n", keymaps.previous, ":BufferPrevious<CR>")
 end
