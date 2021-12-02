@@ -4,7 +4,6 @@ local M = {}
 ---@param extra table[]|nil
 function M.setup(builtin, extra)
   local packer = require("core.packer")
-  require("plugins.packer").setup(packer, builtin.packer)
   -- Load plugins.
   packer.startup(function(use)
     ------------

@@ -17,4 +17,15 @@ if not present then
   packer = require("packer")
 end
 
+packer.init({
+  init = {
+    display = {
+      open_fn = function()
+        return require("packer.util").float({ border = "single" })
+      end,
+      prompt_border = "single",
+    },
+  },
+})
+
 return packer
