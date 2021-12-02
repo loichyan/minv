@@ -20,14 +20,40 @@ function M.setup(builtin, extra)
     ---------
     use({ "neovim/nvim-lspconfig" })
     use({ "jose-elias-alvarez/null-ls.nvim", after = "nvim-lspconfig" })
+    ----------------
+    -- Completion -
+    ----------------
+    use({ "L3MON4D3/LuaSnip" })
+    use({ "hrsh7th/cmp-nvim-lsp" })
+    use({ "hrsh7th/cmp-nvim-lua" })
+    use({ "hrsh7th/cmp-buffer" })
+    use({ "hrsh7th/cmp-path" })
+    use({
+      "hrsh7th/nvim-cmp",
+      after = {
+        "nvim-lspconfig",
+        "LuaSnip",
+        "cmp-nvim-lsp",
+        "cmp-nvim-lua",
+        "cmp-buffer",
+        "cmp-path",
+      },
+      config = function()
+        require("plugins.cmp").setup(require("cmp"), require("luasnip"), _MINV.builtin.cmp)
+      end,
+    })
+    -------------------
+    -- LSP Installer --
+    -------------------
     use({
       "williamboman/nvim-lsp-installer",
-      after = "null-ls.nvim",
+      after = { "null-ls.nvim", "nvim-cmp" },
       config = function()
         require("plugins.lsp").setup(
           require("lspconfig"),
           require("null-ls"),
           require("nvim-lsp-installer"),
+          require("cmp_nvim_lsp"),
           _MINV.builtin.lsp
         )
       end,
