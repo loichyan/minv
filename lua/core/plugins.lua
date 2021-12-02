@@ -53,17 +53,11 @@ function M.setup(builtin, extra)
       disable = not ts.setup.rainbow.enable,
       after = "nvim-treesitter",
     })
-    use({
-      "JoosepAlviste/nvim-ts-context-commentstring",
-      disable = not ts.setup.context_commentstring.enable,
-      after = "nvim-treesitter",
-    })
     -------------
     -- Comment --
     -------------
     use({
       "numToStr/Comment.nvim",
-      after = "nvim-treesitter",
       config = function()
         require("plugins.comment").setup(require("Comment"), _MINV.builtin.comment)
       end,
