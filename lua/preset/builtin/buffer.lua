@@ -1,6 +1,6 @@
 return {
   keymaps = {
-    previous = { "n", "<S-h>", ":BufferPrevious<CR>" },
-    next = { "n", "<S-l>", ":BufferNext<CR>" },
+    previous = "<S-h>",
+    next = "<S-l>",
   },
 }

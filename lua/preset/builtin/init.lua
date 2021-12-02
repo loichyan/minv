@@ -6,6 +6,9 @@ local M = {
   treesitter = {
     setup = require("preset.builtin.treesitter").setup,
   },
+  comment = {
+    keymaps = require("preset.builtin.comment").keymaps,
+  },
   buffer = {
     keymaps = require("preset.builtin.buffer").keymaps,
   },

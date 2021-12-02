@@ -4,28 +4,6 @@
 
 local M = {}
 
---- Set keymap.
----@param mode string
----@param lhs string
----@param rhs string
----@param opts table|nil
-function M.map(mode, lhs, rhs, opts)
-  local options = { noremap = true, silent = true }
-  if opts then
-    options = vim.tbl_extend("force", options, opts)
-  end
-
-  vim.api.nvim_set_keymap(mode, lhs, rhs, options)
-end
-
---- Set keymaps.
----@param maps table<string, any[]>
-function M.keymaps(maps)
-  for _, m in pairs(maps) do
-    M.map(m[1], m[2], m[3], m[4])
-  end
-end
-
 --- Set Vim options.
 ---@param opts table<string, any>
 function M.o(opts)
@@ -50,11 +28,40 @@ function M.au(event, pat, cmd)
   vim.cmd(string.format("au %s %s %s", event, pat, cmd))
 end
 
---- Auto commands.
----@param au table<string, any[]>
-function M.autocmds(au)
-  for _, a in pairs(au) do
-    M.au(a[1], a[2], a[3])
+--- Set keymap.
+---@param mode string|string[]
+---@param lhs string|string[]
+---@param rhs string
+---@param opts table|nil
+function M.map(mode, lhs, rhs, opts)
+  -- Merge options.
+  local options = { noremap = true, silent = true }
+  if opts then
+    options = vim.tbl_extend("force", options, opts)
+  end
+  -- Flatten modes.
+  local modes = {}
+  if type(mode) == "table" then
+    for _, m in pairs(mode) do
+      table.insert(modes, m)
+    end
+  else
+    table.insert(modes, mode)
+  end
+  -- Flatten lhs values.
+  local lhs_vals = {}
+  if type(lhs) == "table" then
+    for _, l in pairs(lhs) do
+      table.insert(lhs_vals, l)
+    end
+  else
+    table.insert(lhs_vals, lhs)
+  end
+  -- Set keymap.
+  for _, m in pairs(modes) do
+    for _, l in pairs(lhs_vals) do
+      vim.api.nvim_set_keymap(m, l, rhs, options)
+    end
   end
 end
 

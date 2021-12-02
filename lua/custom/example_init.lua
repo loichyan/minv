@@ -20,6 +20,8 @@ function M.setup(minv)
       theme = "tokyonight",
     },
   }
+  -- Add keymaps.
+  minv.builtin.comment.keymaps.toggle_line = { "gcc", "<Leader>/" }
 end
 
 return M
