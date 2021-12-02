@@ -14,7 +14,7 @@ function M.setup(minv)
       end,
     },
   }
-  -- Set configs of built-in plugins.
+  -- Set theme of lualine.
   minv.builtin.lualine.setup = {
     options = {
       theme = "tokyonight",
@@ -22,6 +22,15 @@ function M.setup(minv)
   }
   -- Add keymaps.
   minv.builtin.comment.keymaps.toggle_line = { "gcc", "<Leader>/" }
+  minv.builtin.comment.keymaps.op_line = { "gc", "<Leader>/" }
+  -- Rust analyzer.
+  minv.builtin.lsp.settings.rust_analyzer = {
+    ["rust-analyzer"] = {
+      experimental = {
+        procAttrMacros = true,
+      },
+    },
+  }
 end
 
 return M

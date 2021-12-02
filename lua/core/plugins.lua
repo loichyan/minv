@@ -9,28 +9,28 @@ function M.setup(builtin, extra)
     ------------
     -- Packer --
     ------------
-    use({
-      "wbthomason/packer.nvim",
-    })
+    use({ "wbthomason/packer.nvim" })
     ----------
     -- Deps --
     ----------
-    use({
-      "kyazdani42/nvim-web-devicons",
-    })
+    use({ "nvim-lua/plenary.nvim" })
+    use({ "kyazdani42/nvim-web-devicons" })
     ---------
     -- LSP --
     ---------
-    use({
-      "neovim/nvim-lspconfig",
-    })
-    use({
-      "jose-elias-alvarez/null-ls.nvim",
-      after = "nvim-lspconfig",
-    })
+    use({ "neovim/nvim-lspconfig" })
+    use({ "jose-elias-alvarez/null-ls.nvim", after = "nvim-lspconfig" })
     use({
       "williamboman/nvim-lsp-installer",
-      after = "nvim-lspconfig",
+      after = "null-ls.nvim",
+      config = function()
+        require("plugins.lsp").setup(
+          require("lspconfig"),
+          require("null-ls"),
+          require("nvim-lsp-installer"),
+          _MINV.builtin.lsp
+        )
+      end,
     })
     -----------------
     -- Tree Sitter --

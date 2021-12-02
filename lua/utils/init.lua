@@ -33,43 +33,56 @@ function M.autocmd(event, pat, cmd)
 end
 
 --- Set keymap.
----@param mode string|string[]
----@param lhs string|string[]|nil
----@param rhs string
----@param opts table|nil
-function M.map(mode, lhs, rhs, opts)
-  if lhs == nil then
-    return
-  end
-  -- Merge options.
-  local options = { noremap = true, silent = true }
-  if opts ~= nil then
-    options = M.merge(options, opts)
-  end
-  -- Flatten modes.
-  local modes = {}
-  if type(mode) == "table" then
-    for _, m in pairs(mode) do
-      table.insert(modes, m)
+---@param handler function
+local function _make_map(handler)
+  --- Set keymap.
+  ---@param mode string|string[]
+  ---@param lhs string|string[]|nil
+  ---@param rhs string
+  ---@param opts table|nil
+  local function f(mode, lhs, rhs, opts)
+    if lhs == nil then
+      return
     end
-  else
-    table.insert(modes, mode)
-  end
-  -- Flatten lhs values.
-  local lhs_vals = {}
-  if type(lhs) == "table" then
-    for _, l in pairs(lhs) do
-      table.insert(lhs_vals, l)
+    -- Merge options.
+    local options = { noremap = true, silent = true }
+    if opts ~= nil then
+      options = M.merge(options, opts)
     end
-  else
-    table.insert(lhs_vals, lhs)
-  end
-  -- Set keymap.
-  for _, m in pairs(modes) do
-    for _, l in pairs(lhs_vals) do
-      vim.api.nvim_set_keymap(m, l, rhs, options)
+    -- Flatten modes.
+    local modes = {}
+    if type(mode) == "table" then
+      for _, m in pairs(mode) do
+        table.insert(modes, m)
+      end
+    else
+      table.insert(modes, mode)
+    end
+    -- Flatten lhs values.
+    local lhs_vals = {}
+    if type(lhs) == "table" then
+      for _, l in pairs(lhs) do
+        table.insert(lhs_vals, l)
+      end
+    else
+      table.insert(lhs_vals, lhs)
+    end
+    -- Set keymap.
+    for _, m in pairs(modes) do
+      for _, l in pairs(lhs_vals) do
+        vim.api.nvim_set_keymap(m, l, rhs, options)
+      end
     end
   end
+  return f
+end
+
+M.map = _make_map(vim.api.nvim_set_keymap)
+
+function M.make_buf_map(buf)
+  return _make_map(function(...)
+    vim.api.nvim_buf_set_keymap(buf, ...)
+  end)
 end
 
 return M
