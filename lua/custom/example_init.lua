@@ -20,9 +20,6 @@ function M.setup(minv)
       theme = "tokyonight",
     },
   }
-  -- Add keymaps.
-  minv.builtin.comment.keymaps.toggle_line = { "gcc", "<Leader>/" }
-  minv.builtin.comment.keymaps.op_line = { "gc", "<Leader>/" }
   -- Rust analyzer.
   minv.builtin.lsp.settings.rust_analyzer = {
     ["rust-analyzer"] = {
