@@ -5,10 +5,8 @@ function M.setup(minv)
   local utils = require("utils")
   -- Plugins.
   require("core.plugins").setup(minv.builtin, minv.extra)
-  -- Globals.
-  utils.g(minv.g)
-  -- Options.
-  utils.o(minv.o)
+  -- Settings.
+  require("core.settings").setup(minv.settings)
   -- Keymaps.
   require("core.keymaps").setup(minv.keymaps)
   -- Auto commands.

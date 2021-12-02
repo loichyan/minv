@@ -1,14 +1,7 @@
 ---@class MiNVSettings
-local M = {}
-
----@class MiNVGlobals
-M.g = {
+local M = {
   -- Leader
-  mapleader = " ",
-}
-
----@class MiNVOptions
-M.o = {
+  leader = " ",
   -- General
   clipboard = "unnamed",
   mouse = "a",
@@ -22,6 +15,7 @@ M.o = {
   expandtab = true,
   tabstop = 4,
   shiftwidth = 4,
+  smartindent = true,
   -- Window
   splitbelow = true,
   splitright = true,
@@ -29,7 +23,6 @@ M.o = {
   hlsearch = true,
   ignorecase = true,
   smartcase = true,
-  smartindent = true,
   -- File
   swapfile = false,
   undofile = true,
