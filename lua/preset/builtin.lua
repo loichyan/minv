@@ -7,6 +7,7 @@ local M = {
   buffer = require("plugins.buffer").preset(),
   lualine = require("plugins.lualine").preset(),
   tree = require("plugins.tree").preset(),
+  term = require("plugins.term").preset(),
 }
 
 return M

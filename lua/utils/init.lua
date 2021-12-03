@@ -85,4 +85,29 @@ function M.make_buf_map(buf)
   end)
 end
 
+local function _random_id()
+  return math.random(10000, 99999)
+end
+
+--- Register function to the global variable.
+---@param fn function
+---@return integer
+function M._register_fn(fn)
+  local registered = _MINV._registered_funcs
+  -- Look for a new id.
+  local id
+  repeat
+    id = _random_id()
+  until registered[id] == nil
+  -- Insert the functions.
+  registered[id] = fn
+  return id
+end
+
+--- Call registered function.
+---@param id integer
+function M._call_fn(id)
+  _MINV._registered_funcs[id]()
+end
+
 return M

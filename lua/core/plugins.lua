@@ -108,6 +108,12 @@ function M.setup(builtin, extra)
         require("plugins.tree").setup(_MINV.builtin.tree, require("nvim-tree"))
       end,
     })
+    use({
+      "akinsho/toggleterm.nvim",
+      config = function()
+        require("plugins.term").setup(_MINV.builtin.term, require("toggleterm"))
+      end,
+    })
     -------------------
     -- Extra plugins --
     -------------------
