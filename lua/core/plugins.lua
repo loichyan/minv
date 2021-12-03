@@ -23,7 +23,10 @@ function M.setup(builtin, extra)
       "nvim-treesitter/nvim-treesitter",
       event = "BufEnter",
       config = function()
-        require("plugins.treesitter").setup(_MINV.builtin.treesitter, require("nvim-treesitter.configs"))
+        require("plugins.treesitter").setup(
+          _MINV.builtin.treesitter,
+          require("nvim-treesitter.configs")
+        )
       end,
     })
     use({

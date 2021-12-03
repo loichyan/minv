@@ -36,7 +36,10 @@ function M.setup(autocmds)
     utils.autocmd("TextYankPost", "*", cmd)
   end
   if autocmds.format_on_save ~= nil then
-    local cmd = string.format([[:silent lua vim.lsp.buf.formatting_sync(nil, %s)]], autocmds.format_on_save.timeout)
+    local cmd = string.format(
+      [[:silent lua vim.lsp.buf.formatting_sync(nil, %s)]],
+      autocmds.format_on_save.timeout
+    )
     utils.autocmd("BufWritePre", "*", cmd)
   end
   au(autocmds.trim_spaces, "BufWritePre", "*", [[:silent %s/\s\+$//e]])
