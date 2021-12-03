@@ -12,7 +12,7 @@ function M.preset()
 end
 
 ---@param preset MiNVPresetComment
-function M.setup(comment, preset)
+function M.setup(preset, comment)
   comment.setup({
     toggler = {
       line = "<Plug>(_MiNVCommentToggleLine)",

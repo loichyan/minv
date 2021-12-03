@@ -122,7 +122,7 @@ local function make_mapping(cmp, luasnip, keymaps)
 end
 
 ---@param preset MiNVPresetCmp
-function M.setup(cmp, luasnip, preset)
+function M.setup(preset, luasnip, autopairs, cmp_autopiars, cmp)
   cmp.setup({
     snippet = {
       expand = function(args)
@@ -141,6 +141,10 @@ function M.setup(cmp, luasnip, preset)
     mapping = make_mapping(cmp, luasnip, preset.keymaps),
     sources = preset.sources,
   })
+  autopairs.setup({
+    check_ts = true,
+  })
+  cmp.event:on("confirm_done", cmp_autopiars.on_confirm_done())
 end
 
 return M

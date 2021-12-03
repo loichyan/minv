@@ -37,16 +37,13 @@ function M.preset()
           "#FFB900",
         },
       },
-      context_commentstring = {
-        enable = true,
-      },
     },
   }
   return preset
 end
 
 ---@param preset MiNVPresetTreesitter
-function M.setup(treesitter, preset)
+function M.setup(preset, treesitter)
   local setup = {
     ensure_installed = preset.install,
   }

@@ -15,50 +15,6 @@ function M.setup(builtin, extra)
     ----------
     use({ "nvim-lua/plenary.nvim" })
     use({ "kyazdani42/nvim-web-devicons" })
-    ---------
-    -- LSP --
-    ---------
-    use({ "neovim/nvim-lspconfig" })
-    use({ "jose-elias-alvarez/null-ls.nvim", after = "nvim-lspconfig" })
-    ----------------
-    -- Completion -
-    ----------------
-    use({ "L3MON4D3/LuaSnip" })
-    use({ "saadparwaiz1/cmp_luasnip", after = "LuaSnip" })
-    use({ "hrsh7th/cmp-nvim-lsp" })
-    use({ "hrsh7th/cmp-nvim-lua" })
-    use({ "hrsh7th/cmp-buffer" })
-    use({ "hrsh7th/cmp-path" })
-    use({
-      "hrsh7th/nvim-cmp",
-      after = {
-        "nvim-lspconfig",
-        "cmp_luasnip",
-        "cmp-nvim-lsp",
-        "cmp-nvim-lua",
-        "cmp-buffer",
-        "cmp-path",
-      },
-      config = function()
-        require("plugins.cmp").setup(require("cmp"), require("luasnip"), _MINV.builtin.cmp)
-      end,
-    })
-    -------------------
-    -- LSP Installer --
-    -------------------
-    use({
-      "williamboman/nvim-lsp-installer",
-      after = { "null-ls.nvim", "nvim-cmp" },
-      config = function()
-        require("plugins.lsp").setup(
-          require("lspconfig"),
-          require("null-ls"),
-          require("cmp_nvim_lsp"),
-          require("nvim-lsp-installer"),
-          _MINV.builtin.lsp
-        )
-      end,
-    })
     -----------------
     -- Tree Sitter --
     -----------------
@@ -67,7 +23,7 @@ function M.setup(builtin, extra)
       "nvim-treesitter/nvim-treesitter",
       event = "BufEnter",
       config = function()
-        require("plugins.treesitter").setup(require("nvim-treesitter.configs"), _MINV.builtin.treesitter)
+        require("plugins.treesitter").setup(_MINV.builtin.treesitter, require("nvim-treesitter.configs"))
       end,
     })
     use({
@@ -80,13 +36,60 @@ function M.setup(builtin, extra)
       disable = not ts.modules.rainbow.enable,
       after = "nvim-treesitter",
     })
+    ---------------
+    -- Autopairs --
+    ---------------
+    use({ "windwp/nvim-autopairs", after = "nvim-treesitter" })
+    ---------
+    -- LSP --
+    ---------
+    use({ "neovim/nvim-lspconfig" })
+    use({ "jose-elias-alvarez/null-ls.nvim", after = "nvim-lspconfig" })
+    ----------------
+    -- Completion --
+    ----------------
+    use({ "L3MON4D3/LuaSnip" })
+    use({
+      "hrsh7th/nvim-cmp",
+      after = { "LuaSnip", "nvim-autopairs" },
+      config = function()
+        require("plugins.cmp").setup(
+          _MINV.builtin.cmp,
+          require("luasnip"),
+          require("nvim-autopairs"),
+          require("nvim-autopairs.completion.cmp"),
+          require("cmp")
+        )
+      end,
+    })
+    use({ "saadparwaiz1/cmp_luasnip", after = { "nvim-cmp", "LuaSnip" } })
+    use({ "hrsh7th/cmp-nvim-lsp", after = { "nvim-cmp", "nvim-lspconfig" } })
+    use({ "hrsh7th/cmp-nvim-lua", after = "nvim-cmp" })
+    use({ "hrsh7th/cmp-buffer", after = "nvim-cmp" })
+    use({ "hrsh7th/cmp-path", after = "nvim-cmp" })
+    -------------------
+    -- LSP Installer --
+    -------------------
+    use({
+      "williamboman/nvim-lsp-installer",
+      after = { "nvim-lspconfig", "null-ls.nvim", "cmp-nvim-lsp" },
+      config = function()
+        require("plugins.lsp").setup(
+          _MINV.builtin.lsp,
+          require("lspconfig"),
+          require("null-ls"),
+          require("cmp_nvim_lsp"),
+          require("nvim-lsp-installer")
+        )
+      end,
+    })
     -------------
     -- Comment --
     -------------
     use({
       "numToStr/Comment.nvim",
       config = function()
-        require("plugins.comment").setup(require("Comment"), _MINV.builtin.comment)
+        require("plugins.comment").setup(_MINV.builtin.comment, require("Comment"))
       end,
     })
     ------------
@@ -104,7 +107,7 @@ function M.setup(builtin, extra)
     use({
       "nvim-lualine/lualine.nvim",
       config = function()
-        require("plugins.lualine").setup(require("lualine"), _MINV.builtin.lualine)
+        require("plugins.lualine").setup(_MINV.builtin.lualine, require("lualine"))
       end,
     })
     -------------------

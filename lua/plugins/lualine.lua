@@ -11,7 +11,7 @@ function M.preset()
 end
 
 ---@param preset MiNVPresetLualine
-function M.setup(lualine, preset)
+function M.setup(preset, lualine)
   local setup = {
     options = preset.options,
   }
