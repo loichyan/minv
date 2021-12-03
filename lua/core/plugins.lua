@@ -24,6 +24,7 @@ function M.setup(builtin, extra)
     -- Completion -
     ----------------
     use({ "L3MON4D3/LuaSnip" })
+    use({ "saadparwaiz1/cmp_luasnip", after = "LuaSnip" })
     use({ "hrsh7th/cmp-nvim-lsp" })
     use({ "hrsh7th/cmp-nvim-lua" })
     use({ "hrsh7th/cmp-buffer" })
@@ -32,7 +33,7 @@ function M.setup(builtin, extra)
       "hrsh7th/nvim-cmp",
       after = {
         "nvim-lspconfig",
-        "LuaSnip",
+        "cmp_luasnip",
         "cmp-nvim-lsp",
         "cmp-nvim-lua",
         "cmp-buffer",

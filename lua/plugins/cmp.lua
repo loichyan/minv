@@ -15,31 +15,31 @@ function M.preset()
     formatting = {
       fields = { "kind", "abbr", "menu" },
       kind = {
-        Class = "",
-        Color = "",
-        Constant = "ﲀ",
-        Constructor = "",
-        Enum = "練",
-        EnumMember = "",
-        Event = "",
-        Field = "",
-        File = "",
-        Folder = "",
-        Function = "",
-        Interface = "ﰮ",
-        Keyword = "",
-        Method = "",
-        Module = "",
-        Operator = "",
-        Property = "",
-        Reference = "",
-        Snippet = "",
-        Struct = "",
-        Text = "",
-        TypeParameter = "",
-        Unit = "塞",
-        Value = "",
-        Variable = "",
+        Class = " ",
+        Color = " ",
+        Constant = "ﲀ ",
+        Constructor = " ",
+        Enum = "練 ",
+        EnumMember = " ",
+        Event = " ",
+        Field = " ",
+        File = " ",
+        Folder = " ",
+        Function = " ",
+        Interface = "ﰮ ",
+        Keyword = " ",
+        Method = " ",
+        Module = " ",
+        Operator = " ",
+        Property = " ",
+        Reference = " ",
+        Snippet = " ",
+        Struct = " ",
+        Text = " ",
+        TypeParameter = " ",
+        Unit = "塞 ",
+        Value = " ",
+        Variable = " ",
       },
       menu = {
         luasnip = "[Snippet]",
@@ -74,7 +74,18 @@ local function make_mapping(cmp, luasnip, keymaps)
     scroll_up = cmp.mapping.scroll_docs(-4),
     scroll_down = cmp.mapping.scroll_docs(4),
     complete = cmp.mapping.complete(),
-    confirm = cmp.mapping.confirm({ select = false }),
+    confirm = cmp.mapping(function(fallback)
+      if cmp.visible() and cmp.confirm({ select = false }) then
+        if luasnip.jumpable() then
+          luasnip.jump(1)
+        end
+        return
+      elseif luasnip.jumpable() and luasnip.jump(1) then
+        return
+      else
+        fallback()
+      end
+    end),
     close = cmp.mapping.abort(),
     select_next = cmp.mapping(function(fallback)
       if cmp.visible() then
