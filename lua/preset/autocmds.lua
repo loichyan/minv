@@ -12,6 +12,17 @@ function M.preset()
     format_on_save = {
       timeout = nil,
     },
+    --- Map `q` to close window.
+    q_to_close = {
+      ---@type string[]
+      filetype = {
+        "vim",
+        "help",
+        "man",
+        "lspinfo",
+        "null-ls-info",
+      },
+    },
     --- Remove trailing spaces.
     trim_spaces = true,
   }
@@ -20,10 +31,10 @@ end
 
 ---@param autocmds MiNVAutocmds
 function M.setup(autocmds)
-  local utils = require("utils")
-  local function au(enable, ...)
+  local au = require("utils").autocmd
+  local function au_if(enable, ...)
     if enable then
-      utils.autocmd(...)
+      au(...)
     end
   end
 
@@ -33,16 +44,20 @@ function M.setup(autocmds)
       autocmds.hl_yank.highgroup,
       autocmds.hl_yank.timeout
     )
-    utils.autocmd("TextYankPost", "*", cmd)
+    au("TextYankPost", "*", cmd)
   end
   if autocmds.format_on_save ~= nil then
     local cmd = string.format(
       [[:silent lua vim.lsp.buf.formatting_sync(nil, %s)]],
       autocmds.format_on_save.timeout
     )
-    utils.autocmd("BufWritePre", "*", cmd)
+    au("BufWritePre", "*", cmd)
   end
-  au(autocmds.trim_spaces, "BufWritePre", "*", [[:silent %s/\s\+$//e]])
+  if autocmds.q_to_close ~= nil then
+    local ft = table.concat(autocmds.q_to_close.filetype, ",")
+    au("FileType", ft, "nnoremap <silent> <buffer> q :close<CR>")
+  end
+  au_if(autocmds.trim_spaces, "BufWritePre", "*", [[:silent %s/\s\+$//e]])
 end
 
 return M
