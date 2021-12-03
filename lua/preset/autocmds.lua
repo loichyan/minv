@@ -8,6 +8,10 @@ function M.preset()
       highgroup = "Search",
       timeout = 200,
     },
+    --- Format on save.
+    format_on_save = {
+      timeout = nil,
+    },
     --- Remove trailing spaces.
     trim_spaces = true,
   }
@@ -17,24 +21,25 @@ end
 ---@param autocmds MiNVAutocmds
 function M.setup(autocmds)
   local utils = require("utils")
-  local function au(enable, event, pat, cmd)
+  local function au(enable, ...)
     if enable then
-      utils.autocmd(event, pat, cmd)
+      utils.autocmd(...)
     end
   end
 
   if autocmds.hl_yank ~= nil then
-    utils.autocmd(
-      "TextYankPost",
-      "*",
-      string.format(
-        [[lua require("vim.highlight").on_yank({higroup = "%s", timeout = %d})]],
-        autocmds.hl_yank.highgroup,
-        autocmds.hl_yank.timeout
-      )
+    local cmd = string.format(
+      [[lua require("vim.highlight").on_yank({higroup = "%s", timeout = %d})]],
+      autocmds.hl_yank.highgroup,
+      autocmds.hl_yank.timeout
     )
+    utils.autocmd("TextYankPost", "*", cmd)
   end
-  au(autocmds.trim_spaces, "BufWritePre", "*", [[:%s/\s\+$//e]])
+  if autocmds.format_on_save ~= nil then
+    local cmd = string.format([[:silent lua vim.lsp.buf.formatting_sync(nil, %s)]], autocmds.format_on_save.timeout)
+    utils.autocmd("BufWritePre", "*", cmd)
+  end
+  au(autocmds.trim_spaces, "BufWritePre", "*", [[:silent %s/\s\+$//e]])
 end
 
 return M
