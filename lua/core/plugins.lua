@@ -15,24 +15,6 @@ function M.setup(builtin, extra)
     ----------
     use({ "nvim-lua/plenary.nvim" })
     use({ "kyazdani42/nvim-web-devicons" })
-    ------------
-    -- Buffer --
-    ------------
-    use({
-      "romgrk/barbar.nvim",
-      config = function()
-        require("plugins.buffer").setup(_MINV.builtin.buffer)
-      end,
-    })
-    -------------
-    -- Lualine --
-    -------------
-    use({
-      "nvim-lualine/lualine.nvim",
-      config = function()
-        require("plugins.lualine").setup(_MINV.builtin.lualine, require("lualine"))
-      end,
-    })
     -----------------
     -- Tree Sitter --
     -----------------
@@ -103,6 +85,27 @@ function M.setup(builtin, extra)
       "numToStr/Comment.nvim",
       config = function()
         require("plugins.comment").setup(_MINV.builtin.comment, require("Comment"))
+      end,
+    })
+    --------
+    -- UI --
+    --------
+    use({
+      "romgrk/barbar.nvim",
+      config = function()
+        require("plugins.buffer").setup(_MINV.builtin.buffer)
+      end,
+    })
+    use({
+      "nvim-lualine/lualine.nvim",
+      config = function()
+        require("plugins.lualine").setup(_MINV.builtin.lualine, require("lualine"))
+      end,
+    })
+    use({
+      "kyazdani42/nvim-tree.lua",
+      config = function()
+        require("plugins.tree").setup(_MINV.builtin.tree, require("nvim-tree"))
       end,
     })
     -------------------
