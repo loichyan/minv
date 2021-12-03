@@ -13,14 +13,19 @@ end
 
 ---@param preset MiNVPresetComment
 function M.setup(preset, comment)
+  local utils = require("utils")
+  local k_tg_line = utils._register_key()
+  local k_tg_block = utils._register_key()
+  local k_op_line = utils._register_key()
+  local k_op_block = utils._register_key()
   comment.setup({
     toggler = {
-      line = "<Plug>(_MiNVCommentToggleLine)",
-      block = "<Plug>(_MiNVCommentToggleBlock)",
+      line = k_tg_line,
+      block = k_tg_block,
     },
     opleader = {
-      line = "<Plug>(_MiNVCommentOpLine)",
-      block = "<Plug>(_MiNVCommentOpBlock)",
+      line = k_op_line,
+      block = k_op_block,
     },
     mappings = {
       basic = true,
@@ -28,13 +33,12 @@ function M.setup(preset, comment)
       extended = false,
     },
   })
-  local utils = require("utils")
   local keymaps = preset.keymaps
   local opts = { noremap = false }
-  utils.map("n", keymaps.toggle_line, "<Plug>(_MiNVCommentToggleLine)", opts)
-  utils.map("n", keymaps.toggle_block, "<Plug>(_MiNVCommentToggleBlock)", opts)
-  utils.map("x", keymaps.toggle_line, "<Plug>(_MiNVCommentOpLine)", opts)
-  utils.map("x", keymaps.toggle_block, "<Plug>(_MiNVCommentOpBlock)", opts)
+  utils.map("n", keymaps.toggle_line, k_tg_line, opts)
+  utils.map("n", keymaps.toggle_block, k_tg_block, opts)
+  utils.map("x", keymaps.toggle_line, k_op_line, opts)
+  utils.map("x", keymaps.toggle_block, k_op_block, opts)
 end
 
 return M

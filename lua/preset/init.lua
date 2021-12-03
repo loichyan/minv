@@ -18,6 +18,7 @@ local M = {
 
   --- Registered functions.
   _registered_funcs = {},
+  _registered_keys = {},
 }
 
 return M
