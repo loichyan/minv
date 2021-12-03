@@ -52,8 +52,8 @@ function M.setup(builtin, extra)
         require("plugins.lsp").setup(
           require("lspconfig"),
           require("null-ls"),
-          require("nvim-lsp-installer"),
           require("cmp_nvim_lsp"),
+          require("nvim-lsp-installer"),
           _MINV.builtin.lsp
         )
       end,

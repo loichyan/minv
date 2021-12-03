@@ -15,12 +15,12 @@ end
 function M.setup(comment, preset)
   comment.setup({
     toggler = {
-      line = "<Plug>CommentToggleLine",
-      block = "<Plug>CommentToggleBlock",
+      line = "<Plug>(_MiNVCommentToggleLine)",
+      block = "<Plug>(_MiNVCommentToggleBlock)",
     },
     opleader = {
-      line = "<Plug>CommentOpLine",
-      block = "<Plug>CommentOpBlock",
+      line = "<Plug>(_MiNVCommentOpLine)",
+      block = "<Plug>(_MiNVCommentOpBlock)",
     },
     mappings = {
       basic = true,
@@ -30,10 +30,11 @@ function M.setup(comment, preset)
   })
   local utils = require("utils")
   local keymaps = preset.keymaps
-  utils.map("n", keymaps.toggle_line, "<Plug>CommentToggleLine", { noremap = false })
-  utils.map("n", keymaps.toggle_block, "<Plug>CommentToggleBlock", { noremap = false })
-  utils.map("x", keymaps.toggle_line, "<Plug>CommentOpLine", { noremap = false })
-  utils.map("x", keymaps.toggle_block, "<Plug>CommentOpBlock", { noremap = false })
+  local opts = { noremap = false }
+  utils.map("n", keymaps.toggle_line, "<Plug>(_MiNVCommentToggleLine)", opts)
+  utils.map("n", keymaps.toggle_block, "<Plug>(_MiNVCommentToggleBlock)", opts)
+  utils.map("x", keymaps.toggle_line, "<Plug>(_MiNVCommentOpLine)", opts)
+  utils.map("x", keymaps.toggle_block, "<Plug>(_MiNVCommentOpBlock)", opts)
 end
 
 return M

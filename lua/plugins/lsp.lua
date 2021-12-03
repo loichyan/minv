@@ -14,7 +14,7 @@ function M.preset()
 end
 
 ---@param preset MiNVPresetLsp
-function M.setup(lspconfig, null_ls, lsp_installer, cmp_lsp, preset)
+function M.setup(lspconfig, null_ls, cmp_lsp, lsp_installer, preset)
   local utils = require("utils")
   local function on_attach(_, buf)
     local map = utils.make_buf_map(buf)

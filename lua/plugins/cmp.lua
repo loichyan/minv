@@ -3,6 +3,15 @@ local M = {}
 function M.preset()
   ---@class MiNVPresetCmp
   local preset = {
+    keymaps = {
+      scroll_down = "<C-f>",
+      scroll_up = "<C-d>",
+      complete = "<C-Space>",
+      confirm = "<CR>",
+      close = "<C-e>",
+      select_next = "<Tab>",
+      select_prev = "<S-Tab>",
+    },
     formatting = {
       fields = { "kind", "abbr", "menu" },
       kind = {
@@ -59,6 +68,48 @@ function M.preset()
   return preset
 end
 
+local function make_mapping(cmp, luasnip, keymaps)
+  -- Functions to handle keymap.
+  local map_fn = {
+    scroll_up = cmp.mapping.scroll_docs(-4),
+    scroll_down = cmp.mapping.scroll_docs(4),
+    complete = cmp.mapping.complete(),
+    confirm = cmp.mapping.confirm({ select = false }),
+    close = cmp.mapping.abort(),
+    select_next = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      elseif luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
+      else
+        fallback()
+      end
+    end),
+    select_prev = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif luasnip.jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end),
+  }
+  -- Collect mappings.
+  local mappings = {}
+  for k, f in pairs(map_fn) do
+    local map_key = keymaps[k]
+    if type(map_key) == "table" then
+      for _, key in pairs(map_key) do
+        mappings[key] = f
+      end
+    else
+      mappings[map_key] = f
+    end
+  end
+  return mappings
+end
+
 ---@param preset MiNVPresetCmp
 function M.setup(cmp, luasnip, preset)
   cmp.setup({
@@ -76,36 +127,7 @@ function M.setup(cmp, luasnip, preset)
         return vim_item
       end,
     },
-    mapping = {
-      ["<C-p>"] = cmp.mapping.select_prev_item(),
-      ["<C-n>"] = cmp.mapping.select_next_item(),
-      ["<C-d>"] = cmp.mapping.scroll_docs(-4),
-      ["<C-f>"] = cmp.mapping.scroll_docs(4),
-      ["<C-Space>"] = cmp.mapping.complete(),
-      ["<C-e>"] = cmp.mapping.abort(),
-      ["<CR>"] = cmp.mapping.confirm({
-        behavior = cmp.ConfirmBehavior.Replace,
-        select = true,
-      }),
-      ["<Tab>"] = cmp.mapping(function(fallback)
-        if cmp.visible() then
-          cmp.select_next_item()
-        elseif luasnip.expand_or_jumpable() then
-          luasnip.expand_or_jump()
-        else
-          fallback()
-        end
-      end),
-      ["<S-Tab>"] = cmp.mapping(function(fallback)
-        if cmp.visible() then
-          cmp.select_prev_item()
-        elseif luasnip.jumpable(-1) then
-          luasnip.jump(-1)
-        else
-          fallback()
-        end
-      end),
-    },
+    mapping = make_mapping(cmp, luasnip, preset.keymaps),
     sources = preset.sources,
   })
 end
