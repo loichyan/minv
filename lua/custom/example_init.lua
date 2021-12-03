@@ -28,6 +28,8 @@ function M.setup(minv)
       },
     },
   }
+  -- Extra formatters.
+  minv.builtin.lsp.formatters.prettierd = {}
 end
 
 return M

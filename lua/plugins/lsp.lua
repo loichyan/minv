@@ -6,6 +6,7 @@ function M.preset()
     settings = {},
     keymaps = {
       hover = "K",
+      format = "<Leader>lf",
     },
     formatters = {},
     linters = {},
@@ -14,11 +15,24 @@ function M.preset()
 end
 
 ---@param preset MiNVPresetLsp
+local function make_sources(null_ls, preset)
+  local sources = {}
+  for k, v in pairs(preset.formatters) do
+    table.insert(sources, null_ls.builtins.formatting[k].with(v))
+  end
+  for k, v in pairs(preset.linters) do
+    table.insert(sources, null_ls.builtins.diagnostics[k].with(v))
+  end
+  return sources
+end
+
+---@param preset MiNVPresetLsp
 function M.setup(lspconfig, null_ls, cmp_lsp, lsp_installer, preset)
   local utils = require("utils")
   local function on_attach(_, buf)
     local map = utils.make_buf_map(buf)
     map("n", preset.keymaps.hover, ":lua vim.lsp.buf.hover()<CR>")
+    map("n", preset.keymaps.format, ":lua vim.lsp.buf.formatting()<CR>")
   end
   -- Completion.
   local capabilities = cmp_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
@@ -32,9 +46,11 @@ function M.setup(lspconfig, null_ls, cmp_lsp, lsp_installer, preset)
     server:setup(opts)
   end)
   -- Setup null-ls.
-  -- TODO: add sources
-  null_ls.config({ sources = nil })
-  lspconfig["null-ls"].setup({})
+  null_ls.config({ sources = make_sources(null_ls, preset) })
+  lspconfig["null-ls"].setup({
+    on_attach = on_attach,
+    capabilities = capabilities,
+  })
 end
 
 return M
