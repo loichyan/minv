@@ -72,12 +72,12 @@ function M.setup(builtin, extra)
     })
     use({
       "andymass/vim-matchup",
-      disable = not ts.setup.matchup.enable,
+      disable = not ts.modules.matchup.enable,
       after = "nvim-treesitter",
     })
     use({
       "p00f/nvim-ts-rainbow",
-      disable = not ts.setup.rainbow.enable,
+      disable = not ts.modules.rainbow.enable,
       after = "nvim-treesitter",
     })
     -------------

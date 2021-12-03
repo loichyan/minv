@@ -3,14 +3,19 @@ local M = {}
 function M.preset()
   ---@class MiNVPresetLualine
   local preset = {
-    setup = {},
+    options = {
+      theme = "auto",
+    },
   }
   return preset
 end
 
 ---@param preset MiNVPresetLualine
 function M.setup(lualine, preset)
-  lualine.setup(preset.setup)
+  local setup = {
+    options = preset.options,
+  }
+  lualine.setup(setup)
 end
 
 return M

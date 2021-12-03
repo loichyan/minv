@@ -14,12 +14,6 @@ function M.setup(minv)
       end,
     },
   }
-  -- Set theme of lualine.
-  minv.builtin.lualine.setup = {
-    options = {
-      theme = "tokyonight",
-    },
-  }
   -- Rust analyzer.
   minv.builtin.lsp.settings.rust_analyzer = {
     ["rust-analyzer"] = {
