@@ -19,6 +19,7 @@ function M.preset()
         "vim",
         "help",
         "man",
+        "qf",
         "lspinfo",
         "null-ls-info",
       },

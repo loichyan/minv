@@ -6,7 +6,12 @@ function M.preset()
     settings = {},
     keymaps = {
       hover = "K",
-      format = "<Leader>lf",
+      formatting = "<Leader>lf",
+      declaration = "gD",
+      definition = "gd",
+      implementation = "gi",
+      signature_help = "gk",
+      references = "gr",
     },
     formatters = {},
     linters = {},
@@ -31,8 +36,14 @@ function M.setup(preset, lspconfig, null_ls, cmp_lsp, lsp_installer)
   local utils = require("utils")
   local function on_attach(_, buf)
     local map = utils.make_buf_map(buf)
-    map("n", preset.keymaps.hover, ":lua vim.lsp.buf.hover()<CR>")
-    map("n", preset.keymaps.format, ":lua vim.lsp.buf.formatting()<CR>")
+    local keymaps = preset.keymaps
+    map("n", keymaps.hover, ":lua vim.lsp.buf.hover()<CR>")
+    map("n", keymaps.formatting, ":lua vim.lsp.buf.formatting()<CR>")
+    map("n", keymaps.declaration, ":lua vim.lsp.buf.declaration()<CR>")
+    map("n", keymaps.definition, ":lua vim.lsp.buf.definition()<CR>")
+    map("n", keymaps.implementation, ":lua vim.lsp.buf.implementation()<CR>")
+    map("n", keymaps.signature_help, ":lua vim.lsp.buf.signature_help()<CR>")
+    map("n", keymaps.references, ":lua vim.lsp.buf.references()<CR>")
   end
   -- Completion.
   local capabilities = cmp_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
