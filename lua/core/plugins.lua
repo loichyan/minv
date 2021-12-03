@@ -15,13 +15,32 @@ function M.setup(builtin, extra)
     ----------
     use({ "nvim-lua/plenary.nvim" })
     use({ "kyazdani42/nvim-web-devicons" })
+    ------------
+    -- Buffer --
+    ------------
+    use({
+      "romgrk/barbar.nvim",
+      config = function()
+        require("plugins.buffer").setup(_MINV.builtin.buffer)
+      end,
+    })
+    -------------
+    -- Lualine --
+    -------------
+    use({
+      "nvim-lualine/lualine.nvim",
+      config = function()
+        require("plugins.lualine").setup(_MINV.builtin.lualine, require("lualine"))
+      end,
+    })
     -----------------
     -- Tree Sitter --
     -----------------
     local ts = builtin.treesitter
+    use({ "andymass/vim-matchup", disable = not ts.modules.matchup.enable })
+    use({ "p00f/nvim-ts-rainbow", disable = not ts.modules.rainbow.enable })
     use({
       "nvim-treesitter/nvim-treesitter",
-      event = "BufEnter",
       config = function()
         require("plugins.treesitter").setup(
           _MINV.builtin.treesitter,
@@ -29,32 +48,29 @@ function M.setup(builtin, extra)
         )
       end,
     })
-    use({
-      "andymass/vim-matchup",
-      disable = not ts.modules.matchup.enable,
-      after = "nvim-treesitter",
-    })
-    use({
-      "p00f/nvim-ts-rainbow",
-      disable = not ts.modules.rainbow.enable,
-      after = "nvim-treesitter",
-    })
     ---------------
     -- Autopairs --
     ---------------
-    use({ "windwp/nvim-autopairs", after = "nvim-treesitter" })
+    use({ "windwp/nvim-autopairs" })
     ---------
     -- LSP --
     ---------
     use({ "neovim/nvim-lspconfig" })
-    use({ "jose-elias-alvarez/null-ls.nvim", after = "nvim-lspconfig" })
+    use({ "jose-elias-alvarez/null-ls.nvim" })
+    -------------
+    -- Snippet --
+    -------------
+    use({ "L3MON4D3/LuaSnip" })
     ----------------
     -- Completion --
     ----------------
-    use({ "L3MON4D3/LuaSnip" })
+    use({ "saadparwaiz1/cmp_luasnip" })
+    use({ "hrsh7th/cmp-nvim-lsp" })
+    use({ "hrsh7th/cmp-nvim-lua" })
+    use({ "hrsh7th/cmp-buffer" })
+    use({ "hrsh7th/cmp-path" })
     use({
       "hrsh7th/nvim-cmp",
-      after = { "LuaSnip", "nvim-autopairs" },
       config = function()
         require("plugins.cmp").setup(
           _MINV.builtin.cmp,
@@ -65,17 +81,11 @@ function M.setup(builtin, extra)
         )
       end,
     })
-    use({ "saadparwaiz1/cmp_luasnip", after = { "nvim-cmp", "LuaSnip" } })
-    use({ "hrsh7th/cmp-nvim-lsp", after = { "nvim-cmp", "nvim-lspconfig" } })
-    use({ "hrsh7th/cmp-nvim-lua", after = "nvim-cmp" })
-    use({ "hrsh7th/cmp-buffer", after = "nvim-cmp" })
-    use({ "hrsh7th/cmp-path", after = "nvim-cmp" })
     -------------------
     -- LSP Installer --
     -------------------
     use({
       "williamboman/nvim-lsp-installer",
-      after = { "nvim-lspconfig", "null-ls.nvim", "cmp-nvim-lsp" },
       config = function()
         require("plugins.lsp").setup(
           _MINV.builtin.lsp,
@@ -93,24 +103,6 @@ function M.setup(builtin, extra)
       "numToStr/Comment.nvim",
       config = function()
         require("plugins.comment").setup(_MINV.builtin.comment, require("Comment"))
-      end,
-    })
-    ------------
-    -- Buffer --
-    ------------
-    use({
-      "romgrk/barbar.nvim",
-      config = function()
-        require("plugins.buffer").setup(_MINV.builtin.buffer)
-      end,
-    })
-    -------------
-    -- Lualine --
-    -------------
-    use({
-      "nvim-lualine/lualine.nvim",
-      config = function()
-        require("plugins.lualine").setup(_MINV.builtin.lualine, require("lualine"))
       end,
     })
     -------------------
