@@ -114,14 +114,14 @@ end
 --- Register function to the global variable.
 ---@param fn function
 ---@return integer
-function M._register_fn(fn)
+function M.register_fn(fn)
   local registered = _MINV._registered_funcs
   return _random_insert(registered, fn)
 end
 
 --- Call registered function.
 ---@param id integer
-function M._call_fn(id, ...)
+function M.call_fn(id, ...)
   _MINV._registered_funcs[id](...)
 end
 

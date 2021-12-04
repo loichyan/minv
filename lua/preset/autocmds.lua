@@ -22,6 +22,7 @@ function M.preset()
         "qf",
         "lspinfo",
         "null-ls-info",
+        "TelescopePrompt",
       },
     },
     --- Remove trailing spaces.
@@ -56,7 +57,7 @@ function M.setup(autocmds)
   end
   if autocmds.q_to_close ~= nil then
     local ft = table.concat(autocmds.q_to_close.filetype, ",")
-    au("FileType", ft, "nnoremap <silent> <buffer> q :close<CR>")
+    au("FileType", ft, "nnoremap <silent> <buffer> q :close!<CR>")
   end
   au_if(autocmds.trim_spaces, "BufWritePre", "*", [[:silent %s/\s\+$//e]])
 end

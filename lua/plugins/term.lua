@@ -7,7 +7,7 @@ function M.preset()
       --- Toggle terminal.
       toggle = "<C-t>",
       --- Escape terminal mode.
-      esc_terminal = {"<S-j><S-k>", "<S-k><S-j>"},
+      esc_terminal = { "<S-j><S-k>", "<S-k><S-j>" },
     },
   }
   return preset
@@ -22,12 +22,12 @@ function M.setup(preset, term)
   local opts = { noremap = false }
   utils.map("n", keymaps.toggle, k_toggle, opts)
   -- Register a funtions to set keymaps.
-  local set_map = utils._register_fn(function()
+  local set_map = utils.register_fn(function()
     local map = utils.make_buf_map(0)
     map("t", keymaps.toggle, k_toggle, opts)
     map("t", keymaps.esc_terminal, [[<C-\><C-n>]])
   end)
-  local cmd = string.format([[lua require("utils")._call_fn(%d)]], set_map)
+  local cmd = string.format([[lua require("utils").call_fn(%d)]], set_map)
   utils.autocmd("TermOpen", "term://*toggleterm#*", cmd)
 end
 

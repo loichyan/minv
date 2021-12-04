@@ -14,6 +14,7 @@ function M.preset()
     title = true,
     signcolumn = "yes",
     termguicolors = true,
+    showmode = false,
     -- Space
     expandtab = true,
     tabstop = 4,

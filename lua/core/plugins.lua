@@ -87,6 +87,16 @@ function M.setup(builtin, extra)
         require("plugins.comment").setup(_MINV.builtin.comment, require("Comment"))
       end,
     })
+    ---------------
+    -- Telescope --
+    ---------------
+    use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
+    use({
+      "nvim-telescope/telescope.nvim",
+      config = function()
+        require("plugins.telescope").setup(_MINV.builtin.telescope, require("telescope"))
+      end,
+    })
     --------
     -- UI --
     --------
