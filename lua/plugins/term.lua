@@ -4,7 +4,10 @@ function M.preset()
   ---@class MiNVPresetTree
   local preset = {
     keymaps = {
+      --- Toggle terminal.
       toggle = "<C-t>",
+      --- Escape terminal mode.
+      esc_terminal = {"<S-j><S-k>", "<S-k><S-j>"},
     },
   }
   return preset
@@ -22,6 +25,7 @@ function M.setup(preset, term)
   local set_map = utils._register_fn(function()
     local map = utils.make_buf_map(0)
     map("t", keymaps.toggle, k_toggle, opts)
+    map("t", keymaps.esc_terminal, [[<C-\><C-n>]])
   end)
   local cmd = string.format([[lua require("utils")._call_fn(%d)]], set_map)
   utils.autocmd("TermOpen", "term://*toggleterm#*", cmd)

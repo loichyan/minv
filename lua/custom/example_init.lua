@@ -15,7 +15,7 @@ function M.setup(minv)
     },
   }
   -- Rust analyzer.
-  minv.builtin.lsp.settings.rust_analyzer = {
+  minv.builtin.lsp.lsp_settings.rust_analyzer = {
     ["rust-analyzer"] = {
       experimental = {
         procAttrMacros = true,

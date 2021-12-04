@@ -3,7 +3,9 @@ local M = {}
 function M.preset()
   ---@class MiNVPresetLsp
   local preset = {
-    settings = {},
+    options = {
+      popup_border = "single",
+    },
     keymaps = {
       hover = "K",
       formatting = "<Leader>lf",
@@ -13,6 +15,7 @@ function M.preset()
       signature_help = "gk",
       references = "gr",
     },
+    lsp_settings = {},
     formatters = {},
     linters = {},
   }
@@ -52,7 +55,7 @@ function M.setup(preset, lspconfig, null_ls, cmp_lsp, lsp_installer)
     local opts = {
       on_attach = on_attach,
       capabilities = capabilities,
-      settings = preset.settings[server.name],
+      settings = preset.lsp_settings[server.name],
     }
     server:setup(opts)
   end)
@@ -62,6 +65,15 @@ function M.setup(preset, lspconfig, null_ls, cmp_lsp, lsp_installer)
     on_attach = on_attach,
     capabilities = capabilities,
   })
+  -- Set border of popup windows.
+  vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+    vim.lsp.handlers.hover,
+    { border = preset.options.popup_border }
+  )
+  vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
+    vim.lsp.handlers.signature_help,
+    { border = preset.options.popup_border }
+  )
 end
 
 return M
