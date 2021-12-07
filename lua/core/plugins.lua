@@ -101,7 +101,7 @@ function M.setup(builtin, extra)
     -- UI --
     --------
     use({
-      "romgrk/barbar.nvim",
+      "akinsho/bufferline.nvim",
       config = function()
         require("plugins.buffer").setup(_MINV.builtin.buffer)
       end,
