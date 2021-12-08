@@ -5,6 +5,7 @@ local M = {
   lsp = require("plugins.lsp").preset(),
   comment = require("plugins.comment").preset(),
   telescope = require("plugins.telescope").preset(),
+  gitsigns = require("plugins.gitsigns").preset(),
   bufferline = require("plugins.bufferline").preset(),
   lualine = require("plugins.lualine").preset(),
   tree = require("plugins.tree").preset(),

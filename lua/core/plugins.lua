@@ -92,6 +92,12 @@ function M.setup(builtin, extra)
     -- UI --
     --------
     use({
+      "lewis6991/gitsigns.nvim",
+      config = function()
+        require("plugins.gitsigns").setup(_MINV.builtin.gitsigns, require("gitsigns"))
+      end,
+    })
+    use({
       "akinsho/bufferline.nvim",
       config = function()
         require("plugins.bufferline").setup(_MINV.builtin.bufferline, require("bufferline"))
