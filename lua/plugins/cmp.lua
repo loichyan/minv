@@ -138,7 +138,6 @@ function M.setup(preset, luasnip, autopairs, cmp_autopiars, cmp)
   end
 
   -- Setup nvim-cmp.
-  -- TODO: enable in command mode
   cmp.setup({
     snippet = {
       expand = function(args)
@@ -157,6 +156,8 @@ function M.setup(preset, luasnip, autopairs, cmp_autopiars, cmp)
     mapping = make_mapping(),
     sources = make_sources(),
   })
+
+  -- Setuo autopairs.
   autopairs.setup({
     check_ts = true,
   })

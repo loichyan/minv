@@ -6,16 +6,22 @@ function M.preset()
     options = {
       theme = "auto",
     },
+    extensions = {
+      ["nvim-tree"] = true,
+      ["toggleterm"] = true,
+    },
   }
   return preset
 end
 
 ---@param preset MiNVPresetLualine
 function M.setup(preset, lualine)
-  local setup = {
+  local utils = require("utils")
+
+  lualine.setup({
     options = preset.options,
-  }
-  lualine.setup(setup)
+    extensions = utils.set_to_list(preset.extensions),
+  })
 end
 
 return M
