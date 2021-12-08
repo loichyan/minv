@@ -1,10 +1,11 @@
 local M = {}
 
 function M.preset()
-  ---@class MiNVPresetBuffer
+  ---@class MiNVPresetBufferline
   local preset = {
+    show_close_icon = false,
     keymaps = {
-      previous = "<S-h>",
+      prev = "<S-h>",
       next = "<S-l>",
       close = "<Leader>x",
     },
@@ -12,8 +13,11 @@ function M.preset()
   return preset
 end
 
----@param preset MiNVPresetBuffer
+---@param preset MiNVPresetBufferline
 function M.setup(preset, bufferline)
+  local utils = require("utils")
+
+  -- Setup BufferLine.
   bufferline.setup({
     options = {
       diagnostics = "nvim_lsp",
@@ -25,10 +29,11 @@ function M.setup(preset, bufferline)
           text_align = "left",
         },
       },
-      show_close_icon = false,
+      show_close_icon = preset.show_close_icon,
     },
   })
-  local utils = require("utils")
+
+  -- Set keymaps.
   local keymaps = preset.keymaps
   utils.map("n", keymaps.next, ":BufferLineCycleNext<CR>")
   utils.map("n", keymaps.previous, ":BufferLineCyclePrev<CR>")

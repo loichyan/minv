@@ -132,4 +132,31 @@ function M._register_key()
   return string.format("<Plug>(_MiNVKeymap#%d)", id)
 end
 
+---@param tbl table
+---@param map function|nil
+---@return any[]
+function M.table_to_list(tbl, map)
+  local function default_op(k, _)
+    return k
+  end
+  map = map or default_op
+  local list = {}
+  for k, v in pairs(tbl) do
+    table.insert(list, map(k, v))
+  end
+  return list
+end
+
+---@param set table<any, boolean>
+---@return any[]
+function M.set_to_list(set)
+  return M.table_to_list(set, function(k, v)
+    if v == true then
+      return k
+    else
+      return nil
+    end
+  end)
+end
+
 return M

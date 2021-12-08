@@ -18,9 +18,6 @@ function M.setup(builtin, extra)
     -----------------
     -- Tree Sitter --
     -----------------
-    local ts = builtin.treesitter
-    use({ "andymass/vim-matchup", disable = not ts.modules.matchup.enable })
-    use({ "p00f/nvim-ts-rainbow", disable = not ts.modules.rainbow.enable })
     use({
       "nvim-treesitter/nvim-treesitter",
       config = function()
@@ -30,27 +27,31 @@ function M.setup(builtin, extra)
         )
       end,
     })
-    ---------------
-    -- Autopairs --
-    ---------------
-    use({ "windwp/nvim-autopairs" })
+    local ts = builtin.treesitter
+    use({ "andymass/vim-matchup", disable = not ts.modules.matchup.enable })
+    use({ "p00f/nvim-ts-rainbow", disable = not ts.modules.rainbow.enable })
     ---------
     -- LSP --
     ---------
-    use({ "neovim/nvim-lspconfig" })
+    use({
+      "neovim/nvim-lspconfig",
+      config = function()
+        require("plugins.lsp").setup(
+          _MINV.builtin.lsp,
+          require("lspconfig"),
+          require("null-ls"),
+          require("cmp_nvim_lsp"),
+          require("nvim-lsp-installer")
+        )
+      end,
+    })
     use({ "jose-elias-alvarez/null-ls.nvim" })
-    -------------
-    -- Snippet --
-    -------------
-    use({ "L3MON4D3/LuaSnip" })
+    use({ "williamboman/nvim-lsp-installer" })
     ----------------
     -- Completion --
     ----------------
-    use({ "saadparwaiz1/cmp_luasnip" })
-    use({ "hrsh7th/cmp-nvim-lsp" })
-    use({ "hrsh7th/cmp-nvim-lua" })
-    use({ "hrsh7th/cmp-buffer" })
-    use({ "hrsh7th/cmp-path" })
+    use({ "L3MON4D3/LuaSnip" })
+    use({ "windwp/nvim-autopairs" })
     use({
       "hrsh7th/nvim-cmp",
       config = function()
@@ -63,21 +64,11 @@ function M.setup(builtin, extra)
         )
       end,
     })
-    -------------------
-    -- LSP Installer --
-    -------------------
-    use({
-      "williamboman/nvim-lsp-installer",
-      config = function()
-        require("plugins.lsp").setup(
-          _MINV.builtin.lsp,
-          require("lspconfig"),
-          require("null-ls"),
-          require("cmp_nvim_lsp"),
-          require("nvim-lsp-installer")
-        )
-      end,
-    })
+    use({ "saadparwaiz1/cmp_luasnip" })
+    use({ "hrsh7th/cmp-nvim-lsp" })
+    use({ "hrsh7th/cmp-nvim-lua" })
+    use({ "hrsh7th/cmp-buffer" })
+    use({ "hrsh7th/cmp-path" })
     -------------
     -- Comment --
     -------------
@@ -90,20 +81,20 @@ function M.setup(builtin, extra)
     ---------------
     -- Telescope --
     ---------------
-    use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
     use({
       "nvim-telescope/telescope.nvim",
       config = function()
         require("plugins.telescope").setup(_MINV.builtin.telescope, require("telescope"))
       end,
     })
+    use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
     --------
     -- UI --
     --------
     use({
       "akinsho/bufferline.nvim",
       config = function()
-        require("plugins.buffer").setup(_MINV.builtin.buffer)
+        require("plugins.bufferline").setup(_MINV.builtin.bufferline, require("bufferline"))
       end,
     })
     use({

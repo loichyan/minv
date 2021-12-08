@@ -50,79 +50,95 @@ function M.preset()
       },
       dup = {
         luasnip = 1,
-        nvim_lsp = 0,
+        nvim_lsp = 1,
         nvim_lua = 0,
-        buffer = 1,
+        buffer = 0,
         path = 1,
       },
       dup_default = 0,
     },
     sources = {
-      { name = "luasnip" },
-      { name = "nvim_lsp" },
-      { name = "nvim_lua" },
-      { name = "buffer" },
-      { name = "path" },
+      luasnip = true,
+      nvim_lsp = true,
+      nvim_lua = true,
+      buffer = true,
+      path = true,
     },
   }
   return preset
 end
 
-local function make_mapping(cmp, luasnip, keymaps)
-  -- Functions to handle keymap.
-  local map_fn = {
-    scroll_up = cmp.mapping.scroll_docs(-4),
-    scroll_down = cmp.mapping.scroll_docs(4),
-    complete = cmp.mapping.complete(),
-    confirm = cmp.mapping(function(fallback)
-      if cmp.visible() and cmp.confirm({ select = false }) then
-        if luasnip.jumpable() then
-          luasnip.jump(1)
-        end
-        return
-      elseif luasnip.jumpable() and luasnip.jump(1) then
-        return
-      else
-        fallback()
-      end
-    end),
-    close = cmp.mapping.abort(),
-    select_next = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      elseif luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
-      else
-        fallback()
-      end
-    end),
-    select_prev = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      elseif luasnip.jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        fallback()
-      end
-    end),
-  }
-  -- Collect mappings.
-  local mappings = {}
-  for k, f in pairs(map_fn) do
-    local map_key = keymaps[k]
-    if type(map_key) == "table" then
-      for _, key in pairs(map_key) do
-        mappings[key] = f
-      end
-    else
-      mappings[map_key] = f
-    end
-  end
-  return mappings
-end
-
 ---@param preset MiNVPresetCmp
 function M.setup(preset, luasnip, autopairs, cmp_autopiars, cmp)
+  local utils = require("utils")
+
+  -- Make keymaps.
+  local function make_mapping()
+    -- Functions to handle keymap.
+    local map_fn = {
+      scroll_up = cmp.mapping.scroll_docs(-4),
+      scroll_down = cmp.mapping.scroll_docs(4),
+      complete = cmp.mapping.complete(),
+      confirm = cmp.mapping(function(fallback)
+        if cmp.visible() and cmp.confirm({ select = false }) then
+          if luasnip.jumpable() then
+            luasnip.jump(1)
+          end
+          return
+        elseif luasnip.jumpable() and luasnip.jump(1) then
+          return
+        else
+          fallback()
+        end
+      end),
+      close = cmp.mapping.abort(),
+      select_next = cmp.mapping(function(fallback)
+        if cmp.visible() then
+          cmp.select_next_item()
+        elseif luasnip.expand_or_jumpable() then
+          luasnip.expand_or_jump()
+        else
+          fallback()
+        end
+      end),
+      select_prev = cmp.mapping(function(fallback)
+        if cmp.visible() then
+          cmp.select_prev_item()
+        elseif luasnip.jumpable(-1) then
+          luasnip.jump(-1)
+        else
+          fallback()
+        end
+      end),
+    }
+    -- Collect mappings.
+    local mappings = {}
+    for k, f in pairs(map_fn) do
+      local map_key = preset.keymaps[k]
+      if type(map_key) == "table" then
+        for _, key in pairs(map_key) do
+          mappings[key] = f
+        end
+      else
+        mappings[map_key] = f
+      end
+    end
+    return mappings
+  end
+
+  --- Make sources.
+  local function make_sources()
+    return utils.table_to_list(preset.sources, function(k, v)
+      if v == true then
+        return { name = k }
+      else
+        return nil
+      end
+    end)
+  end
+
+  -- Setup nvim-cmp.
+  -- TODO: enable in command mode
   cmp.setup({
     snippet = {
       expand = function(args)
@@ -138,8 +154,8 @@ function M.setup(preset, luasnip, autopairs, cmp_autopiars, cmp)
         return vim_item
       end,
     },
-    mapping = make_mapping(cmp, luasnip, preset.keymaps),
-    sources = preset.sources,
+    mapping = make_mapping(),
+    sources = make_sources(),
   })
   autopairs.setup({
     check_ts = true,
