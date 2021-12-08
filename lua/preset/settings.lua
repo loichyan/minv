@@ -4,25 +4,23 @@ function M.preset()
   ---@class MiNVSettings
   local preset = {
     -- Leader
-    mapleader = " ",
+    leader = " ",
+    markdown_highlight = {
+      bash = true,
+      c = true,
+      json = true,
+      lua = true,
+      python = true,
+    },
     -- General
     clipboard = "unnamed",
     mouse = "a",
     timeoutlen = 500,
-    -- UI
-    hidden = true,
-    title = true,
-    signcolumn = "yes",
-    termguicolors = true,
-    showmode = false,
     -- Space
     expandtab = true,
+    smartindent = true,
     tabstop = 4,
     shiftwidth = 4,
-    smartindent = true,
-    -- Window
-    splitbelow = true,
-    splitright = true,
     -- Search
     hlsearch = true,
     ignorecase = true,
@@ -37,19 +35,55 @@ function M.preset()
   return preset
 end
 
----@param settings MiNVSettings
-function M.setup(settings)
-  local preset = M.preset()
-  local globals = { "mapleader" }
-  -- Set Vim globals.
-  for _, k in pairs(globals) do
-    vim.g[k] = settings[k]
-    preset[k] = nil
-  end
-  -- Set Vim options.
-  for k in pairs(preset) do
-    vim.o[k] = settings[k]
-  end
+---@param preset MiNVSettings
+function M.setup(preset)
+  local utils = require("utils")
+  local markdown_highlight = utils.set_to_list(preset.markdown_highlight)
+
+  --------------------
+  -- Public options --
+  --------------------
+
+  utils.g({
+    mapleader = preset.leader,
+    markdown_fenced_languages = markdown_highlight,
+  })
+  utils.o({
+    -- General
+    clipboard = preset.clipboard,
+    mouse = preset.mouse,
+    timeoutlen = preset.timeoutlen,
+    -- Spaces
+    tabstop = preset.tabstop,
+    shiftwidth = preset.shiftwidth,
+    -- Search
+    hlsearch = preset.hlsearch,
+    ignorecase = preset.ignorecase,
+    smartcase = preset.smartcase,
+    -- File
+    swapfile = preset.swapfile,
+    undofile = preset.undofile,
+    relativenumber = preset.relativenumber,
+
+    ---------------------
+    -- Private options --
+    ---------------------
+
+    -- Line number
+    number = true,
+    -- Space
+    expandtab = true,
+    smartindent = true,
+    -- UI
+    hidden = true,
+    title = true,
+    signcolumn = "yes",
+    termguicolors = true,
+    showmode = false,
+    -- Window
+    splitbelow = true,
+    splitright = true,
+  })
 end
 
 return M

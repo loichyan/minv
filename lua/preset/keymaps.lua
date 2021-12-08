@@ -16,6 +16,8 @@ function M.setup(keymaps)
   local utils = require("utils")
   utils.map("n", keymaps.save, ":write<CR>")
   utils.map("i", keymaps.esc_insert, "<Esc>")
+  -- Nohlsearch.
+  utils.map("n", "<Esc>", ":nohlsearch<CR>")
 end
 
 return M
