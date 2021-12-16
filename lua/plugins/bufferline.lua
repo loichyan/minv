@@ -36,7 +36,7 @@ function M.setup(preset, bufferline)
   -- Set keymaps.
   local keymaps = preset.keymaps
   utils.map("n", keymaps.next, ":BufferLineCycleNext<CR>")
-  utils.map("n", keymaps.previous, ":BufferLineCyclePrev<CR>")
+  utils.map("n", keymaps.prev, ":BufferLineCyclePrev<CR>")
   utils.map("n", keymaps.close, ":bdelete<CR>")
 end
 

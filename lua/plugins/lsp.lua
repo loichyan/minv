@@ -85,11 +85,7 @@ function M.setup(preset, lspconfig, null_ls, cmp_lsp, lsp_installer)
   end)
 
   -- Setup null-ls.
-  null_ls.config({ sources = make_sources() })
-  lspconfig["null-ls"].setup({
-    on_attach = on_attach,
-    capabilities = capabilities,
-  })
+  null_ls.setup({ sources = make_sources() })
 
   -- Set border of popup windows.
   vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
