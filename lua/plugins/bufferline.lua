@@ -3,7 +3,9 @@ local M = {}
 function M.preset()
   ---@class MiNVPresetBufferline
   local preset = {
-    show_close_icon = false,
+    options = {
+      show_close_icon = false,
+    },
     keymaps = {
       prev = "<S-h>",
       next = "<S-l>",
@@ -18,6 +20,7 @@ function M.setup(preset, bufferline)
   local utils = require("utils")
 
   -- Setup BufferLine.
+  local opts = preset.options
   bufferline.setup({
     options = {
       diagnostics = "nvim_lsp",
@@ -29,7 +32,7 @@ function M.setup(preset, bufferline)
           text_align = "left",
         },
       },
-      show_close_icon = preset.show_close_icon,
+      show_close_icon = opts.show_close_icon,
     },
   })
 

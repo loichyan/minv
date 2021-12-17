@@ -3,6 +3,9 @@ local M = {}
 function M.preset()
   ---@class MiNVPresetGitsigns
   local preset = {
+    options = {
+      current_line_blame = true,
+    },
     keymaps = {
       next_hunk = "<Leader>gj",
       prev_hunk = "<Leader>gk",
@@ -13,9 +16,6 @@ function M.preset()
       stage_buffer = "<Leader>gS",
       undo_stage_hunk = "<Leader>gu",
       preview_hunk = "<Leader>gp",
-    },
-    options = {
-      current_line_blame = true,
     },
   }
   return preset

@@ -4,11 +4,11 @@ function M.preset()
   ---@class MiNVPresetTreesitter
   local preset = {
     install = {
-      "bash",
-      "c",
-      "json",
-      "lua",
-      "python",
+      ["bash"] = true,
+      ["c"] = true,
+      ["json"] = true,
+      ["lua"] = true,
+      ["python"] = true,
     },
     modules = {
       highlight = {
@@ -44,8 +44,9 @@ end
 
 ---@param preset MiNVPresetTreesitter
 function M.setup(preset, treesitter)
+  local utils = require("utils")
   local setup = {
-    ensure_installed = preset.install,
+    ensure_installed = utils.set_to_list(preset.install),
   }
   for k, v in pairs(preset.modules) do
     setup[k] = v
