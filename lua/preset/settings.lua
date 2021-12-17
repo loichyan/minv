@@ -6,11 +6,11 @@ function M.preset()
     -- Leader
     leader = " ",
     markdown_highlight = {
-      bash = true,
-      c = true,
-      json = true,
-      lua = true,
-      python = true,
+      ["bash"] = true,
+      ["c"] = true,
+      ["json"] = true,
+      ["lua"] = true,
+      ["python"] = true,
     },
     -- General
     clipboard = "unnamed",

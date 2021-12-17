@@ -14,16 +14,13 @@ function M.preset()
     },
     --- Map `q` to close window.
     q_to_close = {
-      ---@type table<string, boolean>
-      filetype = {
-        vim = true,
-        help = true,
-        man = true,
-        qf = true,
-        lspinfo = true,
-        TelescopePrompt = true,
-        ["null-ls-info"] = true,
-      },
+      ["vim"] = true,
+      ["help"] = true,
+      ["man"] = true,
+      ["qf"] = true,
+      ["lspinfo"] = true,
+      ["TelescopePrompt"] = true,
+      ["null-ls-info"] = true,
     },
     --- Remove trailing spaces.
     trim_spaces = true,
@@ -57,7 +54,7 @@ function M.setup(preset)
     au("BufWritePre", "*", cmd)
   end
   if preset.q_to_close ~= nil then
-    local ft = table.concat(utils.set_to_list(preset.q_to_close.filetype), ",")
+    local ft = table.concat(utils.set_to_list(preset.q_to_close), ",")
     au("FileType", ft, "nnoremap <silent> <buffer> q :close!<CR>")
   end
   au_if(preset.trim_spaces, "BufWritePre", "*", [[:silent %s/\s\+$//e]])
