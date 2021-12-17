@@ -38,15 +38,16 @@ function M.setup(builtin, extra)
       config = function()
         require("plugins.lsp").setup(
           _MINV.builtin.lsp,
-          require("lspconfig"),
           require("null-ls"),
           require("cmp_nvim_lsp"),
-          require("nvim-lsp-installer")
+          require("nvim-lsp-installer"),
+          require("trouble")
         )
       end,
     })
     use({ "jose-elias-alvarez/null-ls.nvim" })
     use({ "williamboman/nvim-lsp-installer" })
+    use({ "folke/trouble.nvim" })
     ----------------
     -- Completion --
     ----------------

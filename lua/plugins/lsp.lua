@@ -29,7 +29,7 @@ function M.preset()
 end
 
 ---@param preset MiNVPresetLsp
-function M.setup(preset, lspconfig, null_ls, cmp_lsp, lsp_installer)
+function M.setup(preset, null_ls, cmp_lsp, lsp_installer, trouble)
   local utils = require("utils")
 
   --- Set keymaps.
@@ -48,10 +48,10 @@ function M.setup(preset, lspconfig, null_ls, cmp_lsp, lsp_installer)
     )
     map("n", km.definition, ":lua vim.lsp.buf.definition()<CR>")
     map("n", km.declaration, ":lua vim.lsp.buf.declaration()<CR>")
-    map("n", km.implementation, ":Telescope lsp_implementations<CR>")
-    map("n", km.references, ":Telescope lsp_references<CR>")
-    map("n", km.document_diagnostics, ":Telescope lsp_document_diagnostics<CR>")
-    map("n", km.workspace_diagnostics, ":Telescope lsp_workspace_diagnostics<CR>")
+    map("n", km.implementation, ":Trouble lsp_implementations<CR>")
+    map("n", km.references, ":Trouble lsp_references<CR>")
+    map("n", km.document_diagnostics, ":Trouble document_diagnostics<CR>")
+    map("n", km.workspace_diagnostics, ":Trouble workspace_diagnostics<CR>")
     map("n", km.goto_next, ":lua vim.lsp.diagnostic.goto_next()<CR>")
     map("n", km.goto_prev, ":lua vim.lsp.diagnostic.goto_prev()<CR>")
     map("n", km.formatting, ":lua vim.lsp.buf.formatting()<CR>")
@@ -75,7 +75,7 @@ function M.setup(preset, lspconfig, null_ls, cmp_lsp, lsp_installer)
         augroup lsp_document_highlight
           autocmd! * <buffer>
           autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-          autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+          autocmd CursorMoved,InsertEnter <buffer> lua vim.lsp.buf.clear_references()
         augroup END
       ]])
     end
@@ -95,6 +95,9 @@ function M.setup(preset, lspconfig, null_ls, cmp_lsp, lsp_installer)
 
   -- Setup null-ls.
   null_ls.setup({ sources = make_sources() })
+
+  -- Setup trouble.
+  trouble.setup({})
 
   -- Set border of popup windows.
   vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
