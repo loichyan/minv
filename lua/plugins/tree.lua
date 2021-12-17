@@ -21,7 +21,7 @@ function M.setup(preset, tree)
     },
     git = {
       enable = true,
-      ignore = true,
+      ignore = false,
       timeout = 500,
     },
   })
