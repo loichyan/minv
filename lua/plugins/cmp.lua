@@ -95,7 +95,7 @@ function M.setup(preset, luasnip, autopairs, cmp_autopiars, cmp)
       select_next = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_next_item()
-        elseif luasnip.expand_or_jumpable() then
+        elseif luasnip.expand_or_locally_jumpable() then
           luasnip.expand_or_jump()
         else
           fallback()
@@ -157,7 +157,7 @@ function M.setup(preset, luasnip, autopairs, cmp_autopiars, cmp)
     sources = make_sources(),
   })
 
-  -- Setuo autopairs.
+  -- Setup autopairs.
   autopairs.setup({
     check_ts = true,
   })

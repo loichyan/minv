@@ -69,7 +69,16 @@ function M.setup(preset, lspconfig, null_ls, cmp_lsp, lsp_installer)
     return sources
   end
 
-  local on_attach = function(_, buf)
+  local function on_attach(client, buf)
+    if client.resolved_capabilities.document_highlight then
+      vim.cmd([[
+        augroup lsp_document_highlight
+          autocmd! * <buffer>
+          autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
+          autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+        augroup END
+      ]])
+    end
     set_keymaps(buf)
   end
   local capabilities = cmp_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())

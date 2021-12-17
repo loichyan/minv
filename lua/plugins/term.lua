@@ -7,7 +7,7 @@ function M.preset()
       --- Toggle terminal.
       toggle = "<C-t>",
       --- Escape terminal mode.
-      esc_terminal = { "<S-j><S-k>", "<S-k><S-j>" },
+      esc_terminal = "<Esc>",
     },
   }
   return preset

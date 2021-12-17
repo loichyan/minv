@@ -15,7 +15,8 @@ function M.preset()
     -- General
     clipboard = "unnamed",
     mouse = "a",
-    timeoutlen = 500,
+    timeoutlen = 300,
+    updatetime = 300,
     -- Space
     expandtab = true,
     smartindent = true,
@@ -53,6 +54,7 @@ function M.setup(preset)
     clipboard = preset.clipboard,
     mouse = preset.mouse,
     timeoutlen = preset.timeoutlen,
+    updatetime = preset.updatetime,
     -- Spaces
     tabstop = preset.tabstop,
     shiftwidth = preset.shiftwidth,
