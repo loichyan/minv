@@ -100,14 +100,12 @@ function M.setup(preset, null_ls, cmp_lsp, lsp_installer, trouble)
   trouble.setup({})
 
   -- Set border of popup windows.
-  vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-    vim.lsp.handlers.hover,
-    { border = preset.options.popup_border }
-  )
-  vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
-    vim.lsp.handlers.signature_help,
-    { border = preset.options.popup_border }
-  )
+  local open_float_preview = vim.lsp.util.open_floating_preview
+  vim.lsp.util.open_floating_preview = function(contents, syntax, opts, ...)
+    opts = opts or {}
+    opts.border = preset.options.popup_border
+    return open_float_preview(contents, syntax, opts, ...)
+  end
 end
 
 return M
