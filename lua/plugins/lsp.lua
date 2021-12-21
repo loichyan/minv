@@ -88,13 +88,20 @@ function M.setup(preset, null_ls, cmp_lsp, lsp_installer, trouble)
     local opts = {
       on_attach = on_attach,
       capabilities = capabilities,
+      flags = {
+        debounce_text_changes = 150,
+      },
       settings = preset.server_settings[server.name],
     }
     server:setup(opts)
   end)
 
   -- Setup null-ls.
-  null_ls.setup({ sources = make_sources() })
+  null_ls.setup({
+    debounce = 150,
+    on_attach = on_attach,
+    sources = make_sources(),
+  })
 
   -- Setup trouble.
   trouble.setup({})
