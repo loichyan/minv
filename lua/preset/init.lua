@@ -11,14 +11,6 @@ local M = {
   --- Extra plugins.
   ---@type table[]|nil
   extra = nil,
-
-  --------------------
-  -- Private fields --
-  --------------------
-
-  --- Registered functions.
-  _registered_funcs = {},
-  _registered_keys = {},
 }
 
 return M

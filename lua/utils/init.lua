@@ -1,4 +1,9 @@
-local M = {}
+local M = {
+  --- Registered functions.
+  _registered_funcs = {},
+  --- Registered keys.
+  _registered_keys = {},
+}
 
 --- Merge two tables.
 ---@param lhs table
@@ -115,19 +120,19 @@ end
 ---@param fn function
 ---@return integer
 function M.register_fn(fn)
-  local registered = _MINV._registered_funcs
+  local registered = M._registered_funcs
   return _random_insert(registered, fn)
 end
 
 --- Call registered function.
 ---@param id integer
 function M.call_fn(id, ...)
-  _MINV._registered_funcs[id](...)
+  M._registered_funcs[id](...)
 end
 
 --- Register a `<Plug>` key to the global variable.
 function M._register_key()
-  local registered = _MINV._registered_keys
+  local registered = M._registered_keys
   local id = _random_insert(registered, true)
   return string.format("<Plug>(_MiNVKeymap#%d)", id)
 end
