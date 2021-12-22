@@ -1,5 +1,5 @@
 -- Load presets.
-_MINV = require("preset")
+_MINV = require("preset").new()
 
 -- Load custom settings.
 local ok, custom = pcall(require, "custom")
