@@ -2,8 +2,7 @@ local M = {}
 
 ---@param builtin MiNVBuiltin
 ---@param extra table[]|nil
-function M.setup(builtin, extra)
-  local packer = require("core.packer")
+function M.setup(packer, builtin, extra)
   -- Load plugins.
   packer.startup(function(use)
     ------------

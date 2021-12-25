@@ -2,8 +2,9 @@ local M = {}
 
 ---@param minv MiNV
 function M.setup(minv)
+  local packer = require("core.packer")
   -- Plugins.
-  require("core.plugins").setup(minv.builtin, minv.extra)
+  require("core.plugins").setup(packer, minv.builtin, minv.extra)
   -- Settings.
   require("preset.settings").setup(minv.settings)
   -- Keymaps.

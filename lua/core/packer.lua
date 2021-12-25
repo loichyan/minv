@@ -14,6 +14,8 @@ if not present then
     packer_path,
   })
 
+  -- Load packer.
+  vim.cmd("packadd packer.nvim")
   packer = require("packer")
 end
 
