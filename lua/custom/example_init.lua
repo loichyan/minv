@@ -5,12 +5,10 @@ function M.setup(minv)
   -- Add extra plugins.
   minv.extra = {
     {
-      "folke/tokyonight.nvim",
+      "tpope/vim-fugitive",
       config = function()
-        require("utils").g({
-          tokyonight_style = "night",
-        })
-        vim.cmd([[colorscheme tokyonight]])
+        local utils = require("utils")
+        utils.map("n", "<Leader>gg", ":Git<CR>")
       end,
     },
   }

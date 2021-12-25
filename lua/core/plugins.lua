@@ -122,6 +122,12 @@ function M.setup(builtin, extra)
         require("plugins.term").setup(_MINV.builtin.term, require("toggleterm"))
       end,
     })
+    use({
+      "folke/tokyonight.nvim",
+      config = function()
+        require("plugins.tokyonight").setup(_MINV.builtin.tokyonight)
+      end,
+    })
     -------------------
     -- Extra plugins --
     -------------------

@@ -13,6 +13,7 @@ function M.preset()
     lualine = require("plugins.lualine").preset(),
     tree = require("plugins.tree").preset(),
     term = require("plugins.term").preset(),
+    tokyonight = require("plugins.tokyonight").preset(),
   }
   return preset
 end
