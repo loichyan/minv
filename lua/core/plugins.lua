@@ -127,6 +127,11 @@ function M.setup(packer, builtin, extra)
         require("plugins.tokyonight").setup(_MINV.builtin.tokyonight)
       end,
     })
+    ----------
+    -- Misc --
+    ----------
+    -- Auto adjusts `shiftwidth` and `expandtab`
+    use({ "tpope/vim-sleuth" })
     -------------------
     -- Extra plugins --
     -------------------
