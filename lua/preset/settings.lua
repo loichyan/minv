@@ -11,6 +11,7 @@ function M.preset()
       ["json"] = true,
       ["lua"] = true,
       ["python"] = true,
+      ["sh"] = true,
     },
     -- General
     clipboard = "unnamed",

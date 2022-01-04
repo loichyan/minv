@@ -5,23 +5,34 @@ Super lightweight collections of configs and plugins for
 [NvChad](https://github.com/NvChad/NvChad) and
 [LunarVim](https://github.com/LunarVim/LunarVim).
 
-## Install
+## Setup
 
-```bash
-# Make a backup with:
+### Install
+
+```sh
+# Make a backup if necessary
 mv ~/.config/nvim ~/.config/nvim.bak
-# Install MiNV with:
+# Install MiNV
 git clone https://github.com/loichyan/minv ~/.config/nvim
-# Install plugins with:
+# Install plugins
 nvim +PackerSync
+```
+
+### Uninstall
+
+```sh
+# Remove MiNV and plugins
+rm -rf ~/.cache/nvim ~/.local/share/nvim ~/.config/nvim
+# Restore the backup if any
+mv ~/.config/nvim.bak ~/.config/nvim
 ```
 
 ## Custom config
 
-```bash
-# Copy example file with:
+```sh
+# Copy example file
 cp ~/.config/nvim/lua/custom/example_init.lua ~/.config/nvim/lua/custom/init.lua
-# Install plugins with:
+# Install plugins
 nvim +PackerSync
 ```
 
