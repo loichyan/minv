@@ -8,7 +8,7 @@ function M.setup(minv)
       "tpope/vim-fugitive",
       config = function()
         local utils = require("utils")
-        utils.map("n", "<Leader>gg", ":Git<CR>")
+        utils.map("n", "<Leader>gg", "<Cmd>Git<CR>")
       end,
     },
   }

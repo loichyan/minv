@@ -14,10 +14,10 @@ end
 ---@param keymaps MiNVKeymaps
 function M.setup(keymaps)
   local utils = require("utils")
-  utils.map("n", keymaps.save, ":write<CR>")
+  utils.map("n", keymaps.save, "<Cmd>write<CR>")
   utils.map("i", keymaps.esc_insert, "<Esc>")
   -- Nohlsearch.
-  utils.map("n", "<Esc>", ":nohlsearch<CR>")
+  utils.map("n", "<Esc>", "<Cmd>nohlsearch<CR>")
 end
 
 return M

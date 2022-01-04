@@ -26,7 +26,7 @@ function M.setup(preset, tree)
     },
   })
   local keymaps = preset.keymaps
-  utils.map("n", keymaps.toggle, ":NvimTreeToggle<CR>")
+  utils.map("n", keymaps.toggle, "<Cmd>NvimTreeToggle<CR>")
 end
 
 return M

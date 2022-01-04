@@ -55,9 +55,9 @@ function M.setup(preset)
   end
   if preset.q_to_close ~= nil then
     local ft = table.concat(utils.set_to_list(preset.q_to_close), ",")
-    au("FileType", ft, "nnoremap <silent> <buffer> q :close!<CR>")
+    au("FileType", ft, "nnoremap <silent> <buffer> q <Cmd>close!<CR>")
   end
-  au_if(preset.trim_spaces, "BufWritePre", "*", [[:silent %s/\s\+$//e]])
+  au_if(preset.trim_spaces, "BufWritePre", "*", [[silent %s/\s\+$//e]])
 end
 
 return M
