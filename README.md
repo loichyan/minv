@@ -31,7 +31,7 @@ mv ~/.config/nvim.bak ~/.config/nvim
 
 ```sh
 # Copy example file
-cp ~/.config/nvim/lua/custom/example_init.lua ~/.config/nvim/lua/custom/init.lua
+cp ~/.config/nvim/examples/example_init.lua ~/.config/nvim/lua/custom/init.lua
 # Install plugins
 nvim +PackerSync
 ```
