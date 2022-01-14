@@ -29,7 +29,7 @@ function M.preset()
 end
 
 ---@param preset MiNVPresetLsp
-function M.setup(preset, null_ls, cmp_lsp, lsp_installer, trouble)
+function M.setup(preset, lspconfig, null_ls, cmp_lsp, lsp_installer, trouble)
   local utils = require("utils")
 
   --- Set keymaps.
@@ -82,19 +82,26 @@ function M.setup(preset, null_ls, cmp_lsp, lsp_installer, trouble)
     set_keymaps(buf)
   end
   local capabilities = cmp_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
-
-  -- Setup installed servers.
-  lsp_installer.on_server_ready(function(server)
-    local opts = {
+  local function make_opts(settings)
+    return {
       on_attach = on_attach,
       capabilities = capabilities,
       flags = {
         debounce_text_changes = 150,
       },
-      settings = preset.server_settings[server.name],
+      settings = settings,
     }
-    server:setup(opts)
+  end
+
+  -- Setup servers.
+  lsp_installer.on_server_ready(function(server)
+    if preset.server_settings[server.name] == nil then
+      server:setup(make_opts())
+    end
   end)
+  for k, v in pairs(preset.server_settings) do
+    lspconfig[k].setup(make_opts(v))
+  end
 
   -- Setup null-ls.
   null_ls.setup({

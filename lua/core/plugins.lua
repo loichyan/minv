@@ -37,6 +37,7 @@ function M.setup(packer, builtin, extra)
       config = function()
         require("plugins.lsp").setup(
           _MINV.builtin.lsp,
+          require("lspconfig"),
           require("null-ls"),
           require("cmp_nvim_lsp"),
           require("nvim-lsp-installer"),
