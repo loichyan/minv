@@ -30,6 +30,7 @@ end
 
 ---@param preset MiNVPresetLsp
 function M.setup(preset, lspconfig, null_ls, cmp_lsp, lsp_installer, trouble)
+  local lsp_installer_servers = require("nvim-lsp-installer.servers")
   local utils = require("utils")
 
   --- Set keymaps.
@@ -93,15 +94,18 @@ function M.setup(preset, lspconfig, null_ls, cmp_lsp, lsp_installer, trouble)
     }
   end
 
-  -- Setup servers.
-  lsp_installer.on_server_ready(function(server)
-    if preset.server_settings[server.name] == nil then
-      server:setup(make_opts())
-    end
-  end)
+  -- Setup servers not installed.
+  local installed_servers = lsp_installer_servers.get_installed_server_names()
   for k, v in pairs(preset.server_settings) do
-    lspconfig[k].setup(make_opts(v))
+    if installed_servers[k] == nil then
+      lspconfig[k].setup(make_opts(v))
+    end
   end
+
+  -- Setup installed servers.
+  lsp_installer.on_server_ready(function(server)
+    server:setup(make_opts(preset.server_settings[server.name]))
+  end)
 
   -- Setup null-ls.
   null_ls.setup({
