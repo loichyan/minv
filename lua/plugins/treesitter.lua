@@ -43,8 +43,10 @@ function M.preset()
 end
 
 ---@param preset MiNVPresetTreesitter
-function M.setup(preset, treesitter)
+function M.setup(preset)
+  local treesitter = require("nvim-treesitter.configs")
   local utils = require("utils")
+
   local setup = {
     ensure_installed = utils.set_to_list(preset.install),
   }

@@ -12,8 +12,10 @@ function M.preset()
 end
 
 ---@param preset MiNVPresetTree
-function M.setup(preset, tree)
+function M.setup(preset)
+  local tree = require("nvim-treesitter.configs")
   local utils = require("utils")
+
   tree.setup({
     filters = {
       dotfiles = false,

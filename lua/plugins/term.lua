@@ -14,8 +14,10 @@ function M.preset()
 end
 
 ---@param preset MiNVPresetTree
-function M.setup(preset, term)
+function M.setup(preset)
+  local term = require("toggleterm")
   local utils = require("utils")
+
   local k_toggle = utils._register_key()
   term.setup({ open_mapping = k_toggle })
   local keymaps = preset.keymaps

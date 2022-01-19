@@ -29,8 +29,13 @@ function M.preset()
 end
 
 ---@param preset MiNVPresetLsp
-function M.setup(preset, lspconfig, null_ls, cmp_lsp, lsp_installer, trouble)
+function M.setup(preset)
+  local cmp_lsp = require("cmp_nvim_lsp")
+  local lsp_installer = require("nvim-lsp-installer")
   local lsp_installer_servers = require("nvim-lsp-installer.servers")
+  local lspconfig = require("lspconfig")
+  local null_ls = require("null-ls")
+  local trouble = require("trouble")
   local utils = require("utils")
 
   --- Set keymaps.

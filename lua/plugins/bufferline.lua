@@ -16,7 +16,8 @@ function M.preset()
 end
 
 ---@param preset MiNVPresetBufferline
-function M.setup(preset, bufferline)
+function M.setup(preset)
+  local bufferline = require("bufferline")
   local utils = require("utils")
 
   -- Setup BufferLine.

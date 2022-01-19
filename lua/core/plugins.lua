@@ -20,10 +20,7 @@ function M.setup(packer, builtin, extra)
     use({
       "nvim-treesitter/nvim-treesitter",
       config = function()
-        require("plugins.treesitter").setup(
-          _MINV.builtin.treesitter,
-          require("nvim-treesitter.configs")
-        )
+        require("plugins.treesitter").setup(_MINV.builtin.treesitter)
       end,
     })
     local ts = builtin.treesitter
@@ -35,14 +32,7 @@ function M.setup(packer, builtin, extra)
     use({
       "neovim/nvim-lspconfig",
       config = function()
-        require("plugins.lsp").setup(
-          _MINV.builtin.lsp,
-          require("lspconfig"),
-          require("null-ls"),
-          require("cmp_nvim_lsp"),
-          require("nvim-lsp-installer"),
-          require("trouble")
-        )
+        require("plugins.lsp").setup(_MINV.builtin.lsp)
       end,
     })
     use({ "jose-elias-alvarez/null-ls.nvim" })
@@ -56,13 +46,7 @@ function M.setup(packer, builtin, extra)
     use({
       "hrsh7th/nvim-cmp",
       config = function()
-        require("plugins.cmp").setup(
-          _MINV.builtin.cmp,
-          require("luasnip"),
-          require("nvim-autopairs"),
-          require("nvim-autopairs.completion.cmp"),
-          require("cmp")
-        )
+        require("plugins.cmp").setup(_MINV.builtin.cmp)
       end,
     })
     use({ "saadparwaiz1/cmp_luasnip" })
@@ -76,7 +60,7 @@ function M.setup(packer, builtin, extra)
     use({
       "numToStr/Comment.nvim",
       config = function()
-        require("plugins.comment").setup(_MINV.builtin.comment, require("Comment"))
+        require("plugins.comment").setup(_MINV.builtin.comment)
       end,
     })
     ---------------
@@ -85,7 +69,7 @@ function M.setup(packer, builtin, extra)
     use({
       "nvim-telescope/telescope.nvim",
       config = function()
-        require("plugins.telescope").setup(_MINV.builtin.telescope, require("telescope"))
+        require("plugins.telescope").setup(_MINV.builtin.telescope)
       end,
     })
     use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
@@ -95,31 +79,31 @@ function M.setup(packer, builtin, extra)
     use({
       "lewis6991/gitsigns.nvim",
       config = function()
-        require("plugins.gitsigns").setup(_MINV.builtin.gitsigns, require("gitsigns"))
+        require("plugins.gitsigns").setup(_MINV.builtin.gitsigns)
       end,
     })
     use({
       "akinsho/bufferline.nvim",
       config = function()
-        require("plugins.bufferline").setup(_MINV.builtin.bufferline, require("bufferline"))
+        require("plugins.bufferline").setup(_MINV.builtin.bufferline)
       end,
     })
     use({
       "nvim-lualine/lualine.nvim",
       config = function()
-        require("plugins.lualine").setup(_MINV.builtin.lualine, require("lualine"))
+        require("plugins.lualine").setup(_MINV.builtin.lualine)
       end,
     })
     use({
       "kyazdani42/nvim-tree.lua",
       config = function()
-        require("plugins.tree").setup(_MINV.builtin.tree, require("nvim-tree"))
+        require("plugins.tree").setup(_MINV.builtin.tree)
       end,
     })
     use({
       "akinsho/toggleterm.nvim",
       config = function()
-        require("plugins.term").setup(_MINV.builtin.term, require("toggleterm"))
+        require("plugins.term").setup(_MINV.builtin.term)
       end,
     })
     use({

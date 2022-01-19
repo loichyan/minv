@@ -69,7 +69,11 @@ function M.preset()
 end
 
 ---@param preset MiNVPresetCmp
-function M.setup(preset, luasnip, autopairs, cmp_autopiars, cmp)
+function M.setup(preset)
+  local autopairs = require("nvim-autopairs")
+  local cmp = require("cmp")
+  local cmp_autopiars = require("nvim-autopairs.completion.cmp")
+  local luasnip = require("luasnip")
   local utils = require("utils")
 
   -- Make keymaps.

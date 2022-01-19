@@ -15,7 +15,8 @@ function M.preset()
 end
 
 ---@param preset MiNVPresetLualine
-function M.setup(preset, lualine)
+function M.setup(preset)
+  local lualine = require("lualine")
   local utils = require("utils")
 
   lualine.setup({

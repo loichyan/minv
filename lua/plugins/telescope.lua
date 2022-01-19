@@ -11,7 +11,10 @@ function M.preset()
 end
 
 ---@param preset MiNVPresetTree
-function M.setup(preset, telescope)
+function M.setup(preset)
+  local telescope = require("telescope")
+  local utils = require("utils")
+
   telescope.setup({
     extensions = {
       fzf = {
@@ -23,7 +26,6 @@ function M.setup(preset, telescope)
     },
   })
   telescope.load_extension("fzf")
-  local utils = require("utils")
   local set_map = utils.register_fn(function()
     local map = utils.make_buf_map(0)
     map("i", preset.keymaps.close, "<Esc><Cmd>close!<CR>")

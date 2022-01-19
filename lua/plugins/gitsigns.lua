@@ -22,8 +22,10 @@ function M.preset()
 end
 
 ---@param preset MiNVPresetGitsigns
-function M.setup(preset, gitsigns)
+function M.setup(preset)
+  local gitsigns = require("gitsigns")
   local utils = require("utils")
+
   -- Setup gitsigns.
   local opts = preset.options
   gitsigns.setup({
