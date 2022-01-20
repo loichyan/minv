@@ -13,7 +13,7 @@ end
 
 ---@param preset MiNVPresetTree
 function M.setup(preset)
-  local tree = require("nvim-treesitter.configs")
+  local tree = require("nvim-tree")
   local utils = require("utils")
 
   tree.setup({
