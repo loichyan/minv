@@ -4,7 +4,8 @@ function M.preset()
   ---@class MiNVPresetTree
   local preset = {
     keymaps = {
-      toggle = "<C-n>",
+      toggle = "<C-b>",
+      focus = "<C-n>",
     },
     filters = { [".git"] = true, [".cache"] = true, ["node_modules"] = true },
   }
@@ -29,6 +30,7 @@ function M.setup(preset)
   })
   local keymaps = preset.keymaps
   utils.map("n", keymaps.toggle, "<Cmd>NvimTreeToggle<CR>")
+  utils.map("n", keymaps.focus, "<Cmd>NvimTreeFocus<CR>")
 end
 
 return M
