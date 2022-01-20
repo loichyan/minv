@@ -9,7 +9,7 @@ local M = {
 ---@param lhs table
 ---@param rhs table
 ---@return table
-function M.merge(lhs, rhs)
+function M.tbl_merge(lhs, rhs)
   return vim.tbl_extend("force", lhs, rhs)
 end
 
@@ -34,7 +34,7 @@ end
 ---@param pat string
 ---@param cmd string
 function M.autocmd(event, pat, cmd)
-  vim.cmd(string.format("au %s %s %s", event, pat, cmd))
+  vim.cmd(string.format("autocmd %s %s %s", event, pat, cmd))
 end
 
 --- Flatten modes and lhs values.
@@ -83,7 +83,7 @@ local function _make_map(map)
     -- Merge options.
     local options = { noremap = true, silent = true }
     if opts ~= nil then
-      options = M.merge(options, opts)
+      options = M.tbl_merge(options, opts)
     end
     -- Set keymap.
     M.flatten_mode_lhs(mode, lhs, function(m, l)
@@ -93,8 +93,13 @@ local function _make_map(map)
   return _map
 end
 
-M.map = _make_map(vim.api.nvim_set_keymap)
+local _map = _make_map(vim.api.nvim_set_keymap)
+--- Set global mappings.
+function M.map(...)
+  _map(...)
+end
 
+--- Return a funtion sets buffer-local mappings.
 function M.make_buf_map(buf)
   return _make_map(function(...)
     vim.api.nvim_buf_set_keymap(buf, ...)
@@ -138,16 +143,12 @@ function M._register_key()
 end
 
 ---@param tbl table
----@param map function|nil
+---@param f function
 ---@return any[]
-function M.table_to_list(tbl, map)
-  local function default_op(k, _)
-    return k
-  end
-  map = map or default_op
+function M.tbl_to_list(tbl, f)
   local list = {}
   for k, v in pairs(tbl) do
-    table.insert(list, map(k, v))
+    table.insert(list, f(k, v))
   end
   return list
 end
@@ -167,7 +168,7 @@ end
 ---@param set table<any, boolean>
 ---@return any[]
 function M.set_to_list(set)
-  return M.table_to_list(set, function(k, v)
+  return M.tbl_to_list(set, function(k, v)
     if v == true then
       return k
     else

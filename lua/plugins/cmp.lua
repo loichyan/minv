@@ -132,7 +132,7 @@ function M.setup(preset)
 
   --- Make sources.
   local function make_sources()
-    return utils.table_to_list(preset.sources, function(k, v)
+    return utils.tbl_to_list(preset.sources, function(k, v)
       if v == true then
         return { name = k }
       else
