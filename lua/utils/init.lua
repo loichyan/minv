@@ -152,6 +152,18 @@ function M.table_to_list(tbl, map)
   return list
 end
 
+---@param tbl table
+---@param f function|nil
+---@return table
+function M.tbl_map(tbl, f)
+  local mapped = {}
+  for k, v in pairs(tbl) do
+    local k2, v2 = f(k, v)
+    mapped[k2] = v2
+  end
+  return mapped
+end
+
 ---@param set table<any, boolean>
 ---@return any[]
 function M.set_to_list(set)

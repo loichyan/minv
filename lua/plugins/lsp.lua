@@ -21,6 +21,9 @@ function M.preset()
       rename = "<Leader>lr",
       formatting = "<Leader>lf",
     },
+    install = {
+      ["sumneko_lua"] = true,
+    },
     server_settings = {},
     formatters = {},
     linters = {},
@@ -99,8 +102,20 @@ function M.setup(preset)
     }
   end
 
+  local installed_servers = utils.tbl_map(
+    lsp_installer_servers.get_installed_server_names(),
+    function(_, v)
+      return v, true
+    end
+  )
+  -- Install not installed servers.
+  for k, v in pairs(preset.install) do
+    if v and not installed_servers[k] then
+      lsp_installer.install(k)
+    end
+  end
+
   -- Setup servers not installed.
-  local installed_servers = lsp_installer_servers.get_installed_server_names()
   for k, v in pairs(preset.server_settings) do
     if installed_servers[k] == nil then
       lspconfig[k].setup(make_opts(v))
