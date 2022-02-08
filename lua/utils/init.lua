@@ -5,12 +5,16 @@ local M = {
   _registered_keys = {},
 }
 
---- Merge two tables.
----@param lhs table
----@param rhs table
+--- Merge tables.
 ---@return table
-function M.tbl_merge(lhs, rhs)
-  return vim.tbl_extend("force", lhs, rhs)
+function M.tbl_merge(...)
+  local merged = {}
+  for _, rhs in ipairs({ ... }) do
+    if rhs ~= nil then
+      merged = vim.tbl_extend("force", merged, rhs)
+    end
+  end
+  return merged
 end
 
 --- Set Vim options.
@@ -81,10 +85,7 @@ local function _make_map(map)
       return
     end
     -- Merge options.
-    local options = { noremap = true, silent = true }
-    if opts ~= nil then
-      options = M.tbl_merge(options, opts)
-    end
+    local options = M.tbl_merge({ noremap = true, silent = true }, opts)
     -- Set keymap.
     M.flatten_mode_lhs(mode, lhs, function(m, l)
       map(m, l, rhs, options)
