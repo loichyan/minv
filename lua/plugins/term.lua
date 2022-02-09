@@ -18,7 +18,7 @@ function M.setup(preset)
   local term = require("toggleterm")
   local utils = require("utils")
 
-  local k_toggle = utils._register_key()
+  local k_toggle = utils.register_key()
   term.setup({ open_mapping = k_toggle })
   local keymaps = preset.keymaps
   utils.keymaps({

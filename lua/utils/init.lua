@@ -122,8 +122,7 @@ function M.call_fn(id, ...)
 end
 
 --- Register a `<Plug>` key to the global variable.
---TODO: rename to `register_key`
-function M._register_key()
+function M.register_key()
   local registered = _M._registered_keys
   local id = _random_insert(registered, true)
   return string.format("<Plug>(_MiNVKeymap#%d)", id)

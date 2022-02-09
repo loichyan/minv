@@ -16,10 +16,10 @@ function M.setup(preset)
   local comment = require("Comment")
   local utils = require("utils")
 
-  local k_tg_line = utils._register_key()
-  local k_tg_block = utils._register_key()
-  local k_op_line = utils._register_key()
-  local k_op_block = utils._register_key()
+  local k_tg_line = utils.register_key()
+  local k_tg_block = utils.register_key()
+  local k_op_line = utils.register_key()
+  local k_op_block = utils.register_key()
   comment.setup({
     toggler = {
       line = k_tg_line,
