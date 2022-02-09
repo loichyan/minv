@@ -95,7 +95,7 @@ function M.setup(preset)
           fallback()
         end
       end),
-      close = cmp.mapping.abort(),
+      close = cmp.mapping.close(),
       select_next = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_next_item()
