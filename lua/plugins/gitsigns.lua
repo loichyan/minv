@@ -32,16 +32,18 @@ function M.setup(preset)
     current_line_blame = opts.current_line_blame,
   })
   -- Set keymaps.
-  local km = preset.keymaps
-  utils.map("n", km.next_hunk, "<Cmd>Gitsigns next_hunk<CR>")
-  utils.map("n", km.prev_hunk, "<Cmd>Gitsigns prev_hunk<CR>")
-  utils.map("n", km.blame_line, "<Cmd>Gitsigns blame_line<CR>")
-  utils.map("n", km.reset_hunk, "<Cmd>Gitsigns reset_hunk<CR>")
-  utils.map("n", km.reset_buffer, "<Cmd>Gitsigns reset_buffer<CR>")
-  utils.map("n", km.stage_hunk, "<Cmd>Gitsigns stage_hunk<CR>")
-  utils.map("n", km.stage_buffer, "<Cmd>Gitsigns stage_buffer<CR>")
-  utils.map("n", km.undo_stage_hunk, "<Cmd>Gitsigns undo_stage_hunk<CR>")
-  utils.map("n", km.preview_hunk, "<Cmd>Gitsigns preview_hunk<CR>")
+  local keymaps = preset.keymaps
+  utils.keymaps({
+    { keymaps.next_hunk, "<Cmd>Gitsigns next_hunk<CR>" },
+    { keymaps.prev_hunk, "<Cmd>Gitsigns prev_hunk<CR>" },
+    { keymaps.blame_line, "<Cmd>Gitsigns blame_line<CR>" },
+    { keymaps.reset_hunk, "<Cmd>Gitsigns reset_hunk<CR>" },
+    { keymaps.reset_buffer, "<Cmd>Gitsigns reset_buffer<CR>" },
+    { keymaps.stage_hunk, "<Cmd>Gitsigns stage_hunk<CR>" },
+    { keymaps.stage_buffer, "<Cmd>Gitsigns stage_buffer<CR>" },
+    { keymaps.undo_stage_hunk, "<Cmd>Gitsigns undo_stage_hunk<CR>" },
+    { keymaps.preview_hunk, "<Cmd>Gitsigns preview_hunk<CR>" },
+  })
 end
 
 return M

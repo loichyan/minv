@@ -36,11 +36,17 @@ function M.setup(preset)
     },
   })
   local keymaps = preset.keymaps
-  local opts = { noremap = false }
-  utils.map("n", keymaps.toggle_line, k_tg_line, opts)
-  utils.map("n", keymaps.toggle_block, k_tg_block, opts)
-  utils.map("x", keymaps.toggle_line, k_op_line, opts)
-  utils.map("x", keymaps.toggle_block, k_op_block, opts)
+  utils.keymaps({
+    noremap = false,
+    { keymaps.toggle_line, k_tg_line },
+    { keymaps.toggle_block, k_tg_block },
+  })
+  utils.keymaps({
+    mode = "x",
+    noremap = false,
+    { keymaps.toggle_line, k_op_line },
+    { keymaps.toggle_block, k_op_block },
+  })
 end
 
 return M

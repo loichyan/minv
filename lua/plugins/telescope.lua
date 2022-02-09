@@ -27,8 +27,12 @@ function M.setup(preset)
   })
   telescope.load_extension("fzf")
   local set_map = utils.register_fn(function()
-    local map = utils.make_buf_map(0)
-    map("i", preset.keymaps.close, "<Esc><Cmd>close!<CR>")
+    local keymaps = preset.keymaps
+    utils.keymaps({
+      mode = "i",
+      buffer = vim.api.nvim_get_current_buf(),
+      { keymaps.close, "<Esc><Cmd>close!<CR>" },
+    })
   end)
   local cmd = string.format([[lua require("utils").call_fn(%d)]], set_map)
   utils.autocmd("FileType", "TelescopePrompt", cmd)

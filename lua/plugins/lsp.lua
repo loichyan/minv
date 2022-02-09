@@ -43,28 +43,29 @@ function M.setup(preset)
 
   --- Set keymaps.
   local function set_keymaps(buf)
-    local map = utils.make_buf_map(buf)
-    local km = preset.keymaps
-    map("n", km.hover, "<Cmd>lua vim.lsp.buf.hover()<CR>")
-    map("n", km.signature_help, "<Cmd>lua vim.lsp.buf.signature_help()<CR>")
-    map(
-      "n",
-      km.show_line_diagnostics,
-      string.format(
-        [[<Cmd>lua vim.lsp.diagnostic.show_line_diagnostics({ border = "%s" })<CR>]],
-        preset.options.popup_border
-      )
-    )
-    map("n", km.definition, "<Cmd>lua vim.lsp.buf.definition()<CR>")
-    map("n", km.declaration, "<Cmd>lua vim.lsp.buf.declaration()<CR>")
-    map("n", km.implementation, "<Cmd>Trouble lsp_implementations<CR>")
-    map("n", km.references, "<Cmd>Trouble lsp_references<CR>")
-    map("n", km.document_diagnostics, "<Cmd>Trouble document_diagnostics<CR>")
-    map("n", km.workspace_diagnostics, "<Cmd>Trouble workspace_diagnostics<CR>")
-    map("n", km.goto_next, "<Cmd>lua vim.lsp.diagnostic.goto_next()<CR>")
-    map("n", km.goto_prev, "<Cmd>lua vim.lsp.diagnostic.goto_prev()<CR>")
-    map("n", km.formatting, "<Cmd>lua vim.lsp.buf.formatting()<CR>")
-    map("n", km.rename, "<Cmd>lua vim.lsp.buf.rename()<CR>")
+    local keymaps = preset.keymaps
+    utils.keymaps({
+      buffer = buf,
+      { keymaps.hover, "<Cmd>lua vim.lsp.buf.hover()<CR>" },
+      { keymaps.signature_help, "<Cmd>lua vim.lsp.buf.signature_help()<CR>" },
+      {
+        keymaps.show_line_diagnostics,
+        string.format(
+          [[<Cmd>lua vim.lsp.diagnostic.show_line_diagnostics({ border = "%s" })<CR>]],
+          preset.options.popup_border
+        ),
+      },
+      { keymaps.definition, "<Cmd>lua vim.lsp.buf.definition()<CR>" },
+      { keymaps.declaration, "<Cmd>lua vim.lsp.buf.declaration()<CR>" },
+      { keymaps.implementation, "<Cmd>Trouble lsp_implementations<CR>" },
+      { keymaps.references, "<Cmd>Trouble lsp_references<CR>" },
+      { keymaps.document_diagnostics, "<Cmd>Trouble document_diagnostics<CR>" },
+      { keymaps.workspace_diagnostics, "<Cmd>Trouble workspace_diagnostics<CR>" },
+      { keymaps.goto_next, "<Cmd>lua vim.lsp.diagnostic.goto_next()<CR>" },
+      { keymaps.goto_prev, "<Cmd>lua vim.lsp.diagnostic.goto_prev()<CR>" },
+      { keymaps.formatting, "<Cmd>lua vim.lsp.buf.formatting()<CR>" },
+      { keymaps.rename, "<Cmd>lua vim.lsp.buf.rename()<CR>" },
+    })
   end
 
   local function make_sources()

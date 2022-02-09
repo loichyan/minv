@@ -1,4 +1,5 @@
-local M = {
+local M = {}
+local _M = {
   --- Registered functions.
   _registered_funcs = {},
   --- Registered keys.
@@ -15,6 +16,12 @@ function M.tbl_merge(...)
     end
   end
   return merged
+end
+
+function M.tbl_remove(tbl, key)
+  local val = tbl[key]
+  tbl[key] = nil
+  return val
 end
 
 --- Set Vim options.
@@ -41,70 +48,48 @@ function M.autocmd(event, pat, cmd)
   vim.cmd(string.format("autocmd %s %s %s", event, pat, cmd))
 end
 
---- Flatten modes and lhs values.
----@param mode string|string[]
----@param lhs string|string[]|nil
----@param f function
-function M.flatten_mode_lhs(mode, lhs, f)
-  -- Flatten modes.
-  local modes = {}
-  if type(mode) == "table" then
-    for _, m in pairs(mode) do
-      table.insert(modes, m)
-    end
-  else
-    table.insert(modes, mode)
-  end
-  -- Flatten lhs values.
-  local lhs_vals = {}
-  if type(lhs) == "table" then
-    for _, l in pairs(lhs) do
-      table.insert(lhs_vals, l)
-    end
-  else
-    table.insert(lhs_vals, lhs)
-  end
-  -- Callback.
-  for _, m in pairs(modes) do
-    for _, l in pairs(lhs_vals) do
-      f(m, l)
+function M.make_keymap(options)
+  local opts = M.tbl_merge({ mode = "n", noremap = true, silent = true }, options)
+  local buffer = M.tbl_remove(opts, "buffer")
+  local mode = M.tbl_remove(opts, "mode")
+  local map = vim.api.nvim_set_keymap
+  if opts.buffer ~= nil then
+    map = function(...)
+      vim.api.nvim_buf_set_keymap(buffer, ...)
     end
   end
-end
-
---- Set keymap.
----@param map function
-local function _make_map(map)
-  --- Set keymap.
-  ---@param mode string|string[]
-  ---@param lhs string|string[]|nil
-  ---@param rhs string
-  ---@param opts table|nil
-  local function _map(mode, lhs, rhs, opts)
+  return function(lhs, rhs)
     if lhs == nil then
-      return
+      lhs = {}
+    elseif type(lhs) == "string" then
+      lhs = { lhs }
     end
-    -- Merge options.
-    local options = M.tbl_merge({ noremap = true, silent = true }, opts)
-    -- Set keymap.
-    M.flatten_mode_lhs(mode, lhs, function(m, l)
-      map(m, l, rhs, options)
-    end)
+    for _, l in ipairs(lhs) do
+      if type(rhs) == "string" then
+        map(mode, l, rhs, opts)
+      elseif type(rhs) == "function" then
+        local cmd = string.format([[<Cmd>lua require("utils").call_fn(%d)<CR>]], M.register_fn(rhs))
+        map(mode, l, cmd, opts)
+      end
+    end
   end
-  return _map
 end
 
-local _map = _make_map(vim.api.nvim_set_keymap)
---- Set global mappings.
-function M.map(...)
-  _map(...)
-end
-
---- Return a funtion sets buffer-local mappings.
-function M.make_buf_map(buf)
-  return _make_map(function(...)
-    vim.api.nvim_buf_set_keymap(buf, ...)
-  end)
+--- Set keymaps.
+function M.keymaps(input)
+  local opts = {}
+  local mappings = {}
+  for key, val in pairs(input) do
+    if type(key) == "number" then
+      table.insert(mappings, val)
+    elseif type(key) == "string" then
+      opts[key] = val
+    end
+  end
+  local keymap = M.make_keymap(opts)
+  for _, mapping in ipairs(mappings) do
+    keymap(mapping[1], mapping[2])
+  end
 end
 
 --- Insert `val` to a random position in `tbl`,
@@ -126,19 +111,20 @@ end
 ---@param fn function
 ---@return integer
 function M.register_fn(fn)
-  local registered = M._registered_funcs
+  local registered = _M._registered_funcs
   return _random_insert(registered, fn)
 end
 
 --- Call registered function.
 ---@param id integer
 function M.call_fn(id, ...)
-  M._registered_funcs[id](...)
+  _M._registered_funcs[id](...)
 end
 
 --- Register a `<Plug>` key to the global variable.
+--TODO: rename to `register_key`
 function M._register_key()
-  local registered = M._registered_keys
+  local registered = _M._registered_keys
   local id = _random_insert(registered, true)
   return string.format("<Plug>(_MiNVKeymap#%d)", id)
 end

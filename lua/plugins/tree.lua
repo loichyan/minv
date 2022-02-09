@@ -29,8 +29,10 @@ function M.setup(preset)
     },
   })
   local keymaps = preset.keymaps
-  utils.map("n", keymaps.toggle, "<Cmd>NvimTreeToggle<CR>")
-  utils.map("n", keymaps.focus, "<Cmd>NvimTreeFocus<CR>")
+  utils.keymaps({
+    { keymaps.toggle, "<Cmd>NvimTreeToggle<CR>" },
+    { keymaps.focus, "<Cmd>NvimTreeFocus<CR>" },
+  })
 end
 
 return M

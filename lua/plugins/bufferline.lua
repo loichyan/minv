@@ -39,9 +39,11 @@ function M.setup(preset)
 
   -- Set keymaps.
   local keymaps = preset.keymaps
-  utils.map("n", keymaps.next, "<Cmd>BufferLineCycleNext<CR>")
-  utils.map("n", keymaps.prev, "<Cmd>BufferLineCyclePrev<CR>")
-  utils.map("n", keymaps.close, "<Cmd>bdelete<CR>")
+  utils.keymaps({
+    { keymaps.next, "<Cmd>BufferLineCycleNext<CR>" },
+    { keymaps.prev, "<Cmd>BufferLineCyclePrev<CR>" },
+    { keymaps.close, "<Cmd>bdelete<CR>" },
+  })
 end
 
 return M
