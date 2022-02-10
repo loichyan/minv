@@ -5,6 +5,11 @@ function M.preset()
   local preset = {
     keymaps = {
       close = { "<S-j><S-k>", "<S-k><S-j>" },
+      live_grep = "<Leader>ff",
+      marks = "<Leader>fm",
+      buffers = "<Leader>fb",
+      registers = "<Leader>fr",
+      git_commits = "<Leader>fg",
     },
   }
   return preset
@@ -15,6 +20,7 @@ function M.setup(preset)
   local telescope = require("telescope")
   local utils = require("utils")
 
+  -- Setup telescope.
   telescope.setup({
     extensions = {
       fzf = {
@@ -36,5 +42,14 @@ function M.setup(preset)
       { keymaps.close, "<Esc><Cmd>close!<CR>" },
     })
   end)
+
+  -- Set mappings for telescope commands.
+  utils.keymaps({
+    { keymaps.live_grep, "<Cmd>Telescope live_grep<CR>" },
+    { keymaps.marks, "<Cmd>Telescope marks<CR>" },
+    { keymaps.buffers, "<Cmd>Telescope buffers<CR>" },
+    { keymaps.registers, "<Cmd>Telescope registers<CR>" },
+    { keymaps.git_commits, "<Cmd>Telescope git_commits<CR>" },
+  })
 end
 return M
