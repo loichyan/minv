@@ -114,6 +114,9 @@ end
 ---@param pat string
 ---@param cmd string
 function M.autocmd(event, pat, cmd)
+  if type(cmd) == "function" then
+    cmd = string.format([[lua require("utils").call_fn(%d)]], M.register_fn(cmd))
+  end
   vim.cmd(string.format("autocmd %s %s %s", event, pat, cmd))
 end
 
@@ -135,12 +138,10 @@ function M.make_keymap(options)
       lhs = { lhs }
     end
     for _, l in ipairs(lhs) do
-      if type(rhs) == "string" then
-        map(mode, l, rhs, opts)
-      elseif type(rhs) == "function" then
-        local cmd = string.format([[<Cmd>lua require("utils").call_fn(%d)<CR>]], M.register_fn(rhs))
-        map(mode, l, cmd, opts)
+      if type(rhs) == "function" then
+        rhs = string.format([[<Cmd>lua require("utils").call_fn(%d)<CR>]], M.register_fn(rhs))
       end
+      map(mode, l, rhs, opts)
     end
   end
 end
