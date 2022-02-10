@@ -24,72 +24,37 @@ function M.tbl_remove(tbl, key)
   return val
 end
 
---- Set Vim options.
----@param opts table<string, any>
-function M.o(opts)
-  for k, v in pairs(opts) do
-    vim.o[k] = v
+---@param tbl table
+---@param f function
+---@return any[]
+function M.tbl_to_list(tbl, f)
+  local list = {}
+  for k, v in pairs(tbl) do
+    table.insert(list, f(k, v))
   end
+  return list
 end
 
---- Set Vim globals.
----@param vars table<string, any>
-function M.g(vars)
-  for k, v in pairs(vars) do
-    vim.g[k] = v
+---@param list any[]
+---@return table<any, boolean>
+function M.list_to_set(list)
+  local set = {}
+  for _, v in ipairs(list) do
+    set[v] = true
   end
+  return set
 end
 
---- Auto command.
----@param event string
----@param pat string
----@param cmd string
-function M.autocmd(event, pat, cmd)
-  vim.cmd(string.format("autocmd %s %s %s", event, pat, cmd))
-end
-
-function M.make_keymap(options)
-  local opts = M.tbl_merge({ mode = "n", noremap = true, silent = true }, options)
-  local buffer = M.tbl_remove(opts, "buffer")
-  local mode = M.tbl_remove(opts, "mode")
-  local map = vim.api.nvim_set_keymap
-  if opts.buffer ~= nil then
-    map = function(...)
-      vim.api.nvim_buf_set_keymap(buffer, ...)
+---@param set table<any, boolean>
+---@return any[]
+function M.set_to_list(set)
+  return M.tbl_to_list(set, function(k, v)
+    if v == true then
+      return k
+    else
+      return nil
     end
-  end
-  return function(lhs, rhs)
-    if lhs == nil then
-      lhs = {}
-    elseif type(lhs) == "string" then
-      lhs = { lhs }
-    end
-    for _, l in ipairs(lhs) do
-      if type(rhs) == "string" then
-        map(mode, l, rhs, opts)
-      elseif type(rhs) == "function" then
-        local cmd = string.format([[<Cmd>lua require("utils").call_fn(%d)<CR>]], M.register_fn(rhs))
-        map(mode, l, cmd, opts)
-      end
-    end
-  end
-end
-
---- Set keymaps.
-function M.keymaps(input)
-  local opts = {}
-  local mappings = {}
-  for key, val in pairs(input) do
-    if type(key) == "number" then
-      table.insert(mappings, val)
-    elseif type(key) == "string" then
-      opts[key] = val
-    end
-  end
-  local keymap = M.make_keymap(opts)
-  for _, mapping in ipairs(mappings) do
-    keymap(mapping[1], mapping[2])
-  end
+  end)
 end
 
 --- Insert `val` to a random position in `tbl`,
@@ -128,39 +93,74 @@ function M.register_key()
   return string.format("<Plug>(_MiNVKeymap#%d)", id)
 end
 
----@param tbl table
----@param f function
----@return any[]
-function M.tbl_to_list(tbl, f)
-  local list = {}
-  for k, v in pairs(tbl) do
-    table.insert(list, f(k, v))
+--- Set Vim options.
+---@param opts table<string, any>
+function M.o(opts)
+  for k, v in pairs(opts) do
+    vim.o[k] = v
   end
-  return list
 end
 
----@param tbl table
----@param f function|nil
----@return table
-function M.tbl_map(tbl, f)
-  local mapped = {}
-  for k, v in pairs(tbl) do
-    local k2, v2 = f(k, v)
-    mapped[k2] = v2
+--- Set Vim globals.
+---@param vars table<string, any>
+function M.g(vars)
+  for k, v in pairs(vars) do
+    vim.g[k] = v
   end
-  return mapped
 end
 
----@param set table<any, boolean>
----@return any[]
-function M.set_to_list(set)
-  return M.tbl_to_list(set, function(k, v)
-    if v == true then
-      return k
-    else
-      return nil
+--- Auto command.
+---@param event string
+---@param pat string
+---@param cmd string
+function M.autocmd(event, pat, cmd)
+  vim.cmd(string.format("autocmd %s %s %s", event, pat, cmd))
+end
+
+---@param options table
+function M.make_keymap(options)
+  local opts = M.tbl_merge({ mode = "n", noremap = true, silent = true }, options)
+  local buffer = M.tbl_remove(opts, "buffer")
+  local mode = M.tbl_remove(opts, "mode")
+  local map = vim.api.nvim_set_keymap
+  if opts.buffer ~= nil then
+    map = function(...)
+      vim.api.nvim_buf_set_keymap(buffer, ...)
     end
-  end)
+  end
+  return function(lhs, rhs)
+    if lhs == nil then
+      lhs = {}
+    elseif type(lhs) == "string" then
+      lhs = { lhs }
+    end
+    for _, l in ipairs(lhs) do
+      if type(rhs) == "string" then
+        map(mode, l, rhs, opts)
+      elseif type(rhs) == "function" then
+        local cmd = string.format([[<Cmd>lua require("utils").call_fn(%d)<CR>]], M.register_fn(rhs))
+        map(mode, l, cmd, opts)
+      end
+    end
+  end
+end
+
+--- Set keymaps.
+---@param input table
+function M.keymaps(input)
+  local opts = {}
+  local mappings = {}
+  for key, val in pairs(input) do
+    if type(key) == "number" then
+      table.insert(mappings, val)
+    elseif type(key) == "string" then
+      opts[key] = val
+    end
+  end
+  local keymap = M.make_keymap(opts)
+  for _, mapping in ipairs(mappings) do
+    keymap(mapping[1], mapping[2])
+  end
 end
 
 return M

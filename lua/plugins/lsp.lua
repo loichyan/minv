@@ -103,12 +103,7 @@ function M.setup(preset)
     }
   end
 
-  local installed_servers = utils.tbl_map(
-    lsp_installer_servers.get_installed_server_names(),
-    function(_, v)
-      return v, true
-    end
-  )
+  local installed_servers = utils.list_to_set(lsp_installer_servers.get_installed_server_names())
   -- Install not installed servers.
   for k, v in pairs(preset.install) do
     if v and not installed_servers[k] then
