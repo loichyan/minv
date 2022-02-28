@@ -3,8 +3,20 @@ local M = {}
 function M.preset()
   ---@class MiNVPresetBufferline
   local preset = {
-    options = {
-      show_close_icon = false,
+    setup = {
+      options = {
+        diagnostics = "nvim_lsp",
+        offsets = {
+          {
+            filetype = "NvimTree",
+            text = "File Explorer",
+            highlight = "Directory",
+            text_align = "left",
+          },
+        },
+        show_tab_indicators = true,
+        show_close_icon = false,
+      },
     },
     keymaps = {
       prev = "<S-h>",
@@ -21,21 +33,7 @@ function M.setup(preset)
   local utils = require("utils")
 
   -- Setup BufferLine.
-  local opts = preset.options
-  bufferline.setup({
-    options = {
-      diagnostics = "nvim_lsp",
-      offsets = {
-        {
-          filetype = "NvimTree",
-          text = "File Explorer",
-          highlight = "Directory",
-          text_align = "left",
-        },
-      },
-      show_close_icon = opts.show_close_icon,
-    },
-  })
+  bufferline.setup(preset.setup)
 
   -- Set keymaps.
   local keymaps = preset.keymaps
