@@ -23,17 +23,15 @@ function M.preset()
       view = {
         auto_resize = true,
       },
-      filters = {
-        custom = {
-          ".git",
-          ".cache",
-          "node_modules",
-        },
-      },
     },
     keymaps = {
       toggle = "<C-b>",
       focus = "<C-n>",
+    },
+    filters = {
+      [".git"] = true,
+      [".cache"] = true,
+      ["node_modules"] = true,
     },
   }
   return preset
@@ -45,7 +43,11 @@ function M.setup(preset)
   local utils = require("utils")
 
   -- Setup nvim-tree.
-  tree.setup(preset.setup)
+  tree.setup(utils.tbl_merge(preset.setup, {
+    filters = {
+      custom = utils.set_to_list(preset.filters),
+    },
+  }))
 
   -- Set keymaps.
   local keymaps = preset.keymaps
