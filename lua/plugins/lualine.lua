@@ -3,8 +3,10 @@ local M = {}
 function M.preset()
   ---@class MiNVPresetLualine
   local preset = {
-    options = {
-      theme = "auto",
+    setup = {
+      options = {
+        theme = "auto",
+      },
     },
     extensions = {
       ["nvim-tree"] = true,
@@ -19,10 +21,10 @@ function M.setup(preset)
   local lualine = require("lualine")
   local utils = require("utils")
 
-  lualine.setup({
-    options = preset.options,
+  -- Setup lualine.
+  lualine.setup(utils.tbl_merge(preset.setup, {
     extensions = utils.set_to_list(preset.extensions),
-  })
+  }))
 end
 
 return M
