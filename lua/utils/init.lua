@@ -36,6 +36,16 @@ function M.tbl_to_list(tbl, f)
 end
 
 ---@param list any[]
+---@return any[]
+function M.list_map(list, f)
+  local mapped = {}
+  for _, v in ipairs(list) do
+    table.insert(mapped, f(v))
+  end
+  return mapped
+end
+
+---@param list any[]
 ---@return table<any, boolean>
 function M.list_to_set(list)
   local set = {}
