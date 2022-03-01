@@ -7,10 +7,6 @@ function M.preset()
       disable_netrw = true,
       auto_close = false,
       update_cwd = true,
-      update_to_buf_dir = {
-        enable = true,
-        auto_open = true,
-      },
       update_focused_file = {
         enable = true,
         update_cwd = true,
