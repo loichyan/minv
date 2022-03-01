@@ -83,6 +83,12 @@ function M.setup(packer, builtin, extra)
       end,
     })
     use({
+      "rcarriga/nvim-notify",
+      config = function()
+        require("plugins.notify").setup(_MINV.builtin.notify)
+      end,
+    })
+    use({
       "goolord/alpha-nvim",
       config = function()
         require("plugins.alpha").setup(_MINV.builtin.alpha)

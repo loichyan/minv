@@ -9,6 +9,7 @@ function M.preset()
     comment = require("plugins.comment").preset(),
     telescope = require("plugins.telescope").preset(),
     todo = require("plugins.todo").preset(),
+    notify = require("plugins.notify").preset(),
     alpha = require("plugins.alpha").preset(),
     gitsigns = require("plugins.gitsigns").preset(),
     bufferline = require("plugins.bufferline").preset(),

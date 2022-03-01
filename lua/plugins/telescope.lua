@@ -10,6 +10,7 @@ function M.preset()
       buffers = "<Leader>fb",
       registers = "<Leader>fr",
       git_commits = "<Leader>fg",
+      notify = "<Leader>fn",
     },
   }
   return preset
@@ -50,6 +51,7 @@ function M.setup(preset)
     { keymaps.buffers, "<Cmd>Telescope buffers<CR>" },
     { keymaps.registers, "<Cmd>Telescope registers<CR>" },
     { keymaps.git_commits, "<Cmd>Telescope git_commits<CR>" },
+    { keymaps.notify, "<Cmd>Telescope notify<CR>" },
   })
 end
 return M
