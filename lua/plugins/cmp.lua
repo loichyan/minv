@@ -153,8 +153,11 @@ function M.setup(preset)
     end)
   end
 
-  -- Setup luasnip
+  -- Setup luasnip.
   luasnip.config.setup(preset.setup.luasnip)
+
+  -- Load friendly snippets.
+  require("luasnip.loaders.from_vscode").lazy_load()
 
   -- Setup nvim-cmp.
   cmp.setup(utils.tbl_merge(preset.setup.cmp, {

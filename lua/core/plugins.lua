@@ -43,6 +43,7 @@ function M.setup(packer, builtin, extra)
     -- Completion --
     ----------------
     use({ "L3MON4D3/LuaSnip" })
+    use({ "rafamadriz/friendly-snippets" })
     use({ "windwp/nvim-autopairs" })
     use({
       "hrsh7th/nvim-cmp",
