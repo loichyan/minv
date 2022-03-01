@@ -3,6 +3,7 @@ local M = {}
 function M.preset()
   ---@class MiNVPresetComment
   local preset = {
+    setup = {},
     keymaps = {
       toggle_line = "<Leader>/",
       toggle_block = "<Leader>a/",
@@ -16,11 +17,12 @@ function M.setup(preset)
   local comment = require("Comment")
   local utils = require("utils")
 
+  -- Setup comment.
   local k_tg_line = utils.register_key()
   local k_tg_block = utils.register_key()
   local k_op_line = utils.register_key()
   local k_op_block = utils.register_key()
-  comment.setup({
+  comment.setup(utils.tbl_merge(preset.setup, {
     toggler = {
       line = k_tg_line,
       block = k_tg_block,
@@ -34,7 +36,9 @@ function M.setup(preset)
       extra = false,
       extended = false,
     },
-  })
+  }))
+
+  -- Set keymaps.
   local keymaps = preset.keymaps
   utils.keymaps({
     noremap = false,
