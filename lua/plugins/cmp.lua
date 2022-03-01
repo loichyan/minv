@@ -1,8 +1,23 @@
 local M = {}
 
 function M.preset()
+  local cmp = require("cmp")
+
   ---@class MiNVPresetCmp
   local preset = {
+    setup = {
+      cmp = {
+        confirmation = {
+          default_behavior = cmp.ConfirmBehavior.Replace,
+        },
+      },
+      luasnip = {
+        histroy = false,
+      },
+      autopairs = {
+        check_ts = true,
+      },
+    },
     keymaps = {
       scroll_down = "<C-f>",
       scroll_up = "<C-d>",
@@ -42,27 +57,28 @@ function M.preset()
         Variable = " ",
       },
       menu = {
-        luasnip = "[Snippet]",
+        luasnip = "[SNIP]",
         nvim_lsp = "[LSP]",
-        nvim_lua = "[Lua]",
+        nvim_lua = "[LUA]",
         buffer = "[BUF]",
-        path = "[Path]",
+        path = "[PATH]",
       },
       dup = {
         luasnip = 1,
         nvim_lsp = 1,
-        nvim_lua = 0,
+        nvim_lua = 1,
         buffer = 0,
         path = 1,
       },
       dup_default = 0,
+      sources = {},
     },
     sources = {
-      luasnip = true,
-      nvim_lsp = true,
-      nvim_lua = true,
-      buffer = true,
-      path = true,
+      "luasnip",
+      "nvim_lsp",
+      "path",
+      "nvim_lua",
+      "buffer",
     },
   }
   return preset
@@ -78,29 +94,31 @@ function M.setup(preset)
 
   -- Make keymaps.
   local function make_mapping()
+    local function check_backspace()
+      local col = vim.fn.col(".") - 1
+      return col == 0 or vim.fn.getline("."):sub(col, col):match("%s")
+    end
+    local function locally_jumpable(dir)
+      return luasnip.jumpable(dir) and luasnip.in_snippet()
+    end
     -- Functions to handle keymap.
     local map_fn = {
       scroll_up = cmp.mapping.scroll_docs(-4),
       scroll_down = cmp.mapping.scroll_docs(4),
       complete = cmp.mapping.complete(),
-      confirm = cmp.mapping(function(fallback)
-        if cmp.visible() and cmp.confirm({ select = false }) then
-          if luasnip.jumpable() then
-            luasnip.jump(1)
-          end
-          return
-        elseif luasnip.jumpable() and luasnip.jump(1) then
-          return
-        else
-          fallback()
-        end
-      end),
+      confirm = cmp.mapping.confirm({
+        select = true,
+      }),
       close = cmp.mapping.close(),
       select_next = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_next_item()
-        elseif luasnip.expand_or_locally_jumpable() then
-          luasnip.expand_or_jump()
+        elseif luasnip.expandable() then
+          luasnip.expand()
+        elseif locally_jumpable(1) then
+          luasnip.jump(1)
+        elseif check_backspace() then
+          fallback()
         else
           fallback()
         end
@@ -108,8 +126,10 @@ function M.setup(preset)
       select_prev = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_prev_item()
-        elseif luasnip.jumpable(-1) then
+        elseif locally_jumpable(-1) then
           luasnip.jump(-1)
+        elseif check_backspace() then
+          fallback()
         else
           fallback()
         end
@@ -118,31 +138,26 @@ function M.setup(preset)
     -- Collect mappings.
     local mappings = {}
     for k, f in pairs(map_fn) do
-      local map_key = preset.keymaps[k]
-      if type(map_key) == "table" then
-        for _, key in pairs(map_key) do
-          mappings[key] = f
-        end
-      else
-        mappings[map_key] = f
-      end
+      local lhs = preset.keymaps[k]
+      utils.foreach_lhs(lhs, function(l)
+        mappings[l] = f
+      end)
     end
     return mappings
   end
 
   --- Make sources.
   local function make_sources()
-    return utils.tbl_to_list(preset.sources, function(k, v)
-      if v == true then
-        return { name = k }
-      else
-        return nil
-      end
+    return utils.list_map(preset.sources, function(v)
+      return { name = v }
     end)
   end
 
+  -- Setup luasnip
+  luasnip.config.setup(preset.setup.luasnip)
+
   -- Setup nvim-cmp.
-  cmp.setup({
+  cmp.setup(utils.tbl_merge(preset.setup.cmp, {
     snippet = {
       expand = function(args)
         luasnip.lsp_expand(args.body)
@@ -159,12 +174,10 @@ function M.setup(preset)
     },
     mapping = make_mapping(),
     sources = make_sources(),
-  })
+  }))
 
   -- Setup autopairs.
-  autopairs.setup({
-    check_ts = true,
-  })
+  autopairs.setup(preset.setup.autopairs)
   cmp.event:on("confirm_done", cmp_autopiars.on_confirm_done())
 end
 

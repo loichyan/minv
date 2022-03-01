@@ -18,6 +18,9 @@ function M.tbl_merge(...)
   return merged
 end
 
+--- Remove a key and return its val.
+---@param tbl table
+--=@param key any
 function M.tbl_remove(tbl, key)
   local val = tbl[key]
   tbl[key] = nil
@@ -119,15 +122,43 @@ function M.g(vars)
   end
 end
 
+--- Make command strings.
+---@param cmd string|function
+---@param is_map boolean|nil
+---@return string
+function M.cmd(cmd, is_map)
+  if type(cmd) == "function" then
+    local cmd_str = string.format([[lua require("utils").call_fn(%d)]], M.register_fn(cmd))
+    if is_map == true then
+      return string.format("<Cmd>%s<CR>", cmd_str)
+    else
+      return cmd_str
+    end
+  else
+    return cmd
+  end
+end
+
+--- Iterate over each `lhs`.
+---@param lhs string|string[]|nil
+function M.foreach_lhs(lhs, f)
+  if lhs == nil then
+    return
+  elseif type(lhs) == "string" then
+    f(lhs)
+  else
+    for _, v in ipairs(lhs) do
+      f(v)
+    end
+  end
+end
+
 --- Auto command.
 ---@param event string
 ---@param pat string
 ---@param cmd string
 function M.autocmd(event, pat, cmd)
-  if type(cmd) == "function" then
-    cmd = string.format([[lua require("utils").call_fn(%d)]], M.register_fn(cmd))
-  end
-  vim.cmd(string.format("autocmd %s %s %s", event, pat, cmd))
+  vim.cmd(string.format("autocmd %s %s %s", event, pat, M.cmd(cmd)))
 end
 
 ---@param options table
@@ -142,17 +173,9 @@ function M.make_keymap(options)
     end
   end
   return function(lhs, rhs)
-    if lhs == nil then
-      lhs = {}
-    elseif type(lhs) == "string" then
-      lhs = { lhs }
-    end
-    for _, l in ipairs(lhs) do
-      if type(rhs) == "function" then
-        rhs = string.format([[<Cmd>lua require("utils").call_fn(%d)<CR>]], M.register_fn(rhs))
-      end
-      map(mode, l, rhs, opts)
-    end
+    M.foreach_lhs(lhs, function(l)
+      map(mode, l, M.cmd(rhs, true), opts)
+    end)
   end
 end
 
