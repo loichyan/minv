@@ -127,6 +127,8 @@ function M.setup(packer, builtin, extra)
     ----------
     -- Misc --
     ----------
+    -- Faster filetypes.
+    use({ "nathom/filetype.nvim" })
     -- Auto adjusts `shiftwidth` and `expandtab`
     use({ "tpope/vim-sleuth" })
     -------------------
