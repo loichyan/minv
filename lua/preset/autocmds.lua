@@ -21,6 +21,7 @@ function M.preset()
       ["lspinfo"] = true,
       ["TelescopePrompt"] = true,
       ["null-ls-info"] = true,
+      ["git"] = true,
     },
     --- Remove trailing spaces.
     trim_spaces = true,
