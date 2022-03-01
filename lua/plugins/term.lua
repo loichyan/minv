@@ -6,8 +6,6 @@ function M.preset()
     keymaps = {
       --- Toggle terminal.
       toggle = "<C-t>",
-      --- Escape terminal mode.
-      esc_terminal = "<Esc>",
     },
   }
   return preset
@@ -33,11 +31,6 @@ function M.setup(preset)
       buffer = buf,
       noremap = false,
       { keymaps.toggle, k_toggle },
-    })
-    utils.keymaps({
-      mode = "t",
-      buffer = buf,
-      { keymaps.esc_terminal, "<C-\\><C-n>" },
     })
   end)
   local cmd = string.format([[lua require("utils").call_fn(%d)]], set_map)
