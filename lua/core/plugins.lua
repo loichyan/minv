@@ -76,7 +76,12 @@ function M.setup(packer, builtin, extra)
     --------
     -- UI --
     --------
-    -- TODO: add `folke/todo-comments.nvim`
+    use({
+      "folke/todo-comments.nvim",
+      config = function()
+        require("plugins.todo").setup(_MINV.builtin.todo)
+      end,
+    })
     use({
       "goolord/alpha-nvim",
       config = function()
