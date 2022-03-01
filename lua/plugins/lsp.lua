@@ -92,16 +92,6 @@ function M.setup(preset)
     set_keymaps(buf)
   end
   local capabilities = cmp_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
-  local function make_opts(settings)
-    return {
-      on_attach = on_attach,
-      capabilities = capabilities,
-      flags = {
-        debounce_text_changes = 150,
-      },
-      settings = settings,
-    }
-  end
 
   local installed_servers = utils.list_to_set(lsp_installer_servers.get_installed_server_names())
   -- Install not installed servers.
@@ -111,16 +101,35 @@ function M.setup(preset)
     end
   end
 
+  local function on_server_setup(name, setup)
+    local opts = {
+      on_attach = on_attach,
+      capabilities = capabilities,
+      flags = {
+        debounce_text_changes = 150,
+      },
+      settings = preset.server_settings[name],
+    }
+    if name == "sumneko_lua" then
+      local luadev = require("lua-dev").setup({ lspconfig = opts })
+      setup(luadev)
+    else
+      setup(opts)
+    end
+  end
+
   -- Setup servers not installed.
-  for k, v in pairs(preset.server_settings) do
-    if installed_servers[k] == nil then
-      lspconfig[k].setup(make_opts(v))
+  for name, _ in pairs(preset.server_settings) do
+    if installed_servers[name] == nil then
+      on_server_setup(name, lspconfig[name].setup)
     end
   end
 
   -- Setup installed servers.
   lsp_installer.on_server_ready(function(server)
-    server:setup(make_opts(preset.server_settings[server.name]))
+    on_server_setup(server.name, function(...)
+      server:setup(...)
+    end)
   end)
 
   -- Setup null-ls.

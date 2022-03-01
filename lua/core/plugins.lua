@@ -38,6 +38,7 @@ function M.setup(packer, builtin, extra)
     use({ "jose-elias-alvarez/null-ls.nvim" })
     use({ "williamboman/nvim-lsp-installer" })
     use({ "folke/trouble.nvim" })
+    use({ "folke/lua-dev.nvim" })
     ----------------
     -- Completion --
     ----------------
@@ -51,7 +52,6 @@ function M.setup(packer, builtin, extra)
     })
     use({ "saadparwaiz1/cmp_luasnip" })
     use({ "hrsh7th/cmp-nvim-lsp" })
-    use({ "hrsh7th/cmp-nvim-lua" })
     use({ "hrsh7th/cmp-buffer" })
     use({ "hrsh7th/cmp-path" })
     -------------
