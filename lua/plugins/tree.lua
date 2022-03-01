@@ -5,7 +5,7 @@ function M.preset()
   local preset = {
     setup = {
       disable_netrw = true,
-      auto_close = true,
+      auto_close = false,
       update_cwd = true,
       update_to_buf_dir = {
         enable = true,
