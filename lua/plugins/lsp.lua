@@ -5,7 +5,7 @@ function M.preset()
   local preset = {
     setup = {
       lsp = {
-        border = "single",
+        border = "rounded",
       },
       lspconfig = {
         flags = {

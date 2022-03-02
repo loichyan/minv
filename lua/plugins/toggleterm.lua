@@ -6,7 +6,7 @@ function M.preset()
     setup = {
       direction = "float",
       float_opts = {
-        border = "single",
+        border = "rounded",
       },
     },
     keymaps = {

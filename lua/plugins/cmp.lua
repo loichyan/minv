@@ -7,6 +7,9 @@ function M.preset()
   local preset = {
     setup = {
       cmp = {
+        documentation = {
+          border = "rounded",
+        },
         confirmation = {
           default_behavior = cmp.ConfirmBehavior.Replace,
         },
