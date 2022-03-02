@@ -33,6 +33,7 @@ function M.setup(preset)
     },
   })
   telescope.load_extension("fzf")
+  telescope.load_extension("notify")
 
   -- Set mappings in TelescopePrompt.
   local keymaps = preset.keymaps
