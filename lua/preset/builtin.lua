@@ -6,7 +6,7 @@ function M.preset()
     treesitter = require("plugins.treesitter").preset(),
     cmp = require("plugins.cmp").preset(),
     lsp = require("plugins.lsp").preset(),
-    comment = require("plugins.comment").preset(),
+    comments = require("plugins.comments").preset(),
     telescope = require("plugins.telescope").preset(),
     alpha = require("plugins.alpha").preset(),
     gitsigns = require("plugins.gitsigns").preset(),

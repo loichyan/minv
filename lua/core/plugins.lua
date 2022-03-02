@@ -157,7 +157,7 @@ function M.setup(packer, builtin, extra)
     use({
       "numToStr/Comment.nvim",
       config = function()
-        require("plugins.comment").setup(_MINV.builtin.comment)
+        require("plugins.comments").setup(_MINV.builtin.comments)
       end,
     })
     -- Faster filetypes.
