@@ -24,13 +24,27 @@ function M.setup(packer, builtin, extra)
       end,
     })
     local ts = builtin.treesitter
-    use({ "andymass/vim-matchup", disable = not ts.modules.matchup.enable })
-    use({ "p00f/nvim-ts-rainbow", disable = not ts.modules.rainbow.enable })
+    use({
+      "andymass/vim-matchup",
+      requires = "nvim-treesitter/nvim-treesitter",
+      disable = not ts.modules.matchup.enable,
+    })
+    use({
+      "p00f/nvim-ts-rainbow",
+      requires = "nvim-treesitter/nvim-treesitter",
+      disable = not ts.modules.rainbow.enable,
+    })
     ---------
     -- LSP --
     ---------
     use({
       "neovim/nvim-lspconfig",
+      requires = {
+        "jose-elias-alvarez/null-ls.nvim",
+        "williamboman/nvim-lsp-installer",
+        "folke/trouble.nvim",
+        "folke/lua-dev.nvim",
+      },
       config = function()
         require("plugins.lsp").setup(_MINV.builtin.lsp)
       end,
@@ -42,33 +56,31 @@ function M.setup(packer, builtin, extra)
     ----------------
     -- Completion --
     ----------------
-    use({ "L3MON4D3/LuaSnip" })
-    use({ "rafamadriz/friendly-snippets" })
-    use({ "windwp/nvim-autopairs" })
     use({
       "hrsh7th/nvim-cmp",
+      requires = { "L3MON4D3/LuaSnip" },
       config = function()
         require("plugins.cmp").setup(_MINV.builtin.cmp)
       end,
     })
-    use({ "saadparwaiz1/cmp_luasnip" })
-    use({ "hrsh7th/cmp-nvim-lsp" })
-    use({ "hrsh7th/cmp-buffer" })
-    use({ "hrsh7th/cmp-path" })
-    -------------
-    -- Comment --
-    -------------
+    -- Completion sources
+    use({ "saadparwaiz1/cmp_luasnip", requires = "hrsh7th/nvim-cmp" })
+    use({ "hrsh7th/cmp-nvim-lsp", requires = "hrsh7th/nvim-cmp" })
+    use({ "hrsh7th/cmp-buffer", requires = "hrsh7th/nvim-cmp" })
+    use({ "hrsh7th/cmp-path", requires = "hrsh7th/nvim-cmp" })
+    -- Snippets
     use({
-      "numToStr/Comment.nvim",
-      config = function()
-        require("plugins.comment").setup(_MINV.builtin.comment)
-      end,
+      "L3MON4D3/LuaSnip",
+      requires = { "rafamadriz/friendly-snippets", "windwp/nvim-autopairs" },
     })
+    use({ "rafamadriz/friendly-snippets" })
+    use({ "windwp/nvim-autopairs" })
     ---------------
     -- Telescope --
     ---------------
     use({
       "nvim-telescope/telescope.nvim",
+      requires = { "nvim-telescope/telescope-fzf-native.nvim", "rcarriga/nvim-notify" },
       config = function()
         require("plugins.telescope").setup(_MINV.builtin.telescope)
       end,
@@ -84,21 +96,15 @@ function M.setup(packer, builtin, extra)
       end,
     })
     use({
-      "lewis6991/gitsigns.nvim",
+      "nvim-lualine/lualine.nvim",
       config = function()
-        require("plugins.gitsigns").setup(_MINV.builtin.gitsigns)
+        require("plugins.lualine").setup(_MINV.builtin.lualine)
       end,
     })
     use({
       "akinsho/bufferline.nvim",
       config = function()
         require("plugins.bufferline").setup(_MINV.builtin.bufferline)
-      end,
-    })
-    use({
-      "nvim-lualine/lualine.nvim",
-      config = function()
-        require("plugins.lualine").setup(_MINV.builtin.lualine)
       end,
     })
     use({
@@ -113,18 +119,32 @@ function M.setup(packer, builtin, extra)
         require("plugins.toggleterm").setup(_MINV.builtin.toggleterm)
       end,
     })
-    use({ "folke/todo-comments.nvim" })
-    use({ "rcarriga/nvim-notify" })
-    use({ "j-hui/fidget.nvim" })
     use({
       "folke/tokyonight.nvim",
       config = function()
         require("plugins.ui").setup(_MINV.builtin.ui)
       end,
     })
+    use({ "folke/todo-comments.nvim" })
+    use({ "rcarriga/nvim-notify" })
+    use({ "j-hui/fidget.nvim" })
     ----------
     -- Misc --
     ----------
+    -- Gitsigns
+    use({
+      "lewis6991/gitsigns.nvim",
+      config = function()
+        require("plugins.gitsigns").setup(_MINV.builtin.gitsigns)
+      end,
+    })
+    -- Comments
+    use({
+      "numToStr/Comment.nvim",
+      config = function()
+        require("plugins.comment").setup(_MINV.builtin.comment)
+      end,
+    })
     -- Faster filetypes.
     use({ "nathom/filetype.nvim" })
     -- Auto adjusts `shiftwidth` and `expandtab`
