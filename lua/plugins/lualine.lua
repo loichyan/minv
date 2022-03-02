@@ -40,7 +40,6 @@ function M.preset()
         },
         lualine_x = {
           components.diagnostics,
-          components.lsp,
         },
         lualine_y = {
           components.encoding,
