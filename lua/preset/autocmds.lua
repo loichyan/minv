@@ -26,6 +26,8 @@ function M.preset()
     },
     --- Remove trailing spaces.
     trim_spaces = true,
+    --- Auto resize windows when changed.
+    auto_resize = true,
   }
   return preset
 end
@@ -60,6 +62,7 @@ function M.setup(preset)
     au("FileType", ft, "nnoremap <silent> <buffer> q <Cmd>close!<CR>")
   end
   au_if(preset.trim_spaces, "BufWritePre", "*", [[silent %s/\s\+$//e]])
+  au_if(preset.auto_resize, "VimResized", "*", "wincmd =")
 end
 
 return M
