@@ -38,6 +38,16 @@ function M.tbl_to_list(tbl, f)
   return list
 end
 
+--- Create a list with specified size.
+---@param size number
+function M.list_new(size)
+  local list = {}
+  for i = 1, size + 1 do
+    table.insert(list, i)
+  end
+  return list
+end
+
 ---@param list any[]
 ---@return any[]
 function M.list_map(list, f)

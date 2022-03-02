@@ -59,26 +59,23 @@ function M.preset()
       menu = {
         luasnip = "[SNIP]",
         nvim_lsp = "[LSP]",
-        nvim_lua = "[LUA]",
-        buffer = "[BUF]",
         path = "[PATH]",
+        buffer = "[BUF]",
       },
       dup = {
         luasnip = 1,
         nvim_lsp = 1,
-        nvim_lua = 1,
-        buffer = 0,
         path = 1,
+        buffer = 0,
       },
       dup_default = 0,
       sources = {},
     },
     sources = {
-      "luasnip",
-      "nvim_lsp",
-      "path",
-      "nvim_lua",
-      "buffer",
+      ["luasnip"] = 1,
+      ["nvim_lsp"] = 2,
+      ["path"] = 3,
+      ["buffer"] = 4,
     },
   }
   return preset
@@ -148,9 +145,11 @@ function M.setup(preset)
 
   --- Make sources.
   local function make_sources()
-    return utils.list_map(preset.sources, function(v)
-      return { name = v }
-    end)
+    local sources = utils.list_new(#preset.sources)
+    for k, v in pairs(preset.sources) do
+      sources[v] = { name = k }
+    end
+    return sources
   end
 
   -- Setup luasnip.
