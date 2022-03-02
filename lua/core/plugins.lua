@@ -78,18 +78,6 @@ function M.setup(packer, builtin, extra)
     -- UI --
     --------
     use({
-      "folke/todo-comments.nvim",
-      config = function()
-        require("plugins.todo").setup(_MINV.builtin.todo)
-      end,
-    })
-    use({
-      "rcarriga/nvim-notify",
-      config = function()
-        require("plugins.notify").setup(_MINV.builtin.notify)
-      end,
-    })
-    use({
       "goolord/alpha-nvim",
       config = function()
         require("plugins.alpha").setup(_MINV.builtin.alpha)
@@ -114,12 +102,6 @@ function M.setup(packer, builtin, extra)
       end,
     })
     use({
-      "j-hui/fidget.nvim",
-      config = function()
-        require("fidget").setup({})
-      end,
-    })
-    use({
       "kyazdani42/nvim-tree.lua",
       config = function()
         require("plugins.tree").setup(_MINV.builtin.tree)
@@ -131,10 +113,13 @@ function M.setup(packer, builtin, extra)
         require("plugins.term").setup(_MINV.builtin.term)
       end,
     })
+    use({ "folke/todo-comments.nvim" })
+    use({ "rcarriga/nvim-notify" })
+    use({ "j-hui/fidget.nvim" })
     use({
       "folke/tokyonight.nvim",
       config = function()
-        require("plugins.tokyonight").setup(_MINV.builtin.tokyonight)
+        require("plugins.ui").setup(_MINV.builtin.ui)
       end,
     })
     ----------

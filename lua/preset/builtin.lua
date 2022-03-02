@@ -8,15 +8,13 @@ function M.preset()
     lsp = require("plugins.lsp").preset(),
     comment = require("plugins.comment").preset(),
     telescope = require("plugins.telescope").preset(),
-    todo = require("plugins.todo").preset(),
-    notify = require("plugins.notify").preset(),
     alpha = require("plugins.alpha").preset(),
     gitsigns = require("plugins.gitsigns").preset(),
     bufferline = require("plugins.bufferline").preset(),
     lualine = require("plugins.lualine").preset(),
     tree = require("plugins.tree").preset(),
     term = require("plugins.term").preset(),
-    tokyonight = require("plugins.tokyonight").preset(),
+    ui = require("plugins.ui").preset(),
   }
   return preset
 end
