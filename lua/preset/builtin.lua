@@ -13,7 +13,7 @@ function M.preset()
     bufferline = require("plugins.bufferline").preset(),
     lualine = require("plugins.lualine").preset(),
     tree = require("plugins.tree").preset(),
-    term = require("plugins.term").preset(),
+    toggleterm = require("plugins.toggleterm").preset(),
     ui = require("plugins.ui").preset(),
   }
   return preset

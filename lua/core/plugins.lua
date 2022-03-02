@@ -110,7 +110,7 @@ function M.setup(packer, builtin, extra)
     use({
       "akinsho/toggleterm.nvim",
       config = function()
-        require("plugins.term").setup(_MINV.builtin.term)
+        require("plugins.toggleterm").setup(_MINV.builtin.toggleterm)
       end,
     })
     use({ "folke/todo-comments.nvim" })
