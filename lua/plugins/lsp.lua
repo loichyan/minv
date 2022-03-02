@@ -3,8 +3,22 @@ local M = {}
 function M.preset()
   ---@class MiNVPresetLsp
   local preset = {
-    options = {
-      popup_border = "single",
+    setup = {
+      lsp = {
+        border = "single",
+      },
+      lspconfig = {
+        flags = {
+          debounce_text_changes = 150,
+        },
+      },
+      null_ls = {
+        debounce = 150,
+      },
+      trouble = {
+        indent_lines = false,
+        auto_close = true,
+      },
     },
     keymaps = {
       hover = "K",
@@ -50,10 +64,7 @@ function M.setup(preset)
       { keymaps.signature_help, "<Cmd>lua vim.lsp.buf.signature_help()<CR>" },
       {
         keymaps.show_line_diagnostics,
-        string.format(
-          [[<Cmd>lua vim.lsp.diagnostic.show_line_diagnostics({ border = "%s" })<CR>]],
-          preset.options.popup_border
-        ),
+        "<Cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>",
       },
       { keymaps.definition, "<Cmd>lua vim.lsp.buf.definition()<CR>" },
       { keymaps.declaration, "<Cmd>lua vim.lsp.buf.declaration()<CR>" },
@@ -102,14 +113,11 @@ function M.setup(preset)
   end
 
   local function on_server_setup(name, setup)
-    local opts = {
+    local opts = utils.tbl_merge(preset.setup.lspconfig, {
       on_attach = on_attach,
       capabilities = capabilities,
-      flags = {
-        debounce_text_changes = 150,
-      },
       settings = preset.server_settings[name],
-    }
+    })
     if name == "sumneko_lua" then
       local luadev = require("lua-dev").setup({ lspconfig = opts })
       setup(luadev)
@@ -133,20 +141,19 @@ function M.setup(preset)
   end)
 
   -- Setup null-ls.
-  null_ls.setup({
-    debounce = 150,
+  null_ls.setup(utils.tbl_merge(preset.setup.null_ls, {
     on_attach = on_attach,
     sources = make_sources(),
-  })
+  }))
 
   -- Setup trouble.
-  trouble.setup({})
+  trouble.setup(preset.setup.trouble)
 
   -- Set border of popup windows.
   local open_float_preview = vim.lsp.util.open_floating_preview
   vim.lsp.util.open_floating_preview = function(contents, syntax, opts, ...)
     opts = opts or {}
-    opts.border = preset.options.popup_border
+    opts.border = preset.setup.lsp.border
     return open_float_preview(contents, syntax, opts, ...)
   end
 end
