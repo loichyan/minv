@@ -122,12 +122,27 @@ function M.setup(packer, builtin, extra)
     use({
       "folke/tokyonight.nvim",
       config = function()
-        require("plugins.ui").setup(_MINV.builtin.ui)
+        require("plugins.tokyonight").setup(_MINV.builtin.tokyonight)
       end,
     })
-    use({ "folke/todo-comments.nvim" })
-    use({ "rcarriga/nvim-notify" })
-    use({ "j-hui/fidget.nvim" })
+    use({
+      "folke/todo-comments.nvim",
+      config = function()
+        require("plugins.todo_comments").setup(_MINV.builtin.todo_comments)
+      end,
+    })
+    use({
+      "rcarriga/nvim-notify",
+      config = function()
+        require("plugins.notify").setup(_MINV.builtin.notify)
+      end,
+    })
+    use({
+      "j-hui/fidget.nvim",
+      config = function()
+        require("plugins.fidget").setup(_MINV.builtin.fidget)
+      end,
+    })
     ----------
     -- Misc --
     ----------

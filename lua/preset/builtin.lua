@@ -14,7 +14,10 @@ function M.preset()
     lualine = require("plugins.lualine").preset(),
     tree = require("plugins.tree").preset(),
     toggleterm = require("plugins.toggleterm").preset(),
-    ui = require("plugins.ui").preset(),
+    notify = require("plugins.notify").preset(),
+    tokyonight = require("plugins.tokyonight").preset(),
+    fidget = require("plugins.fidget").preset(),
+    todo_comments = require("plugins.todo_comments").preset(),
   }
   return preset
 end
