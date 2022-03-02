@@ -114,6 +114,12 @@ function M.setup(packer, builtin, extra)
       end,
     })
     use({
+      "j-hui/fidget.nvim",
+      config = function()
+        require("fidget").setup({})
+      end,
+    })
+    use({
       "kyazdani42/nvim-tree.lua",
       config = function()
         require("plugins.tree").setup(_MINV.builtin.tree)
