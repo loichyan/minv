@@ -9,6 +9,10 @@ function M.setup(packer, builtin, extra)
     -- Packer --
     ------------
     use({ "wbthomason/packer.nvim" })
+    --------------
+    -- Speed up --
+    --------------
+    use({ "lewis6991/impatient.nvim" })
     ----------
     -- Deps --
     ----------
