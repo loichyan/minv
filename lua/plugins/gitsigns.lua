@@ -3,7 +3,7 @@ local M = {}
 function M.preset()
   ---@class MiNVPresetGitsigns
   local preset = {
-    options = {
+    setup = {
       current_line_blame = true,
     },
     keymaps = {
@@ -27,10 +27,8 @@ function M.setup(preset)
   local utils = require("utils")
 
   -- Setup gitsigns.
-  local opts = preset.options
-  gitsigns.setup({
-    current_line_blame = opts.current_line_blame,
-  })
+  gitsigns.setup(preset.setup)
+
   -- Set keymaps.
   local keymaps = preset.keymaps
   utils.keymaps({
