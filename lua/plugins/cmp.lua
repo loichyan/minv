@@ -22,8 +22,8 @@ function M.preset()
       },
     },
     keymaps = {
-      scroll_down = "<C-f>",
-      scroll_up = "<C-d>",
+      scroll_down = "<C-d>",
+      scroll_up = "<C-u>",
       complete = "<C-Space>",
       confirm = "<CR>",
       close = "<C-e>",
