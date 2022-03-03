@@ -42,6 +42,15 @@ function M.setup(packer, builtin, extra)
       requires = "nvim-treesitter/nvim-treesitter",
       disable = not ts.modules.rainbow.enable,
     })
+    -- Comments
+    use({
+      "numToStr/Comment.nvim",
+      requires = "JoosepAlviste/nvim-ts-context-commentstring",
+    })
+    use({
+      "JoosepAlviste/nvim-ts-context-commentstring",
+      requires = "nvim-treesitter/nvim-treesitter",
+    })
     ---------
     -- LSP --
     ---------
@@ -157,17 +166,6 @@ function M.setup(packer, builtin, extra)
       config = function()
         require("plugins.tokyonight").setup(_MINV.builtin.tokyonight)
         pcall(_MINV.builtin.tokyonight.after)
-      end,
-    })
-    ----------
-    -- Misc --
-    ----------
-    -- Comments
-    use({
-      "numToStr/Comment.nvim",
-      config = function()
-        require("plugins.comments").setup(_MINV.builtin.comments)
-        pcall(_MINV.builtin.comments.after)
       end,
     })
     -------------------

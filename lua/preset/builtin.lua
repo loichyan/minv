@@ -15,7 +15,6 @@ function M.preset()
     toggleterm = require("plugins.toggleterm").preset(),
     tokyonight = require("plugins.tokyonight").preset(),
     gitsigns = require("plugins.gitsigns").preset(),
-    comments = require("plugins.comments").preset(),
   }
   return preset
 end
