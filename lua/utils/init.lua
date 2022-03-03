@@ -1,10 +1,12 @@
 local M = {}
-local _M = {
-  --- Registered functions.
-  _registered_funcs = {},
-  --- Registered keys.
-  _registered_keys = {},
-}
+--- Registered functions.
+local _registered_funcs = {}
+--- Registered keys.
+local _registered_keys = {}
+
+-----------
+-- Table --
+-----------
 
 --- Merge tables.
 ---@return table
@@ -80,6 +82,10 @@ function M.set_to_list(set)
   end)
 end
 
+-------------
+-- Command --
+-------------
+
 --- Insert `val` to a random position in `tbl`,
 ---@param tbl table
 ---@param val any
@@ -99,54 +105,43 @@ end
 ---@param fn function
 ---@return integer
 function M.register_fn(fn)
-  local registered = _M._registered_funcs
+  local registered = _registered_funcs
   return _random_insert(registered, fn)
 end
 
 --- Call registered function.
 ---@param id integer
 function M.call_fn(id, ...)
-  _M._registered_funcs[id](...)
-end
-
---- Register a `<Plug>` key to the global variable.
-function M.register_key()
-  local registered = _M._registered_keys
-  local id = _random_insert(registered, true)
-  return string.format("<Plug>(_MiNVKeymap#%d)", id)
-end
-
---- Set Vim options.
----@param opts table<string, any>
-function M.o(opts)
-  for k, v in pairs(opts) do
-    vim.o[k] = v
-  end
-end
-
---- Set Vim globals.
----@param vars table<string, any>
-function M.g(vars)
-  for k, v in pairs(vars) do
-    vim.g[k] = v
-  end
+  _registered_funcs[id](...)
 end
 
 --- Make command strings.
 ---@param cmd string|function
----@param is_map boolean|nil
 ---@return string
-function M.cmd(cmd, is_map)
+local function _cmd(cmd)
+  return string.format([[lua require("utils").call_fn(%d)]], M.register_fn(cmd))
+end
+
+--- Auto command.
+---@param event string
+---@param pat string
+---@param cmd string
+function M.autocmd(event, pat, cmd)
   if type(cmd) == "function" then
-    local cmd_str = string.format([[lua require("utils").call_fn(%d)]], M.register_fn(cmd))
-    if is_map == true then
-      return string.format("<Cmd>%s<CR>", cmd_str)
-    else
-      return cmd_str
-    end
-  else
-    return cmd
+    cmd = _cmd(cmd)
   end
+  vim.cmd(string.format("autocmd %s %s %s", event, pat, cmd))
+end
+
+------------
+-- Keymap --
+------------
+
+--- Register a `<Plug>` key to the global variable.
+function M.register_key()
+  local registered = _registered_keys
+  local id = _random_insert(registered, true)
+  return string.format("<Plug>(_MiNVKeymap#%d)", id)
 end
 
 --- Iterate over each `lhs`.
@@ -163,16 +158,8 @@ function M.foreach_lhs(lhs, f)
   end
 end
 
---- Auto command.
----@param event string
----@param pat string
----@param cmd string
-function M.autocmd(event, pat, cmd)
-  vim.cmd(string.format("autocmd %s %s %s", event, pat, M.cmd(cmd)))
-end
-
 ---@param options table
-function M.make_keymap(options)
+local function _make_keymap(options)
   local opts = M.tbl_merge({ mode = "n", noremap = true, silent = true }, options)
   local buffer = M.tbl_remove(opts, "buffer")
   local mode = M.tbl_remove(opts, "mode")
@@ -184,7 +171,10 @@ function M.make_keymap(options)
   end
   return function(lhs, rhs)
     M.foreach_lhs(lhs, function(l)
-      map(mode, l, M.cmd(rhs, true), opts)
+      if type(rhs) == "function" then
+        rhs = string.format("<Cmd>%s<CR>", _cmd(rhs))
+      end
+      map(mode, l, rhs, opts)
     end)
   end
 end
@@ -201,9 +191,29 @@ function M.keymaps(input)
       opts[key] = val
     end
   end
-  local keymap = M.make_keymap(opts)
+  local keymap = _make_keymap(opts)
   for _, mapping in ipairs(mappings) do
     keymap(mapping[1], mapping[2])
+  end
+end
+
+-----------------
+-- VIM Options --
+-----------------
+
+--- Set Vim options.
+---@param opts table<string, any>
+function M.o(opts)
+  for k, v in pairs(opts) do
+    vim.o[k] = v
+  end
+end
+
+--- Set Vim globals.
+---@param vars table<string, any>
+function M.g(vars)
+  for k, v in pairs(vars) do
+    vim.g[k] = v
   end
 end
 
