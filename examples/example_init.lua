@@ -78,8 +78,6 @@ function M.setup(minv)
         require("lightspeed").setup({})
       end,
     },
-    -- Faster filetypes.
-    { "nathom/filetype.nvim" },
     -- Auto adjusts `shiftwidth` and `expandtab`
     { "tpope/vim-sleuth" },
     -- Surround.

@@ -13,6 +13,7 @@ function M.setup(packer, builtin, extra)
     -- Speed up --
     --------------
     use({ "lewis6991/impatient.nvim" })
+    use({ "nathom/filetype.nvim" })
     ----------
     -- Deps --
     ----------
