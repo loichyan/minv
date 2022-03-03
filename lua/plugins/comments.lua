@@ -8,6 +8,7 @@ function M.preset()
       toggle_line = "<Leader>/",
       toggle_block = "<Leader>a/",
     },
+    after = nil,
   }
   return preset
 end

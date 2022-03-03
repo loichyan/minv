@@ -13,6 +13,7 @@ function M.preset()
       --- Toggle terminal.
       toggle = "<C-t>",
     },
+    after = nil,
   }
   return preset
 end

@@ -23,6 +23,7 @@ function M.preset()
       next = "<S-l>",
       close = "<Leader>x",
     },
+    after = nil,
   }
   return preset
 end

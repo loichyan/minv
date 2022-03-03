@@ -3,6 +3,7 @@ local M = {}
 function M.preset()
   ---@class MiNVPresetAlpha
   local preset = {
+    after = nil,
     header = {
       "███╗   ██╗ ███████╗ ██████╗  ██╗   ██╗ ██╗ ███╗   ███╗",
       "████╗  ██║ ██╔════╝██╔═══██╗ ██║   ██║ ██║ ████╗ ████║",

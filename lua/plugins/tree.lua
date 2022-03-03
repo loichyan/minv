@@ -23,6 +23,7 @@ function M.preset()
       toggle = "<C-b>",
       focus = "<C-n>",
     },
+    after = nil,
     filters = {
       [".git"] = true,
       [".cache"] = true,

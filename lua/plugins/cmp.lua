@@ -34,6 +34,7 @@ function M.preset()
       select_next = "<Tab>",
       select_prev = "<S-Tab>",
     },
+    after = nil,
     formatting = {
       fields = { "kind", "abbr", "menu" },
       kind = {

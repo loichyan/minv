@@ -3,6 +3,7 @@ local M = {}
 function M.preset()
   ---@class MiNVPresetTreesitter
   local preset = {
+    after = nil,
     install = {
       ["bash"] = true,
       ["c"] = true,

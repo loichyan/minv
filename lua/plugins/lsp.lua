@@ -35,6 +35,7 @@ function M.preset()
       rename = "<Leader>lr",
       formatting = "<Leader>lf",
     },
+    after = nil,
     install = {
       ["sumneko_lua"] = true,
     },

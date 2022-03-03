@@ -14,6 +14,13 @@ function M.setup(packer, builtin, extra)
     ----------
     use({ "nvim-lua/plenary.nvim" })
     use({ "kyazdani42/nvim-web-devicons" })
+    use({
+      "lewis6991/gitsigns.nvim",
+      config = function()
+        require("plugins.gitsigns").setup(_MINV.builtin.gitsigns)
+        pcall(_MINV.builtin.gitsigns.after)
+      end,
+    })
     -----------------
     -- Tree Sitter --
     -----------------
@@ -21,6 +28,7 @@ function M.setup(packer, builtin, extra)
       "nvim-treesitter/nvim-treesitter",
       config = function()
         require("plugins.treesitter").setup(_MINV.builtin.treesitter)
+        pcall(_MINV.builtin.treesitter.after)
       end,
     })
     local ts = builtin.treesitter
@@ -47,6 +55,7 @@ function M.setup(packer, builtin, extra)
       },
       config = function()
         require("plugins.lsp").setup(_MINV.builtin.lsp)
+        pcall(_MINV.builtin.lsp.after)
       end,
     })
     use({ "jose-elias-alvarez/null-ls.nvim" })
@@ -61,6 +70,7 @@ function M.setup(packer, builtin, extra)
       requires = { "L3MON4D3/LuaSnip" },
       config = function()
         require("plugins.cmp").setup(_MINV.builtin.cmp)
+        pcall(_MINV.builtin.cmp.after)
       end,
     })
     -- Completion sources
@@ -100,6 +110,7 @@ function M.setup(packer, builtin, extra)
       requires = { "nvim-telescope/telescope-fzf-native.nvim", "rcarriga/nvim-notify" },
       config = function()
         require("plugins.telescope").setup(_MINV.builtin.telescope)
+        pcall(_MINV.builtin.telescope.after)
       end,
     })
     use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
@@ -110,77 +121,83 @@ function M.setup(packer, builtin, extra)
       "goolord/alpha-nvim",
       config = function()
         require("plugins.alpha").setup(_MINV.builtin.alpha)
+        pcall(_MINV.builtin.alpha.after)
       end,
     })
     use({
       "nvim-lualine/lualine.nvim",
       config = function()
         require("plugins.lualine").setup(_MINV.builtin.lualine)
+        pcall(_MINV.builtin.lualine.after)
       end,
     })
     use({
       "akinsho/bufferline.nvim",
       config = function()
         require("plugins.bufferline").setup(_MINV.builtin.bufferline)
+        pcall(_MINV.builtin.bufferline.after)
       end,
     })
     use({
       "kyazdani42/nvim-tree.lua",
       config = function()
         require("plugins.tree").setup(_MINV.builtin.tree)
+        pcall(_MINV.builtin.tree.after)
       end,
     })
     use({
       "akinsho/toggleterm.nvim",
       config = function()
         require("plugins.toggleterm").setup(_MINV.builtin.toggleterm)
+        pcall(_MINV.builtin.toggleterm.after)
       end,
     })
     use({
       "folke/tokyonight.nvim",
       config = function()
         require("plugins.tokyonight").setup(_MINV.builtin.tokyonight)
+        pcall(_MINV.builtin.tokyonight.after)
       end,
     })
     use({
       "folke/todo-comments.nvim",
+      disable = not builtin.todo_comments.enable,
       config = function()
         require("plugins.todo_comments").setup(_MINV.builtin.todo_comments)
+        pcall(_MINV.builtin.todo_comments.after)
       end,
     })
     use({
       "rcarriga/nvim-notify",
+      disable = not builtin.notify.enable,
       config = function()
         require("plugins.notify").setup(_MINV.builtin.notify)
+        pcall(_MINV.builtin.notify.after)
       end,
     })
     use({
       "j-hui/fidget.nvim",
+      disable = not builtin.fidget.enable,
       config = function()
         require("plugins.fidget").setup(_MINV.builtin.fidget)
+        pcall(_MINV.builtin.fidget.after)
       end,
     })
     ----------
     -- Misc --
     ----------
-    -- Gitsigns
-    use({
-      "lewis6991/gitsigns.nvim",
-      config = function()
-        require("plugins.gitsigns").setup(_MINV.builtin.gitsigns)
-      end,
-    })
     -- Comments
     use({
       "numToStr/Comment.nvim",
       config = function()
         require("plugins.comments").setup(_MINV.builtin.comments)
+        pcall(_MINV.builtin.comments.after)
       end,
     })
     -- Faster filetypes.
-    use({ "nathom/filetype.nvim" })
+    use({ "nathom/filetype.nvim", disable = not builtin.filetype.enable })
     -- Auto adjusts `shiftwidth` and `expandtab`
-    use({ "tpope/vim-sleuth" })
+    use({ "tpope/vim-sleuth", disable = not builtin.sleuth.enable })
     -------------------
     -- Extra plugins --
     -------------------

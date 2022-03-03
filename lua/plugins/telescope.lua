@@ -12,6 +12,7 @@ function M.preset()
       git_commits = "<Leader>fg",
       notify = "<Leader>fn",
     },
+    after = nil,
   }
   return preset
 end

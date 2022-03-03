@@ -6,6 +6,7 @@ function M.preset()
     setup = {
       style = "night",
     },
+    after = nil,
   }
   return preset
 end

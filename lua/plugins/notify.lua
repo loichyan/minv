@@ -3,9 +3,11 @@ local M = {}
 function M.preset()
   ---@class MiNVPresetNotify
   local preset = {
+    enable = true,
     setup = {
       max_width = 70,
     },
+    after = nil,
   }
   return preset
 end

@@ -3,7 +3,9 @@ local M = {}
 function M.preset()
   ---@class MiNVPresetTodoComments
   local preset = {
+    enable = true,
     setup = {},
+    after = nil,
   }
   return preset
 end

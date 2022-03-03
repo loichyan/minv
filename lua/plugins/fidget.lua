@@ -3,7 +3,9 @@ local M = {}
 function M.preset()
   ---@class MiNVPresetFidget
   local preset = {
+    enable = true,
     setup = {},
+    after = nil,
   }
   return preset
 end

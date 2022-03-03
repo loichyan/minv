@@ -17,6 +17,7 @@ function M.preset()
       undo_stage_hunk = "<Leader>gu",
       preview_hunk = "<Leader>gp",
     },
+    after = nil,
   }
   return preset
 end

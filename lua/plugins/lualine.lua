@@ -51,6 +51,7 @@ function M.preset()
         },
       },
     },
+    after = nil,
     extensions = {
       ["nvim-tree"] = true,
       ["toggleterm"] = true,
