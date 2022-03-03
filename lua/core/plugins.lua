@@ -159,30 +159,6 @@ function M.setup(packer, builtin, extra)
         pcall(_MINV.builtin.tokyonight.after)
       end,
     })
-    use({
-      "folke/todo-comments.nvim",
-      disable = not builtin.todo_comments.enable,
-      config = function()
-        require("plugins.todo_comments").setup(_MINV.builtin.todo_comments)
-        pcall(_MINV.builtin.todo_comments.after)
-      end,
-    })
-    use({
-      "rcarriga/nvim-notify",
-      disable = not builtin.notify.enable,
-      config = function()
-        require("plugins.notify").setup(_MINV.builtin.notify)
-        pcall(_MINV.builtin.notify.after)
-      end,
-    })
-    use({
-      "j-hui/fidget.nvim",
-      disable = not builtin.fidget.enable,
-      config = function()
-        require("plugins.fidget").setup(_MINV.builtin.fidget)
-        pcall(_MINV.builtin.fidget.after)
-      end,
-    })
     ----------
     -- Misc --
     ----------
@@ -194,10 +170,6 @@ function M.setup(packer, builtin, extra)
         pcall(_MINV.builtin.comments.after)
       end,
     })
-    -- Faster filetypes.
-    use({ "nathom/filetype.nvim", disable = not builtin.filetype.enable })
-    -- Auto adjusts `shiftwidth` and `expandtab`
-    use({ "tpope/vim-sleuth", disable = not builtin.sleuth.enable })
     -------------------
     -- Extra plugins --
     -------------------

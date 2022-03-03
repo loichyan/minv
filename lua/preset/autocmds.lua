@@ -17,12 +17,11 @@ function M.preset()
       ["vim"] = true,
       ["help"] = true,
       ["man"] = true,
+      ["git"] = true,
       ["qf"] = true,
       ["lspinfo"] = true,
       ["TelescopePrompt"] = true,
       ["null-ls-info"] = true,
-      ["git"] = true,
-      ["notify"] = true,
     },
     --- Remove trailing spaces.
     trim_spaces = true,

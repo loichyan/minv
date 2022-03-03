@@ -3,7 +3,6 @@ local M = {}
 function M.new()
   ---@class MiNV
   local preset = {
-
     --- Builtin plugins.
     builtin = require("preset.builtin").preset(),
     --- Vim settings.
