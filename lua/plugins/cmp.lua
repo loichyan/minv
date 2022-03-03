@@ -1,7 +1,11 @@
 local M = {}
 
 function M.preset()
-  local cmp = require("cmp")
+  local ok, cmp = pcall(require, "cmp")
+  local default_behavior = nil
+  if ok then
+    default_behavior = cmp.ConfirmBehavior.Replace
+  end
 
   ---@class MiNVPresetCmp
   local preset = {
@@ -11,7 +15,7 @@ function M.preset()
           border = "rounded",
         },
         confirmation = {
-          default_behavior = cmp.ConfirmBehavior.Replace,
+          default_behavior = default_behavior,
         },
       },
       luasnip = {
