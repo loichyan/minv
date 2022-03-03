@@ -3,6 +3,7 @@ local M = {}
 function M.preset()
   ---@class MiNVBuiltin
   local preset = {
+    packer = require("core.packer").preset(),
     treesitter = require("plugins.treesitter").preset(),
     cmp = require("plugins.cmp").preset(),
     lsp = require("plugins.lsp").preset(),
