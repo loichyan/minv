@@ -104,6 +104,11 @@ function M.setup(packer, builtin, extra)
       disable = cmp.sources["buffer"] == 0,
       requires = "hrsh7th/nvim-cmp",
     })
+    use({
+      "hrsh7th/cmp-nvim-lsp-signature-help",
+      requires = "hrsh7th/nvim-cmp",
+      disable = cmp.sources["nvim_lsp_signature_help"] == 0,
+    })
     -- Snippets
     use({
       "L3MON4D3/LuaSnip",

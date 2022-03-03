@@ -84,6 +84,7 @@ function M.preset()
       ["nvim_lsp"] = 2,
       ["path"] = 3,
       ["buffer"] = 4,
+      ["nvim_lsp_signature_help"] = 5,
     },
   }
   return preset
