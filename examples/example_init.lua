@@ -24,7 +24,7 @@ function M.setup(minv)
             },
             file_panel = {
               ["q"] = "<Cmd>DiffviewClose<CR>",
-              ["o"] = cb("focus_entry"),
+              ["o"] = cb("select_entry"),
               ["<CR>"] = cb("focus_entry"),
               ["<2-LeftMouse>"] = cb("focus_entry"),
               ["<C-b>"] = cb("toggle_files"),
@@ -32,7 +32,7 @@ function M.setup(minv)
             },
             file_history_panel = {
               ["q"] = "<Cmd>DiffviewClose<CR>",
-              ["o"] = cb("focus_entry"),
+              ["o"] = cb("select_entry"),
               ["<CR>"] = cb("focus_entry"),
               ["<2-LeftMouse>"] = cb("focus_entry"),
               ["<C-b>"] = cb("toggle_files"),
