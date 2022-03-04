@@ -1,5 +1,22 @@
 local M = {}
 
+local function minv()
+  ---@class MiNV
+  local preset = {
+    ---Builtin plugins.
+    builtin = require("builtin").preset(),
+    ---Extra plugins.
+    extra = {},
+    ---Vim settings.
+    settings = require("core.settings").preset(),
+    ---Auto commands.
+    autocmds = require("core.autocmds").preset(),
+    ---Keymaps.
+    keymaps = require("core.keymaps").preset(),
+  }
+  return preset
+end
+
 function M.setup()
   -- Speed up startup time.
   local ok_impatient, impatient = pcall(require, "impatient")
@@ -8,7 +25,7 @@ function M.setup()
   end
 
   -- Load presets.
-  _MINV = require("preset").new()
+  _MINV = minv()
 
   -- Load custom settings.
   local ok_custom, custom = pcall(require, "custom")
@@ -16,15 +33,14 @@ function M.setup()
     custom.setup(_MINV)
   end
 
-  local packer = require("core.packer").setup(_MINV.builtin.packer)
   -- Plugins.
-  require("core.plugins").setup(packer, _MINV.builtin, _MINV.extra)
+  require("core.plugins").setup(_MINV.builtin, _MINV.extra)
   -- Settings.
-  require("preset.settings").setup(_MINV.settings)
+  require("core.settings").setup(_MINV.settings)
   -- Keymaps.
-  require("preset.keymaps").setup(_MINV.keymaps)
+  require("core.keymaps").setup(_MINV.keymaps)
   -- Auto commands.
-  require("preset.autocmds").setup(_MINV.autocmds)
+  require("core.autocmds").setup(_MINV.autocmds)
 end
 
 return M
