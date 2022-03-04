@@ -3,15 +3,15 @@ local M = {}
 function M.new()
   ---@class MiNV
   local preset = {
-    --- Builtin plugins.
+    ---Builtin plugins.
     builtin = require("preset.builtin").preset(),
-    --- Vim settings.
+    ---Vim settings.
     settings = require("preset.settings").preset(),
-    --- Auto commands.
+    ---Auto commands.
     autocmds = require("preset.autocmds").preset(),
-    --- Keymaps.
+    ---Keymaps.
     keymaps = require("preset.keymaps").preset(),
-    --- Extra plugins.
+    ---Extra plugins.
     ---@type table[]
     extra = {},
   }

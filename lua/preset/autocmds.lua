@@ -3,16 +3,16 @@ local M = {}
 function M.preset()
   ---@class MiNVAutocmds
   local preset = {
-    --- Hightlight yanked text.
+    ---Hightlight yanked text.
     hl_yank = {
       highgroup = "Search",
       timeout = 200,
     },
-    --- Format on save.
+    ---Format on save.
     format_on_save = {
       timeout = nil,
     },
-    --- Map `q` to close window.
+    ---Map `q` to close window.
     q_to_close = {
       ["vim"] = true,
       ["help"] = true,
@@ -23,9 +23,9 @@ function M.preset()
       ["TelescopePrompt"] = true,
       ["null-ls-info"] = true,
     },
-    --- Remove trailing spaces.
+    ---Remove trailing spaces.
     trim_spaces = true,
-    --- Auto resize windows when changed.
+    ---Auto resize windows when changed.
     auto_resize = true,
   }
   return preset

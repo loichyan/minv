@@ -56,7 +56,7 @@ function M.setup(preset)
   local trouble = require("trouble")
   local utils = require("utils")
 
-  --- Set keymaps.
+  ---Set keymaps.
   local function set_keymaps(buf)
     local keymaps = preset.keymaps
     utils.keymaps({

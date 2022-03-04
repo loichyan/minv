@@ -91,28 +91,28 @@ function M.setup(packer, builtin, extra)
     local cmp = builtin.cmp
     use({
       "saadparwaiz1/cmp_luasnip",
-      disable = cmp.sources["luasnip"] == 0,
+      disable = cmp.sources.luasnip == 0,
       requires = "hrsh7th/nvim-cmp",
     })
     use({
       "hrsh7th/cmp-nvim-lsp",
-      disable = cmp.sources["nvim_lsp"] == 0,
+      disable = cmp.sources.nvim_lsp == 0,
       requires = "hrsh7th/nvim-cmp",
     })
     use({
       "hrsh7th/cmp-path",
-      disable = cmp.sources["path"] == 0,
+      disable = cmp.sources.path == 0,
       requires = "hrsh7th/nvim-cmp",
     })
     use({
       "hrsh7th/cmp-buffer",
-      disable = cmp.sources["buffer"] == 0,
+      disable = cmp.sources.buffer == 0,
       requires = "hrsh7th/nvim-cmp",
     })
     use({
       "hrsh7th/cmp-nvim-lsp-signature-help",
       requires = "hrsh7th/nvim-cmp",
-      disable = cmp.sources["nvim_lsp_signature_help"] == 0,
+      disable = cmp.sources.nvim_lsp_signature_help == 0,
     })
     -- Snippets
     use({

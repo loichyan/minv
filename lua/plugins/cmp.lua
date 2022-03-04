@@ -80,11 +80,11 @@ function M.preset()
       sources = {},
     },
     sources = {
-      ["luasnip"] = 1,
-      ["nvim_lsp"] = 2,
-      ["path"] = 3,
-      ["buffer"] = 4,
-      ["nvim_lsp_signature_help"] = 5,
+      luasnip = 1,
+      nvim_lsp = 2,
+      path = 3,
+      buffer = 4,
+      nvim_lsp_signature_help = 5,
     },
   }
   return preset
@@ -152,7 +152,7 @@ function M.setup(preset)
     return mappings
   end
 
-  --- Make sources.
+  ---Make sources.
   local function make_sources()
     local sources = utils.list_new(#preset.sources)
     for k, v in pairs(preset.sources) do

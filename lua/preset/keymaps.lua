@@ -3,9 +3,9 @@ local M = {}
 function M.preset()
   ---@class MiNVKeymaps
   local preset = {
-    --- Save to file.
+    ---Save to file.
     save = "<C-s>",
-    --- Escape insert mode.
+    ---Escape insert mode.
     esc_insert = { "jk", "kj" },
   }
   return preset

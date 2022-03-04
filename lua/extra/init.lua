@@ -1,6 +1,6 @@
 local M = {}
 
---- Nice UI plugins, including `todo-comments`, `notify` and `fidget`.
+---Nice UI plugins, including `todo-comments`, `notify` and `fidget`.
 ---@param minv MiNV
 function M.ui(minv)
   vim.list_extend(minv.extra, {
@@ -31,7 +31,7 @@ function M.ui(minv)
   })
 end
 
---- Plugins for better coding experience, including `surround`, `repeat` and `sleuth`.
+---Plugins for better coding experience, including `surround`, `repeat` and `sleuth`.
 ---@param minv MiNV
 function M.easily_coding(minv)
   vim.list_extend(minv.extra, {
@@ -43,7 +43,7 @@ function M.easily_coding(minv)
   })
 end
 
---- Useful treesitter modules, including `context` and `textobjects`.
+---Useful treesitter modules, including `context` and `textobjects`.
 ---@param minv MiNV
 function M.ts_modules(minv)
   vim.list_extend(minv.extra, {
@@ -89,7 +89,7 @@ function M.ts_modules(minv)
   }
 end
 
---- Pretty git diff viewer.
+---Pretty git diff viewer.
 ---@param minv MiNV
 function M.diffview(minv)
   vim.list_extend(minv.extra, {
@@ -138,7 +138,7 @@ function M.diffview(minv)
   })
 end
 
---- A plugin to speed up motions.
+---A plugin to speed up motions.
 ---@param minv MiNV
 function M.lightspeed(minv)
   vim.list_extend(minv.extra, {
@@ -151,7 +151,7 @@ function M.lightspeed(minv)
   })
 end
 
---- Load all extra plugins.
+---Load all extra plugins.
 ---@param minv MiNV
 function M.setup(minv)
   M.ui(minv)

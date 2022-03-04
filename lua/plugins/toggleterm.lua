@@ -10,7 +10,7 @@ function M.preset()
       },
     },
     keymaps = {
-      --- Toggle terminal.
+      ---Toggle terminal.
       toggle = "<C-t>",
     },
     after = nil,

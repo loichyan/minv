@@ -1,14 +1,14 @@
 local M = {}
---- Registered functions.
+---Registered functions.
 local _registered_funcs = {}
---- Registered keys.
+---Registered keys.
 local _registered_keys = {}
 
 -----------
 -- Table --
 -----------
 
---- Merge tables.
+---Merge tables.
 ---@return table
 function M.tbl_merge(...)
   local merged = {}
@@ -20,7 +20,7 @@ function M.tbl_merge(...)
   return merged
 end
 
---- Remove a key and return its val.
+---Remove a key and return its val.
 ---@param tbl table
 --=@param key any
 function M.tbl_remove(tbl, key)
@@ -40,8 +40,8 @@ function M.tbl_to_list(tbl, f)
   return list
 end
 
---- Create a list with specified size.
----@param size number
+---Create a list with specified size.
+---@param size integer
 function M.list_new(size)
   local list = {}
   for i = 1, size + 1 do
@@ -86,7 +86,7 @@ end
 -- Command --
 -------------
 
---- Insert `val` to a random position in `tbl`,
+---Insert `val` to a random position in `tbl`,
 ---@param tbl table
 ---@param val any
 ---@return integer
@@ -101,7 +101,7 @@ local function _random_insert(tbl, val)
   return id
 end
 
---- Register function to the global variable.
+---Register function to the global variable.
 ---@param fn function
 ---@return integer
 function M.register_fn(fn)
@@ -109,20 +109,20 @@ function M.register_fn(fn)
   return _random_insert(registered, fn)
 end
 
---- Call registered function.
+---Call registered function.
 ---@param id integer
 function M.call_fn(id, ...)
   _registered_funcs[id](...)
 end
 
---- Make command strings.
+---Make command strings.
 ---@param cmd string|function
 ---@return string
 local function _cmd(cmd)
   return string.format([[lua require("utils").call_fn(%d)]], M.register_fn(cmd))
 end
 
---- Auto command.
+---Auto command.
 ---@param event string
 ---@param pat string
 ---@param cmd string
@@ -137,14 +137,14 @@ end
 -- Keymap --
 ------------
 
---- Register a `<Plug>` key to the global variable.
+---Register a `<Plug>` key to the global variable.
 function M.register_key()
   local registered = _registered_keys
   local id = _random_insert(registered, true)
   return string.format("<Plug>(_MiNVKeymap#%d)", id)
 end
 
---- Iterate over each `lhs`.
+---Iterate over each `lhs`.
 ---@param lhs string|string[]|nil
 function M.foreach_lhs(lhs, f)
   if lhs == nil then
@@ -179,7 +179,7 @@ local function _make_keymap(options)
   end
 end
 
---- Set keymaps.
+---Set keymaps.
 ---@param input table
 function M.keymaps(input)
   local opts = {}
@@ -201,7 +201,7 @@ end
 -- VIM Options --
 -----------------
 
---- Set Vim options.
+---Set Vim options.
 ---@param opts table<string, any>
 function M.o(opts)
   for k, v in pairs(opts) do
@@ -209,7 +209,7 @@ function M.o(opts)
   end
 end
 
---- Set Vim globals.
+---Set Vim globals.
 ---@param vars table<string, any>
 function M.g(vars)
   for k, v in pairs(vars) do

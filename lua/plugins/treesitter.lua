@@ -35,7 +35,7 @@ function M.preset()
       rainbow = {
         enable = true,
         extended_mode = true,
-        --- Fluent colors.
+        ---Fluent colors.
         colors = {
           "#E74856",
           "#0078D7",
