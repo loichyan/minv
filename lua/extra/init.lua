@@ -43,6 +43,52 @@ function M.easily_coding(minv)
   })
 end
 
+--- Useful treesitter modules, including `context` and `textobjects`.
+---@param minv MiNV
+function M.ts_modules(minv)
+  vim.list_extend(minv.extra, {
+    { "nvim-treesitter/nvim-treesitter-textobjects" },
+    {
+      "romgrk/nvim-treesitter-context",
+      config = function()
+        require("treesitter-context").setup({})
+      end,
+    },
+  })
+  minv.builtin.treesitter.modules.textobjects = {
+    select = {
+      enable = true,
+      lookahead = true,
+      keymaps = {
+        ["af"] = "@function.outer",
+        ["if"] = "@function.inner",
+        ["ac"] = "@class.outer",
+        ["ic"] = "@class.inner",
+      },
+    },
+    move = {
+      enable = true,
+      set_jumps = true, -- whether to set jumps in the jumplist
+      goto_next_start = {
+        ["]m"] = "@function.outer",
+        ["]]"] = "@class.outer",
+      },
+      goto_next_end = {
+        ["]M"] = "@function.outer",
+        ["]["] = "@class.outer",
+      },
+      goto_previous_start = {
+        ["[m"] = "@function.outer",
+        ["[["] = "@class.outer",
+      },
+      goto_previous_end = {
+        ["[M"] = "@function.outer",
+        ["[]"] = "@class.outer",
+      },
+    },
+  }
+end
+
 --- Pretty git diff viewer.
 ---@param minv MiNV
 function M.diffview(minv)
@@ -110,6 +156,7 @@ end
 function M.setup(minv)
   M.ui(minv)
   M.easily_coding(minv)
+  M.ts_modules(minv)
   M.diffview(minv)
   M.lightspeed(minv)
 end
