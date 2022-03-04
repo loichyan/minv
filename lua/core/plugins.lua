@@ -181,10 +181,8 @@ function M.setup(packer, builtin, extra)
     -------------------
     -- Extra plugins --
     -------------------
-    if extra ~= nil then
-      for _, plug in pairs(extra) do
-        use(plug)
-      end
+    for _, plug in ipairs(extra) do
+      use(plug)
     end
   end)
 end

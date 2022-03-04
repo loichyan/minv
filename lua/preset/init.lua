@@ -12,8 +12,8 @@ function M.new()
     --- Keymaps.
     keymaps = require("preset.keymaps").preset(),
     --- Extra plugins.
-    ---@type table[]|nil
-    extra = nil,
+    ---@type table[]
+    extra = {},
   }
   return preset
 end
