@@ -62,6 +62,7 @@ function M.setup(minv, customize)
   customize(preset)
 
   -- Add extra plugins.
+  local ts_modules = preset.ts_modules
   vim.list_extend(minv.extra, {
     ---------------------
     -- Nice UI Plugins --
@@ -108,7 +109,12 @@ function M.setup(minv, customize)
     -----------------------------------------
     {
       "nvim-treesitter/nvim-treesitter-textobjects",
-      disable = not preset.ts_modules.textobjects.enable,
+      disable = not ts_modules.textobjects.enable,
+    },
+    {
+      "p00f/nvim-ts-rainbow",
+      requires = "nvim-treesitter/nvim-treesitter",
+      disable = not ts_modules.rainbow.enable,
     },
     {
       "romgrk/nvim-treesitter-context",

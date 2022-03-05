@@ -51,11 +51,6 @@ function M.setup(preset)
       requires = "nvim-treesitter/nvim-treesitter",
       disable = not ts_modules.matchup.enable,
     },
-    {
-      "p00f/nvim-ts-rainbow",
-      requires = "nvim-treesitter/nvim-treesitter",
-      disable = not ts_modules.rainbow.enable,
-    },
     -- Comments
     {
       "numToStr/Comment.nvim",
