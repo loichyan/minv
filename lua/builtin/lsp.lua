@@ -15,10 +15,6 @@ function M.preset()
       null_ls = {
         debounce = 150,
       },
-      trouble = {
-        indent_lines = false,
-        auto_close = true,
-      },
     },
     keymaps = {
       hover = "K",
@@ -39,6 +35,7 @@ function M.preset()
     install = {
       ["sumneko_lua"] = true,
     },
+    on_attach = nil,
     server_settings = {},
     formatters = {},
     linters = {},
@@ -53,7 +50,6 @@ function M.setup(preset)
   local lsp_installer_servers = require("nvim-lsp-installer.servers")
   local lspconfig = require("lspconfig")
   local null_ls = require("null-ls")
-  local trouble = require("trouble")
   local utils = require("utils")
 
   ---Set keymaps.
@@ -63,18 +59,15 @@ function M.setup(preset)
       buffer = buf,
       { keymaps.hover, "<Cmd>lua vim.lsp.buf.hover()<CR>" },
       { keymaps.signature_help, "<Cmd>lua vim.lsp.buf.signature_help()<CR>" },
-      {
-        keymaps.show_line_diagnostics,
-        "<Cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>",
-      },
+      { keymaps.show_line_diagnostics, "<Cmd>lua vim.diagnostic.open_float()<CR>" },
       { keymaps.definition, "<Cmd>lua vim.lsp.buf.definition()<CR>" },
       { keymaps.declaration, "<Cmd>lua vim.lsp.buf.declaration()<CR>" },
-      { keymaps.implementation, "<Cmd>Trouble lsp_implementations<CR>" },
-      { keymaps.references, "<Cmd>Trouble lsp_references<CR>" },
-      { keymaps.document_diagnostics, "<Cmd>Trouble document_diagnostics<CR>" },
-      { keymaps.workspace_diagnostics, "<Cmd>Trouble workspace_diagnostics<CR>" },
-      { keymaps.goto_next, "<Cmd>lua vim.lsp.diagnostic.goto_next()<CR>" },
-      { keymaps.goto_prev, "<Cmd>lua vim.lsp.diagnostic.goto_prev()<CR>" },
+      { keymaps.implementation, "<Cmd>lua vim.lsp.buf.implementation()<CR>" },
+      { keymaps.references, "<Cmd>lua vim.lsp.buf.references()<CR>" },
+      { keymaps.document_diagnostics, "<Cmd>lua vim.diagnostic.setloclist()<CR>" },
+      { keymaps.workspace_diagnostics, "<Cmd>lua vim.diagnostic.setqflist()<CR>" },
+      { keymaps.goto_next, "<Cmd>lua vim.diagnostic.goto_next()<CR>" },
+      { keymaps.goto_prev, "<Cmd>lua vim.diagnostic.goto_prev()<CR>" },
       { keymaps.formatting, "<Cmd>lua vim.lsp.buf.formatting()<CR>" },
       { keymaps.rename, "<Cmd>lua vim.lsp.buf.rename()<CR>" },
     })
@@ -102,6 +95,7 @@ function M.setup(preset)
       ]])
     end
     set_keymaps(buf)
+    pcall(preset.on_attach)
   end
   local capabilities = cmp_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
@@ -146,9 +140,6 @@ function M.setup(preset)
     on_attach = on_attach,
     sources = make_sources(),
   }))
-
-  -- Setup trouble.
-  trouble.setup(preset.setup.trouble)
 
   -- Set border of popup windows.
   local open_float_preview = vim.lsp.util.open_floating_preview

@@ -78,7 +78,6 @@ function M.setup(preset)
     },
     { "jose-elias-alvarez/null-ls.nvim" },
     { "williamboman/nvim-lsp-installer" },
-    { "folke/trouble.nvim" },
     { "folke/lua-dev.nvim" },
     ----------------
     -- Completion --

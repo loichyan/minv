@@ -56,7 +56,7 @@ end
 
 ---@param preset MiNVPresetTSModules
 ---@param minv MiNV
-function M.setup(preset, minv)
+function M.apply(preset, minv)
   -- Load modules.
   if preset.textobjects.enable then
     minv.builtin.treesitter.modules.textobjects = preset.textobjects

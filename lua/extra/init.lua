@@ -2,6 +2,7 @@ local M = {}
 
 ---@class MiNVExtra
 _MINV_EXTRA = {
+  trouble = require("extra.trouble").preset(),
   todo_comments = {
     enable = true,
     setup = {},
@@ -68,6 +69,15 @@ function M.setup(minv, customize)
     ---------------------
     -- Nice UI Plugins --
     ---------------------
+    -- Trouble.
+    {
+      "folke/trouble.nvim",
+      disable = not preset.trouble.enable,
+      config = function()
+        require("extra.trouble").setup(_MINV_EXTRA.trouble)
+        pcall(_MINV_EXTRA.trouble.after)
+      end,
+    },
     -- Todo comments.
     {
       "folke/todo-comments.nvim",
@@ -184,8 +194,9 @@ function M.setup(minv, customize)
     },
   })
 
-  -- Load treesitter modules.
-  require("extra.ts_modules").setup(preset.ts_modules, minv)
+  -- Apply customization.
+  require("extra.trouble").apply(preset.trouble, minv)
+  require("extra.ts_modules").apply(preset.ts_modules, minv)
 end
 
 return M
