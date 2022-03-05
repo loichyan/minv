@@ -79,7 +79,7 @@ function M.setup(minv, customize)
     -----------------
     {
       "hrsh7th/cmp-nvim-lsp-signature-help",
-      disable = cmp_sources.nvim_lsp_signature_help == 0,
+      disable = cmp_sources.nvim_lsp_signature_help,
     },
     -----------------------------------------
     -- Useful treesitter modules & plugins --

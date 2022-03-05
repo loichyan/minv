@@ -15,7 +15,7 @@ end
 function M.apply(preset, minv)
   -- Load cmp sources.
   if preset.nvim_lsp_signature_help.enable then
-    minv.builtin.cmp.sources["nvim_lsp_signature_help"] = 5
+    minv.builtin.cmp.sources:add("nvim_lsp_signature_help")
   end
 end
 

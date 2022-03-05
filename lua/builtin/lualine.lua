@@ -20,7 +20,9 @@ function M.components()
 end
 
 function M.preset()
+  local utils = require("utils")
   local components = M.components()
+
   ---@class MiNVPresetLualine
   local preset = {
     setup = {
@@ -52,10 +54,10 @@ function M.preset()
       },
     },
     after = nil,
-    extensions = {
-      ["nvim-tree"] = true,
-      ["toggleterm"] = true,
-    },
+    extensions = utils.set.new({
+      "nvim-tree",
+      "toggleterm",
+    }),
   }
   return preset
 end
@@ -67,7 +69,7 @@ function M.setup(preset)
 
   -- Setup lualine.
   lualine.setup(utils.tbl_merge(preset.setup, {
-    extensions = utils.set_to_list(preset.extensions),
+    extensions = preset.extensions:to_list(),
   }))
 end
 

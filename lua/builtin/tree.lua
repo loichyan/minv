@@ -1,6 +1,8 @@
 local M = {}
 
 function M.preset()
+  local utils = require("utils")
+
   ---@class MiNVPresetTree
   local preset = {
     setup = {
@@ -24,11 +26,11 @@ function M.preset()
       focus = "<C-n>",
     },
     after = nil,
-    filters = {
-      [".git"] = true,
-      [".cache"] = true,
-      ["node_modules"] = true,
-    },
+    filters = utils.set.new({
+      ".git",
+      ".cache",
+      "node_modules",
+    }),
   }
   return preset
 end
@@ -41,7 +43,7 @@ function M.setup(preset)
   -- Setup nvim-tree.
   tree.setup(utils.tbl_merge(preset.setup, {
     filters = {
-      custom = utils.set_to_list(preset.filters),
+      custom = preset.filters:to_list(),
     },
   }))
 

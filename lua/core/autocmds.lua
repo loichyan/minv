@@ -1,6 +1,8 @@
 local M = {}
 
 function M.preset()
+  local utils = require("utils")
+
   ---@class MiNVAutocmds
   local preset = {
     ---Hightlight yanked text.
@@ -13,16 +15,16 @@ function M.preset()
       timeout = nil,
     },
     ---Map `q` to close window.
-    q_to_close = {
-      ["vim"] = true,
-      ["help"] = true,
-      ["man"] = true,
-      ["git"] = true,
-      ["qf"] = true,
-      ["lspinfo"] = true,
-      ["TelescopePrompt"] = true,
-      ["null-ls-info"] = true,
-    },
+    q_to_close = utils.set.new({
+      "vim",
+      "help",
+      "man",
+      "git",
+      "qf",
+      "lspinfo",
+      "TelescopePrompt",
+      "null-ls-info",
+    }),
     ---Remove trailing spaces.
     trim_spaces = true,
     ---Auto resize windows when changed.
@@ -57,7 +59,7 @@ function M.setup(preset)
     au("BufWritePre", "*", cmd)
   end
   if preset.q_to_close ~= nil then
-    local ft = table.concat(utils.set_to_list(preset.q_to_close), ",")
+    local ft = table.concat(preset.q_to_close:to_list(), ",")
     au("FileType", ft, "nnoremap <silent> <buffer> q <Cmd>close!<CR>")
   end
   au_if(preset.trim_spaces, "BufWritePre", "*", [[silent %s/\s\+$//e]])

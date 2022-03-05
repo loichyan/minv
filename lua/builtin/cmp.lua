@@ -1,6 +1,8 @@
 local M = {}
 
 function M.preset()
+  local utils = require("utils")
+
   local ok, cmp = pcall(require, "cmp")
   local default_behavior = nil
   if ok then
@@ -74,14 +76,13 @@ function M.preset()
         buffer = 0,
       },
       dup_default = 0,
-      sources = {},
     },
-    sources = {
-      luasnip = 1,
-      nvim_lsp = 2,
-      path = 3,
-      buffer = 4,
-    },
+    sources = utils.set.new({
+      "luasnip",
+      "nvim_lsp",
+      "path",
+      "buffer",
+    }),
   }
   return preset
 end
@@ -148,9 +149,9 @@ function M.setup(preset)
 
   ---Make sources.
   local function make_sources()
-    local sources = utils.list_new(#preset.sources)
-    for k, v in pairs(preset.sources) do
-      sources[v] = { name = k }
+    local sources = {}
+    for _, name in ipairs(preset.sources:to_list()) do
+      table.insert(sources, { name = name })
     end
     return sources
   end

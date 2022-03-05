@@ -1,18 +1,20 @@
 local M = {}
 
 function M.preset()
+  local utils = require("utils")
+
   ---@class MiNVSettings
   local preset = {
     -- Leader
     leader = " ",
-    markdown_highlight = {
-      ["bash"] = true,
-      ["c"] = true,
-      ["json"] = true,
-      ["lua"] = true,
-      ["python"] = true,
-      ["sh"] = true,
-    },
+    markdown_highlight = utils.set.new({
+      "bash",
+      "c",
+      "json",
+      "lua",
+      "python",
+      "sh",
+    }),
     -- General
     clipboard = "unnamed",
     mouse = "a",
@@ -40,15 +42,11 @@ end
 ---@param preset MiNVSettings
 function M.setup(preset)
   local utils = require("utils")
-  local markdown_highlight = utils.set_to_list(preset.markdown_highlight)
 
-  --------------------
-  -- Public options --
-  --------------------
-
+  -- Apply options
   utils.g({
     mapleader = preset.leader,
-    markdown_fenced_languages = markdown_highlight,
+    markdown_fenced_languages = preset.markdown_highlight:to_list(),
   })
   utils.o({
     -- General
@@ -67,10 +65,10 @@ function M.setup(preset)
     swapfile = preset.swapfile,
     undofile = preset.undofile,
     relativenumber = preset.relativenumber,
+  })
 
-    ---------------------
-    -- Private options --
-    ---------------------
+  -- Reserved options
+  utils.o({
 
     -- Line number
     number = true,

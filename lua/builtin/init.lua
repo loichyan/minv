@@ -93,22 +93,22 @@ function M.setup(preset)
     -- Completion sources
     {
       "saadparwaiz1/cmp_luasnip",
-      disable = cmp_sources.luasnip == 0,
+      disable = not cmp_sources:has("luasnip"),
       requires = "hrsh7th/nvim-cmp",
     },
     {
       "hrsh7th/cmp-nvim-lsp",
-      disable = cmp_sources.nvim_lsp == 0,
+      disable = not cmp_sources:has("nvim_lsp"),
       requires = "hrsh7th/nvim-cmp",
     },
     {
       "hrsh7th/cmp-path",
-      disable = cmp_sources.path == 0,
+      disable = not cmp_sources:has("path"),
       requires = "hrsh7th/nvim-cmp",
     },
     {
       "hrsh7th/cmp-buffer",
-      disable = cmp_sources.buffer == 0,
+      disable = not cmp_sources:has("buffer"),
       requires = "hrsh7th/nvim-cmp",
     },
     -- Snippets

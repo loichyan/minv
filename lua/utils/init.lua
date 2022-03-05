@@ -1,4 +1,7 @@
-local M = {}
+local M = {
+  set = require("utils.set"),
+}
+
 ---Registered functions.
 local _registered_funcs = {}
 ---Registered keys.
@@ -58,28 +61,6 @@ function M.list_map(list, f)
     table.insert(mapped, f(v))
   end
   return mapped
-end
-
----@param list any[]
----@return table<any, boolean>
-function M.list_to_set(list)
-  local set = {}
-  for _, v in ipairs(list) do
-    set[v] = true
-  end
-  return set
-end
-
----@param set table<any, boolean>
----@return any[]
-function M.set_to_list(set)
-  return M.tbl_to_list(set, function(k, v)
-    if v == true then
-      return k
-    else
-      return nil
-    end
-  end)
 end
 
 -------------

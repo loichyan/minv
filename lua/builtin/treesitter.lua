@@ -1,6 +1,8 @@
 local M = {}
 
 function M.preset()
+  local utils = require("utils")
+
   ---@class MiNVPresetTreesitter
   local preset = {
     setup = {
@@ -12,13 +14,13 @@ function M.preset()
       toggle_block = "<Leader>a/",
     },
     after = nil,
-    install = {
-      ["bash"] = true,
-      ["c"] = true,
-      ["json"] = true,
-      ["lua"] = true,
-      ["python"] = true,
-    },
+    install = utils.set.new({
+      "bash",
+      "c",
+      "json",
+      "lua",
+      "python",
+    }),
     modules = {
       highlight = {
         enable = true,
@@ -55,7 +57,7 @@ function M.setup(preset)
 
   -- Setup treesitter.
   treesitter.setup(utils.tbl_merge(preset.setup.treesitter, preset.modules, {
-    ensure_installed = utils.set_to_list(preset.install),
+    ensure_installed = preset.install:to_list(),
   }))
 
   -- Setup comments.

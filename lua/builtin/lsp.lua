@@ -1,6 +1,8 @@
 local M = {}
 
 function M.preset()
+  local utils = require("utils")
+
   ---@class MiNVPresetLsp
   local preset = {
     setup = {
@@ -32,9 +34,9 @@ function M.preset()
       formatting = "<Leader>lf",
     },
     after = nil,
-    install = {
-      ["sumneko_lua"] = true,
-    },
+    install = utils.set.new({
+      "sumneko_lua",
+    }),
     on_attach = nil,
     server_settings = {},
     formatters = {},
@@ -99,11 +101,11 @@ function M.setup(preset)
   end
   local capabilities = cmp_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
-  local installed_servers = utils.list_to_set(lsp_installer_servers.get_installed_server_names())
+  local installed_servers = utils.set.new(lsp_installer_servers.get_installed_server_names())
   -- Install not installed servers.
-  for k, v in pairs(preset.install) do
-    if v and not installed_servers[k] then
-      lsp_installer.install(k)
+  for _, name in ipairs(preset.install:to_list()) do
+    if not installed_servers:has(name) then
+      lsp_installer.install(name)
     end
   end
 
