@@ -33,11 +33,11 @@ function M.preset()
       rename = "<Leader>lr",
       formatting = "<Leader>lf",
     },
-    after = nil,
+    after = utils.callback.new(),
     install = utils.set.new({
       "sumneko_lua",
     }),
-    on_attach = nil,
+    on_attach = utils.callback.new(),
     server_settings = {},
     formatters = {},
     linters = {},
@@ -97,7 +97,7 @@ function M.setup(preset)
       ]])
     end
     set_keymaps(buf)
-    pcall(preset.on_attach)
+    preset.on_attach:apply(buf)
   end
   local capabilities = cmp_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
 

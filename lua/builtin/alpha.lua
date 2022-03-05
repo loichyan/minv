@@ -1,9 +1,11 @@
 local M = {}
 
 function M.preset()
+  local utils = require("utils")
+
   ---@class MiNVPresetAlpha
   local preset = {
-    after = nil,
+    after = utils.callback.new(),
     header = {
       "███╗   ██╗ ███████╗ ██████╗  ██╗   ██╗ ██╗ ███╗   ███╗",
       "████╗  ██║ ██╔════╝██╔═══██╗ ██║   ██║ ██║ ████╗ ████║",

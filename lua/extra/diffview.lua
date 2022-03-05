@@ -1,6 +1,8 @@
 local M = {}
 
 function M.preset()
+  local utils = require("utils")
+
   local ok, dv_config = pcall(require, "diffview.config")
   local cb = function(_)
     return nil
@@ -38,7 +40,7 @@ function M.preset()
     keymaps = {
       open = "<Leader>gg",
     },
-    after = nil,
+    after = utils.callback.new(),
   }
   return preset
 end

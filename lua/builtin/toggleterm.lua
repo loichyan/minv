@@ -1,6 +1,8 @@
 local M = {}
 
 function M.preset()
+  local utils = require("utils")
+
   ---@class MiNVPresetTree
   local preset = {
     setup = {
@@ -13,7 +15,7 @@ function M.preset()
       ---Toggle terminal.
       toggle = "<C-t>",
     },
-    after = nil,
+    after = utils.callback.new(),
   }
   return preset
 end

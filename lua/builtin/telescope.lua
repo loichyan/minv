@@ -1,6 +1,8 @@
 local M = {}
 
 function M.preset()
+  local utils = require("utils")
+
   ---@class MiNVPresetTree
   local preset = {
     keymaps = {
@@ -12,7 +14,7 @@ function M.preset()
       git_commits = "<Leader>fg",
       notify = "<Leader>fn",
     },
-    after = nil,
+    after = utils.callback.new(),
   }
   return preset
 end

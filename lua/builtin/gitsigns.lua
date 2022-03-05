@@ -1,6 +1,8 @@
 local M = {}
 
 function M.preset()
+  local utils = require("utils")
+
   ---@class MiNVPresetGitsigns
   local preset = {
     setup = {
@@ -17,7 +19,7 @@ function M.preset()
       undo_stage_hunk = "<Leader>gu",
       preview_hunk = "<Leader>gp",
     },
-    after = nil,
+    after = utils.callback.new(),
   }
   return preset
 end

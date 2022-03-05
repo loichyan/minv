@@ -1,6 +1,8 @@
 local M = {}
 
 function M.preset()
+  local utils = require("utils")
+
   ---@class MiNVPresetTrouble
   local preset = {
     enable = true,
@@ -14,7 +16,7 @@ function M.preset()
       document_diagnostics = "<Leader>le",
       workspace_diagnostics = "<Leader>lE",
     },
-    after = nil,
+    after = utils.callback.new(),
   }
   return preset
 end
@@ -23,7 +25,7 @@ end
 ---@param minv MiNV
 function M.apply(preset, minv)
   if preset.enable then
-    minv.builtin.lsp.on_attach = function(buf)
+    minv.builtin.lsp.on_attach:add(function(buf)
       local keymaps = preset.keymaps
       require("utils").keymaps({
         buffer = buf,
@@ -32,7 +34,7 @@ function M.apply(preset, minv)
         { keymaps.document_diagnostics, "<Cmd>Trouble document_diagnostics<CR>" },
         { keymaps.workspace_diagnostics, "<Cmd>Trouble workspace_diagnostics<CR>" },
       })
-    end
+    end)
   end
 end
 

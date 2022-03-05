@@ -1,76 +1,82 @@
 local M = {}
 
----@class MiNVExtra
-_MINV_EXTRA = {
-  cmp_sources = require("extra.cmp_sources").preset(),
-  ts_modules = require("extra.ts_modules").preset(),
-  ts_context = {
-    enable = true,
-    setup = {},
-    after = nil,
-  },
-  trouble = require("extra.trouble").preset(),
-  todo_comments = {
-    enable = true,
-    setup = {},
-    after = nil,
-  },
-  notify = {
-    enable = true,
-    setup = {
-      max_width = 70,
+function M.preset()
+  local utils = require("utils")
+
+  ---@class MiNVExtra
+  local preset = {
+    cmp_sources = require("extra.cmp_sources").preset(),
+    ts_modules = require("extra.ts_modules").preset(),
+    ts_context = {
+      enable = true,
+      setup = {},
+      after = utils.callback.new(),
     },
-    after = nil,
-  },
-  fidget = {
-    enable = true,
-    setup = {},
-    after = nil,
-  },
-  indent_blankline = {
-    enable = true,
-    setup = {
-      show_current_context = true,
-      use_treesitter = true,
+    trouble = require("extra.trouble").preset(),
+    todo_comments = {
+      enable = true,
+      setup = {},
+      after = utils.callback.new(),
     },
-    after = nil,
-  },
-  diffview = require("extra.diffview").preset(),
-  lightspeed = {
-    enable = true,
-    setup = {},
-    after = nil,
-  },
-  autopairs = {
-    enable = true,
-    setup = {
-      check_ts = true,
+    notify = {
+      enable = true,
+      setup = {
+        max_width = 70,
+      },
+      after = utils.callback.new(),
     },
-    after = nil,
-  },
-  surround = {
-    enable = true,
-    after = nil,
-  },
-  repeat_ = {
-    enable = true,
-    after = nil,
-  },
-  sleuth = {
-    enable = true,
-    after = nil,
-  },
-}
+    fidget = {
+      enable = true,
+      setup = {},
+      after = utils.callback.new(),
+    },
+    indent_blankline = {
+      enable = true,
+      setup = {
+        show_current_context = true,
+        use_treesitter = true,
+      },
+      after = utils.callback.new(),
+    },
+    diffview = require("extra.diffview").preset(),
+    lightspeed = {
+      enable = true,
+      setup = {},
+      after = utils.callback.new(),
+    },
+    autopairs = {
+      enable = true,
+      setup = {
+        check_ts = true,
+      },
+      after = utils.callback.new(),
+    },
+    surround = {
+      enable = true,
+      after = utils.callback.new(),
+    },
+    repeat_ = {
+      enable = true,
+      after = utils.callback.new(),
+    },
+    sleuth = {
+      enable = true,
+      after = utils.callback.new(),
+    },
+  }
+
+  return preset
+end
 
 ---@param minv MiNV
 ---@param customize fun(extra:MiNVExtra)
 function M.setup(minv, customize)
-  local preset = _MINV_EXTRA
-
   -- Load customization.
+  local preset = M.preset()
   customize(preset)
 
   -- Add extra plugins.
+  _MINV_EXTRA = preset
   local ts_modules = preset.ts_modules
   local cmp_sources = preset.cmp_sources
   vim.list_extend(minv.extra, {
@@ -98,7 +104,7 @@ function M.setup(minv, customize)
       disable = not preset.ts_context.enable,
       config = function()
         require("treesitter-context").setup(_MINV_EXTRA.ts_context.setup)
-        pcall(_MINV_EXTRA.ts_context.after)
+        _MINV_EXTRA.ts_context.after:apply()
       end,
     },
     ---------------------
@@ -110,7 +116,7 @@ function M.setup(minv, customize)
       disable = not preset.trouble.enable,
       config = function()
         require("extra.trouble").setup(_MINV_EXTRA.trouble)
-        pcall(_MINV_EXTRA.trouble.after)
+        _MINV_EXTRA.trouble.after:apply()
       end,
     },
     -- Todo comments.
@@ -119,7 +125,7 @@ function M.setup(minv, customize)
       disable = not preset.todo_comments.enable,
       config = function()
         require("todo-comments").setup(_MINV_EXTRA.todo_comments.setup)
-        pcall(_MINV_EXTRA.todo_comments.after)
+        _MINV_EXTRA.todo_comments.after:apply()
       end,
     },
     -- Beautiful notification.
@@ -129,7 +135,7 @@ function M.setup(minv, customize)
       config = function()
         vim.notify = require("notify")
         vim.notify.setup(_MINV_EXTRA.notify.setup)
-        pcall(_MINV_EXTRA.notify.after)
+        _MINV_EXTRA.notify.after:apply()
       end,
     },
     -- Nice LSP progress UI.
@@ -138,7 +144,7 @@ function M.setup(minv, customize)
       disable = not preset.fidget.enable,
       config = function()
         require("fidget").setup(_MINV_EXTRA.fidget.setup)
-        pcall(_MINV_EXTRA.fidget.after)
+        _MINV_EXTRA.fidget.after:apply()
       end,
     },
     -- Indent blankline.
@@ -147,7 +153,7 @@ function M.setup(minv, customize)
       disable = not preset.indent_blankline.enable,
       config = function()
         require("indent_blankline").setup(_MINV_EXTRA.indent_blankline.setup)
-        pcall(_MINV_EXTRA.indent_blankline.after)
+        _MINV_EXTRA.indent_blankline.after:apply()
       end,
     },
     ---------------------------
@@ -158,7 +164,7 @@ function M.setup(minv, customize)
       disable = not preset.diffview.enable,
       config = function()
         require("extra.diffview").setup(_MINV_EXTRA.diffview)
-        pcall(_MINV_EXTRA.diffview.after)
+        _MINV_EXTRA.diffview.after:apply()
       end,
     },
     ----------------------
@@ -169,7 +175,7 @@ function M.setup(minv, customize)
       disable = not preset.lightspeed,
       config = function()
         require("lightspeed").setup(_MINV_EXTRA.lightspeed.setup)
-        pcall(_MINV_EXTRA.lightspeed.after)
+        _MINV_EXTRA.lightspeed.after:apply()
       end,
     },
     ------------
@@ -186,7 +192,7 @@ function M.setup(minv, customize)
           "confirm_done",
           require("nvim-autopairs.completion.cmp").on_confirm_done()
         )
-        pcall(_MINV_EXTRA.autopairs.after)
+        _MINV_EXTRA.autopairs.after:apply()
       end,
     },
     -- Surround.
@@ -194,14 +200,14 @@ function M.setup(minv, customize)
       "tpope/vim-surround",
       disable = not preset.surround.enable,
       config = function()
-        pcall(_MINV_EXTRA.surround.after)
+        _MINV_EXTRA.surround.after:apply()
       end,
     },
     {
       "tpope/vim-repeat",
       disalbe = not preset.repeat_.enable,
       config = function()
-        pcall(_MINV_EXTRA.repeat_.after)
+        _MINV_EXTRA.repeat_.after:apply()
       end,
     },
     -- Auto adjusts `shiftwidth` and `expandtab`
@@ -209,7 +215,7 @@ function M.setup(minv, customize)
       "tpope/vim-sleuth",
       disable = not preset.sleuth.enable,
       config = function()
-        pcall(_MINV_EXTRA.sleuth.after)
+        _MINV_EXTRA.sleuth.after:apply()
       end,
     },
   })

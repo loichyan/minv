@@ -25,7 +25,7 @@ function M.preset()
       toggle = "<C-b>",
       focus = "<C-n>",
     },
-    after = nil,
+    after = utils.callback.new(),
     filters = utils.set.new({
       ".git",
       ".cache",

@@ -53,7 +53,7 @@ function M.preset()
         },
       },
     },
-    after = nil,
+    after = utils.callback.new(),
     extensions = utils.set.new({
       "nvim-tree",
       "toggleterm",

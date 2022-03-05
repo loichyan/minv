@@ -13,7 +13,7 @@ function M.preset()
       toggle_line = "<Leader>/",
       toggle_block = "<Leader>a/",
     },
-    after = nil,
+    after = utils.callback.new(),
     install = utils.set.new({
       "bash",
       "c",

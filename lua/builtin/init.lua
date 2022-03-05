@@ -33,7 +33,7 @@ function M.setup(preset)
       "lewis6991/gitsigns.nvim",
       config = function()
         require("builtin.gitsigns").setup(_MINV.builtin.gitsigns)
-        pcall(_MINV.builtin.gitsigns.after)
+        _MINV.builtin.gitsigns.after:apply()
       end,
     },
     -----------------
@@ -43,7 +43,7 @@ function M.setup(preset)
       "nvim-treesitter/nvim-treesitter",
       config = function()
         require("builtin.treesitter").setup(_MINV.builtin.treesitter)
-        pcall(_MINV.builtin.treesitter.after)
+        _MINV.builtin.treesitter.after:apply()
       end,
     },
     {
@@ -73,7 +73,7 @@ function M.setup(preset)
       },
       config = function()
         require("builtin.lsp").setup(_MINV.builtin.lsp)
-        pcall(_MINV.builtin.lsp.after)
+        _MINV.builtin.lsp.after:apply()
       end,
     },
     { "jose-elias-alvarez/null-ls.nvim" },
@@ -87,7 +87,7 @@ function M.setup(preset)
       requires = { "L3MON4D3/LuaSnip" },
       config = function()
         require("builtin.cmp").setup(_MINV.builtin.cmp)
-        pcall(_MINV.builtin.cmp.after)
+        _MINV.builtin.cmp.after:apply()
       end,
     },
     -- Completion sources
@@ -125,7 +125,7 @@ function M.setup(preset)
       requires = { "nvim-telescope/telescope-fzf-native.nvim", "rcarriga/nvim-notify" },
       config = function()
         require("builtin.telescope").setup(_MINV.builtin.telescope)
-        pcall(_MINV.builtin.telescope.after)
+        _MINV.builtin.telescope.after:apply()
       end,
     },
     { "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
@@ -136,42 +136,42 @@ function M.setup(preset)
       "goolord/alpha-nvim",
       config = function()
         require("builtin.alpha").setup(_MINV.builtin.alpha)
-        pcall(_MINV.builtin.alpha.after)
+        _MINV.builtin.alpha.after:apply()
       end,
     },
     {
       "nvim-lualine/lualine.nvim",
       config = function()
         require("builtin.lualine").setup(_MINV.builtin.lualine)
-        pcall(_MINV.builtin.lualine.after)
+        _MINV.builtin.lualine.after:apply()
       end,
     },
     {
       "akinsho/bufferline.nvim",
       config = function()
         require("builtin.bufferline").setup(_MINV.builtin.bufferline)
-        pcall(_MINV.builtin.bufferline.after)
+        _MINV.builtin.bufferline.after:apply()
       end,
     },
     {
       "kyazdani42/nvim-tree.lua",
       config = function()
         require("builtin.tree").setup(_MINV.builtin.tree)
-        pcall(_MINV.builtin.tree.after)
+        _MINV.builtin.tree.after:apply()
       end,
     },
     {
       "akinsho/toggleterm.nvim",
       config = function()
         require("builtin.toggleterm").setup(_MINV.builtin.toggleterm)
-        pcall(_MINV.builtin.toggleterm.after)
+        _MINV.builtin.toggleterm.after:apply()
       end,
     },
     {
       "folke/tokyonight.nvim",
       config = function()
         require("builtin.tokyonight").setup(_MINV.builtin.tokyonight)
-        pcall(_MINV.builtin.tokyonight.after)
+        _MINV.builtin.tokyonight.after:apply()
       end,
     },
   }

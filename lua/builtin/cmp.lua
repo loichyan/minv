@@ -33,7 +33,7 @@ function M.preset()
       select_next = "<Tab>",
       select_prev = "<S-Tab>",
     },
-    after = nil,
+    after = utils.callback.new(),
     formatting = {
       fields = { "kind", "abbr", "menu" },
       kind = {

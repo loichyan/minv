@@ -1,12 +1,14 @@
 local M = {}
 
 function M.preset()
+  local utils = require("utils")
+
   ---@class MiNVPresetTokyonight
   local preset = {
     setup = {
       style = "night",
     },
-    after = nil,
+    after = utils.callback.new(),
   }
   return preset
 end

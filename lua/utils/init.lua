@@ -1,5 +1,6 @@
 local M = {
   set = require("utils.set"),
+  callback = require("utils.callback"),
 }
 
 ---Registered functions.
