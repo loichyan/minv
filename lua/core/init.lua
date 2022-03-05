@@ -1,6 +1,6 @@
 local M = {}
 
-local function minv_preset()
+function M.preset()
   ---@class MiNV
   local preset = {
     ---Builtin plugins.
@@ -25,22 +25,22 @@ function M.setup()
   end
 
   -- Load presets.
-  _MINV = minv_preset()
+  local minv = M.preset()
 
-  -- Load custom settings.
+  -- Load customization.
   local ok_custom, custom = pcall(require, "custom")
   if ok_custom then
-    custom.setup(_MINV)
+    custom.setup(minv)
   end
 
   -- Plugins.
-  require("core.plugins").setup(_MINV)
+  require("core.plugins").setup(minv)
   -- Settings.
-  require("core.settings").setup(_MINV.settings)
+  require("core.settings").setup(minv.settings)
   -- Keymaps.
-  require("core.keymaps").setup(_MINV.keymaps)
+  require("core.keymaps").setup(minv.keymaps)
   -- Auto commands.
-  require("core.autocmds").setup(_MINV.autocmds)
+  require("core.autocmds").setup(minv.autocmds)
 end
 
 return M

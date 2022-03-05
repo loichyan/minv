@@ -21,6 +21,7 @@ end
 
 ---@param preset MiNVBuiltin
 function M.setup(preset)
+  _MINV_BUILTIN = preset
   local ts_modules = preset.treesitter.modules
   local cmp_sources = preset.cmp.sources
   return {
@@ -32,8 +33,8 @@ function M.setup(preset)
     {
       "lewis6991/gitsigns.nvim",
       config = function()
-        require("builtin.gitsigns").setup(_MINV.builtin.gitsigns)
-        _MINV.builtin.gitsigns.after:apply()
+        require("builtin.gitsigns").setup(_MINV_BUILTIN.gitsigns)
+        _MINV_BUILTIN.gitsigns.after:apply()
       end,
     },
     -----------------
@@ -42,8 +43,8 @@ function M.setup(preset)
     {
       "nvim-treesitter/nvim-treesitter",
       config = function()
-        require("builtin.treesitter").setup(_MINV.builtin.treesitter)
-        _MINV.builtin.treesitter.after:apply()
+        require("builtin.treesitter").setup(_MINV_BUILTIN.treesitter)
+        _MINV_BUILTIN.treesitter.after:apply()
       end,
     },
     {
@@ -72,8 +73,8 @@ function M.setup(preset)
         "folke/lua-dev.nvim",
       },
       config = function()
-        require("builtin.lsp").setup(_MINV.builtin.lsp)
-        _MINV.builtin.lsp.after:apply()
+        require("builtin.lsp").setup(_MINV_BUILTIN.lsp)
+        _MINV_BUILTIN.lsp.after:apply()
       end,
     },
     { "jose-elias-alvarez/null-ls.nvim" },
@@ -86,8 +87,8 @@ function M.setup(preset)
       "hrsh7th/nvim-cmp",
       requires = { "L3MON4D3/LuaSnip" },
       config = function()
-        require("builtin.cmp").setup(_MINV.builtin.cmp)
-        _MINV.builtin.cmp.after:apply()
+        require("builtin.cmp").setup(_MINV_BUILTIN.cmp)
+        _MINV_BUILTIN.cmp.after:apply()
       end,
     },
     -- Completion sources
@@ -124,8 +125,8 @@ function M.setup(preset)
       "nvim-telescope/telescope.nvim",
       requires = { "nvim-telescope/telescope-fzf-native.nvim", "rcarriga/nvim-notify" },
       config = function()
-        require("builtin.telescope").setup(_MINV.builtin.telescope)
-        _MINV.builtin.telescope.after:apply()
+        require("builtin.telescope").setup(_MINV_BUILTIN.telescope)
+        _MINV_BUILTIN.telescope.after:apply()
       end,
     },
     { "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
@@ -135,43 +136,43 @@ function M.setup(preset)
     {
       "goolord/alpha-nvim",
       config = function()
-        require("builtin.alpha").setup(_MINV.builtin.alpha)
-        _MINV.builtin.alpha.after:apply()
+        require("builtin.alpha").setup(_MINV_BUILTIN.alpha)
+        _MINV_BUILTIN.alpha.after:apply()
       end,
     },
     {
       "nvim-lualine/lualine.nvim",
       config = function()
-        require("builtin.lualine").setup(_MINV.builtin.lualine)
-        _MINV.builtin.lualine.after:apply()
+        require("builtin.lualine").setup(_MINV_BUILTIN.lualine)
+        _MINV_BUILTIN.lualine.after:apply()
       end,
     },
     {
       "akinsho/bufferline.nvim",
       config = function()
-        require("builtin.bufferline").setup(_MINV.builtin.bufferline)
-        _MINV.builtin.bufferline.after:apply()
+        require("builtin.bufferline").setup(_MINV_BUILTIN.bufferline)
+        _MINV_BUILTIN.bufferline.after:apply()
       end,
     },
     {
       "kyazdani42/nvim-tree.lua",
       config = function()
-        require("builtin.tree").setup(_MINV.builtin.tree)
-        _MINV.builtin.tree.after:apply()
+        require("builtin.tree").setup(_MINV_BUILTIN.tree)
+        _MINV_BUILTIN.tree.after:apply()
       end,
     },
     {
       "akinsho/toggleterm.nvim",
       config = function()
-        require("builtin.toggleterm").setup(_MINV.builtin.toggleterm)
-        _MINV.builtin.toggleterm.after:apply()
+        require("builtin.toggleterm").setup(_MINV_BUILTIN.toggleterm)
+        _MINV_BUILTIN.toggleterm.after:apply()
       end,
     },
     {
       "folke/tokyonight.nvim",
       config = function()
-        require("builtin.tokyonight").setup(_MINV.builtin.tokyonight)
-        _MINV.builtin.tokyonight.after:apply()
+        require("builtin.tokyonight").setup(_MINV_BUILTIN.tokyonight)
+        _MINV_BUILTIN.tokyonight.after:apply()
       end,
     },
   }

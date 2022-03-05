@@ -2,7 +2,7 @@ local M = {}
 
 ---@param minv MiNV
 function M.setup(minv)
-  local packer = require("core.packer").setup(_MINV.builtin.packer)
+  local packer = require("core.packer").setup(minv.builtin.packer)
 
   -- Load plugins.
   packer.startup(function(use)
