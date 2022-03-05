@@ -2,6 +2,13 @@ local M = {}
 
 ---@class MiNVExtra
 _MINV_EXTRA = {
+  cmp_sources = require("extra.cmp_sources").preset(),
+  ts_modules = require("extra.ts_modules").preset(),
+  ts_context = {
+    enable = true,
+    setup = {},
+    after = nil,
+  },
   trouble = require("extra.trouble").preset(),
   todo_comments = {
     enable = true,
@@ -28,19 +35,19 @@ _MINV_EXTRA = {
     },
     after = nil,
   },
-  ts_modules = require("extra.ts_modules").preset(),
-  ts_context = {
-    enable = true,
-    setup = {},
-    after = nil,
-  },
   diffview = require("extra.diffview").preset(),
   lightspeed = {
     enable = true,
     setup = {},
     after = nil,
   },
-  autopairs = require("extra.autopairs").preset(),
+  autopairs = {
+    enable = true,
+    setup = {
+      check_ts = true,
+    },
+    after = nil,
+  },
   surround = {
     enable = true,
     after = nil,
@@ -65,7 +72,35 @@ function M.setup(minv, customize)
 
   -- Add extra plugins.
   local ts_modules = preset.ts_modules
+  local cmp_sources = preset.cmp_sources
   vim.list_extend(minv.extra, {
+    -----------------
+    -- Cmp sources --
+    -----------------
+    {
+      "hrsh7th/cmp-nvim-lsp-signature-help",
+      disable = cmp_sources.nvim_lsp_signature_help == 0,
+    },
+    -----------------------------------------
+    -- Useful treesitter modules & plugins --
+    -----------------------------------------
+    {
+      "nvim-treesitter/nvim-treesitter-textobjects",
+      disable = not ts_modules.textobjects.enable,
+    },
+    {
+      "p00f/nvim-ts-rainbow",
+      requires = "nvim-treesitter/nvim-treesitter",
+      disable = not ts_modules.rainbow.enable,
+    },
+    {
+      "romgrk/nvim-treesitter-context",
+      disable = not preset.ts_context.enable,
+      config = function()
+        require("treesitter-context").setup(_MINV_EXTRA.ts_context.setup)
+        pcall(_MINV_EXTRA.ts_context.after)
+      end,
+    },
     ---------------------
     -- Nice UI Plugins --
     ---------------------
@@ -115,26 +150,6 @@ function M.setup(minv, customize)
         pcall(_MINV_EXTRA.indent_blankline.after)
       end,
     },
-    -----------------------------------------
-    -- Useful treesitter modules & plugins --
-    -----------------------------------------
-    {
-      "nvim-treesitter/nvim-treesitter-textobjects",
-      disable = not ts_modules.textobjects.enable,
-    },
-    {
-      "p00f/nvim-ts-rainbow",
-      requires = "nvim-treesitter/nvim-treesitter",
-      disable = not ts_modules.rainbow.enable,
-    },
-    {
-      "romgrk/nvim-treesitter-context",
-      disable = not preset.ts_context.enable,
-      config = function()
-        require("treesitter-context").setup(_MINV_EXTRA.ts_context.setup)
-        pcall(_MINV_EXTRA.ts_context.after)
-      end,
-    },
     ---------------------------
     -- Beautiful diff viewer --
     ---------------------------
@@ -165,7 +180,12 @@ function M.setup(minv, customize)
       "windwp/nvim-autopairs",
       disable = not preset.autopairs.enable,
       config = function()
-        require("extra.autopairs").setup(_MINV_EXTRA.autopairs)
+        -- Setup autopairs.
+        require("nvim-autopairs").setup(_MINV_EXTRA.autopairs.setup)
+        require("cmp").event:on(
+          "confirm_done",
+          require("nvim-autopairs.completion.cmp").on_confirm_done()
+        )
         pcall(_MINV_EXTRA.autopairs.after)
       end,
     },
@@ -195,6 +215,7 @@ function M.setup(minv, customize)
   })
 
   -- Apply customization.
+  require("extra.cmp_sources").apply(preset.cmp_sources, minv)
   require("extra.trouble").apply(preset.trouble, minv)
   require("extra.ts_modules").apply(preset.ts_modules, minv)
 end
