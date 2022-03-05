@@ -3,7 +3,10 @@ local M = {}
 ---@param minv MiNV
 function M.setup(minv)
   -- Load extra plugins.
-  require("extra").setup(minv)
+  require("extra").setup(minv, function(extra)
+    -- Disable indent_blank_line
+    extra.indent_blankline.enable = false
+  end)
 
   -- Rust
   minv.builtin.treesitter.install["rust"] = true

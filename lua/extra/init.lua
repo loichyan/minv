@@ -1,174 +1,175 @@
 local M = {}
 
----Nice UI plugins, including `todo-comments`, `notify` and `fidget`.
+---@class MiNVExtra
+_MINV_EXTRA = {
+  todo_comments = {
+    enable = true,
+    setup = {},
+    after = nil,
+  },
+  notify = {
+    enable = true,
+    setup = {
+      max_width = 70,
+    },
+    after = nil,
+  },
+  fidget = {
+    enable = true,
+    setup = {},
+    after = nil,
+  },
+  indent_blankline = {
+    enable = true,
+    setup = {
+      show_current_context = true,
+      use_treesitter = true,
+    },
+    after = nil,
+  },
+  ts_modules = require("extra.ts_modules").preset(),
+  ts_context = {
+    enable = true,
+    setup = {},
+    after = nil,
+  },
+  diffview = require("extra.diffview").preset(),
+  lightspeed = {
+    enable = true,
+    setup = {},
+    after = nil,
+  },
+  surround = {
+    enable = true,
+    after = nil,
+  },
+  repeat_ = {
+    enable = true,
+    after = nil,
+  },
+  sleuth = {
+    enable = true,
+    after = nil,
+  },
+}
+
 ---@param minv MiNV
-function M.ui(minv)
+---@param customize fun(extra:MiNVExtra)
+function M.setup(minv, customize)
+  local preset = _MINV_EXTRA
+
+  -- Load customization.
+  customize(preset)
+
+  -- Add extra plugins.
   vim.list_extend(minv.extra, {
+    ---------------------
+    -- Nice UI Plugins --
+    ---------------------
     -- Todo comments.
     {
       "folke/todo-comments.nvim",
+      disable = not preset.todo_comments.enable,
       config = function()
-        require("todo-comments").setup({})
+        require("todo-comments").setup(_MINV_EXTRA.todo_comments.setup)
+        pcall(_MINV_EXTRA.todo_comments.after)
       end,
     },
     -- Beautiful notification.
     {
       "rcarriga/nvim-notify",
+      disable = not preset.notify.enable,
       config = function()
-        -- Setup notify
-        local notify = require("notify")
-        notify.setup({ max_width = 70 })
-        vim.notify = notify
+        vim.notify = require("notify")
+        vim.notify.setup(_MINV_EXTRA.notify.setup)
+        pcall(_MINV_EXTRA.notify.after)
       end,
     },
     -- Nice LSP progress UI.
     {
       "j-hui/fidget.nvim",
+      disable = not preset.fidget.enable,
       config = function()
-        require("fidget").setup({})
+        require("fidget").setup(_MINV_EXTRA.fidget.setup)
+        pcall(_MINV_EXTRA.fidget.after)
       end,
     },
-    -- Indent blanklines.
+    -- Indent blankline.
     {
       "lukas-reineke/indent-blankline.nvim",
+      disable = not preset.indent_blankline.enable,
       config = function()
-        require("indent_blankline").setup({
-          show_current_context = true,
-          use_treesitter = true,
-        })
+        require("indent_blankline").setup(_MINV_EXTRA.indent_blankline.setup)
+        pcall(_MINV_EXTRA.indent_blankline.after)
       end,
     },
-  })
-end
-
----Plugins for better coding experience, including `surround`, `repeat` and `sleuth`.
----@param minv MiNV
-function M.easily_coding(minv)
-  vim.list_extend(minv.extra, {
-    -- Surround.
-    { "tpope/vim-surround" },
-    { "tpope/vim-repeat" },
-    -- Auto adjusts `shiftwidth` and `expandtab`
-    { "tpope/vim-sleuth" },
-  })
-end
-
----Useful treesitter modules, including `context` and `textobjects`.
----@param minv MiNV
-function M.ts_modules(minv)
-  vim.list_extend(minv.extra, {
-    { "nvim-treesitter/nvim-treesitter-textobjects" },
+    -----------------------------------------
+    -- Useful treesitter modules & plugins --
+    -----------------------------------------
+    {
+      "nvim-treesitter/nvim-treesitter-textobjects",
+      disable = not preset.ts_modules.textobjects.enable,
+    },
     {
       "romgrk/nvim-treesitter-context",
+      disable = not preset.ts_context.enable,
       config = function()
-        require("treesitter-context").setup({})
+        require("treesitter-context").setup(_MINV_EXTRA.ts_context.setup)
+        pcall(_MINV_EXTRA.ts_context.after)
       end,
     },
-  })
-  minv.builtin.treesitter.modules.textobjects = {
-    select = {
-      enable = true,
-      lookahead = true,
-      keymaps = {
-        ["af"] = "@function.outer",
-        ["if"] = "@function.inner",
-        ["ac"] = "@class.outer",
-        ["ic"] = "@class.inner",
-      },
-    },
-    move = {
-      enable = true,
-      set_jumps = true, -- whether to set jumps in the jumplist
-      goto_next_start = {
-        ["]m"] = "@function.outer",
-        ["]]"] = "@class.outer",
-      },
-      goto_next_end = {
-        ["]M"] = "@function.outer",
-        ["]["] = "@class.outer",
-      },
-      goto_previous_start = {
-        ["[m"] = "@function.outer",
-        ["[["] = "@class.outer",
-      },
-      goto_previous_end = {
-        ["[M"] = "@function.outer",
-        ["[]"] = "@class.outer",
-      },
-    },
-  }
-end
-
----Pretty git diff viewer.
----@param minv MiNV
-function M.diffview(minv)
-  vim.list_extend(minv.extra, {
+    ---------------------------
+    -- Beautiful diff viewer --
+    ---------------------------
     {
       "sindrets/diffview.nvim",
+      disable = not preset.diffview.enable,
       config = function()
-        local utils = require("utils")
-        local cb = require("diffview.config").diffview_callback
-
-        require("diffview").setup({
-          enhanced_diff_hl = true,
-          file_panel = {
-            width = 30,
-          },
-          key_bindings = {
-            view = {
-              ["q"] = "<Cmd>DiffviewClose<CR>",
-              ["<C-b>"] = cb("toggle_files"),
-              ["<C-n>"] = cb("focus_files"),
-            },
-            file_panel = {
-              ["q"] = "<Cmd>DiffviewClose<CR>",
-              ["o"] = cb("select_entry"),
-              ["<CR>"] = cb("focus_entry"),
-              ["<2-LeftMouse>"] = cb("focus_entry"),
-              ["<C-b>"] = cb("toggle_files"),
-              ["<C-n>"] = cb("focus_files"),
-            },
-            file_history_panel = {
-              ["q"] = "<Cmd>DiffviewClose<CR>",
-              ["o"] = cb("select_entry"),
-              ["<CR>"] = cb("focus_entry"),
-              ["<2-LeftMouse>"] = cb("focus_entry"),
-              ["<C-b>"] = cb("toggle_files"),
-              ["<C-n>"] = cb("focus_files"),
-            },
-          },
-        })
-
-        -- Set keymaps.
-        utils.keymaps({
-          { "<Leader>gg", "<Cmd>DiffviewOpen<CR>" },
-        })
+        require("extra.diffview").setup(_MINV_EXTRA.diffview)
+        pcall(_MINV_EXTRA.diffview.after)
       end,
     },
-  })
-end
-
----A plugin to speed up motions.
----@param minv MiNV
-function M.lightspeed(minv)
-  vim.list_extend(minv.extra, {
+    ----------------------
+    -- Speed up motions --
+    ----------------------
     {
       "ggandor/lightspeed.nvim",
+      disable = not preset.lightspeed,
       config = function()
-        require("lightspeed").setup({})
+        require("lightspeed").setup(_MINV_EXTRA.lightspeed.setup)
+        pcall(_MINV_EXTRA.lightspeed.after)
+      end,
+    },
+    ------------
+    -- Others --
+    ------------
+    -- Surround.
+    {
+      "tpope/vim-surround",
+      disable = not preset.surround.enable,
+      config = function()
+        pcall(_MINV_EXTRA.surround.after)
+      end,
+    },
+    {
+      "tpope/vim-repeat",
+      disalbe = not preset.repeat_.enable,
+      config = function()
+        pcall(_MINV_EXTRA.repeat_.after)
+      end,
+    },
+    -- Auto adjusts `shiftwidth` and `expandtab`
+    {
+      "tpope/vim-sleuth",
+      disable = not preset.sleuth.enable,
+      config = function()
+        pcall(_MINV_EXTRA.sleuth.after)
       end,
     },
   })
-end
 
----Load all extra plugins.
----@param minv MiNV
-function M.setup(minv)
-  M.ui(minv)
-  M.easily_coding(minv)
-  M.ts_modules(minv)
-  M.diffview(minv)
-  M.lightspeed(minv)
+  -- Load treesitter modules.
+  require("extra.ts_modules").setup(preset.ts_modules, minv)
 end
 
 return M

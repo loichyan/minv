@@ -1,23 +1,25 @@
 local M = {}
 
----@param builtin MiNVBuiltin
----@param extra table[]|nil
-function M.setup(builtin, extra)
+---@param minv MiNV
+function M.setup(minv)
   local packer = require("core.packer").setup(_MINV.builtin.packer)
 
   -- Load plugins.
   packer.startup(function(use)
-    -- Packer
+    -- Packer.
     use({ "wbthomason/packer.nvim" })
-    -- Speed up
+
+    -- Speed up startup time.
     use({ "lewis6991/impatient.nvim" })
     use({ "nathom/filetype.nvim" })
-    -- Builtin plugins
-    for _, plug in ipairs(require("builtin").setup(builtin)) do
+
+    -- Load builtin plugins.
+    for _, plug in ipairs(require("builtin").setup(minv.builtin)) do
       use(plug)
     end
-    -- Extra plugins
-    for _, plug in ipairs(extra) do
+
+    -- Load extra plugins.
+    for _, plug in ipairs(minv.extra) do
       use(plug)
     end
   end)
