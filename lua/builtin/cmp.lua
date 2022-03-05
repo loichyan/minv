@@ -21,9 +21,6 @@ function M.preset()
       luasnip = {
         histroy = false,
       },
-      autopairs = {
-        check_ts = true,
-      },
     },
     keymaps = {
       scroll_down = "<C-d>",
@@ -92,9 +89,7 @@ end
 
 ---@param preset MiNVPresetCmp
 function M.setup(preset)
-  local autopairs = require("nvim-autopairs")
   local cmp = require("cmp")
-  local cmp_autopiars = require("nvim-autopairs.completion.cmp")
   local luasnip = require("luasnip")
   local utils = require("utils")
 
@@ -186,10 +181,6 @@ function M.setup(preset)
     mapping = make_mapping(),
     sources = make_sources(),
   }))
-
-  -- Setup autopairs.
-  autopairs.setup(preset.setup.autopairs)
-  cmp.event:on("confirm_done", cmp_autopiars.on_confirm_done())
 end
 
 return M

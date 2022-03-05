@@ -114,16 +114,15 @@ function M.setup(preset)
     },
     {
       "hrsh7th/cmp-nvim-lsp-signature-help",
-      requires = "hrsh7th/nvim-cmp",
       disable = cmp_sources.nvim_lsp_signature_help == 0,
+      requires = "hrsh7th/nvim-cmp",
     },
     -- Snippets
     {
       "L3MON4D3/LuaSnip",
-      requires = { "rafamadriz/friendly-snippets", "windwp/nvim-autopairs" },
+      requires = "rafamadriz/friendly-snippets",
     },
     { "rafamadriz/friendly-snippets" },
-    { "windwp/nvim-autopairs" },
     ---------------
     -- Telescope --
     ---------------

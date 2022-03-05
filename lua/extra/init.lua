@@ -39,6 +39,7 @@ _MINV_EXTRA = {
     setup = {},
     after = nil,
   },
+  autopairs = require("extra.autopairs").preset(),
   surround = {
     enable = true,
     after = nil,
@@ -149,6 +150,15 @@ function M.setup(minv, customize)
     ------------
     -- Others --
     ------------
+    -- Autopairs.
+    {
+      "windwp/nvim-autopairs",
+      disable = not preset.autopairs.enable,
+      config = function()
+        require("extra.autopairs").setup(_MINV_EXTRA.autopairs)
+        pcall(_MINV_EXTRA.autopairs.after)
+      end,
+    },
     -- Surround.
     {
       "tpope/vim-surround",
