@@ -13,6 +13,11 @@ function M.preset()
       after = utils.callback.new(),
     },
     trouble = require("extra.trouble").preset(),
+    colorizer = {
+      enable = true,
+      setup = { "*" },
+      after = utils.callback.new(),
+    },
     todo_comments = {
       enable = true,
       setup = {},
@@ -117,6 +122,15 @@ function M.setup(minv, customize)
       config = function()
         require("extra.trouble").setup(_MINV_EXTRA.trouble)
         _MINV_EXTRA.trouble.after:apply()
+      end,
+    },
+    -- Colorizer.
+    {
+      "norcalli/nvim-colorizer.lua",
+      disable = not extra.colorizer.enable,
+      config = function()
+        require("colorizer").setup(_MINV_EXTRA.colorizer.setup)
+        _MINV_EXTRA.colorizer.after:apply()
       end,
     },
     -- Todo comments.
