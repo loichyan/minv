@@ -5,10 +5,10 @@ function M.preset()
 
   ---@class MiNVPresetTokyonight
   local preset = {
+    after = utils.callback.new(),
     setup = {
       style = "night",
     },
-    after = utils.callback.new(),
   }
   return preset
 end

@@ -9,52 +9,52 @@ function M.preset()
     ts_modules = require("extra.ts_modules").preset(),
     ts_context = {
       enable = true,
-      setup = {},
       after = utils.callback.new(),
+      setup = {},
     },
     trouble = require("extra.trouble").preset(),
     colorizer = {
       enable = true,
-      setup = { "*" },
       after = utils.callback.new(),
+      setup = { "*" },
     },
     todo_comments = {
       enable = true,
-      setup = {},
       after = utils.callback.new(),
+      setup = {},
     },
     notify = {
       enable = true,
+      after = utils.callback.new(),
       setup = {
         max_width = 70,
       },
-      after = utils.callback.new(),
     },
     fidget = {
       enable = true,
-      setup = {},
       after = utils.callback.new(),
+      setup = {},
     },
     indent_blankline = {
       enable = true,
+      after = utils.callback.new(),
       setup = {
         show_current_context = true,
         use_treesitter = true,
       },
-      after = utils.callback.new(),
     },
     diffview = require("extra.diffview").preset(),
     lightspeed = {
       enable = true,
-      setup = {},
       after = utils.callback.new(),
+      setup = {},
     },
     autopairs = {
       enable = true,
+      after = utils.callback.new(),
       setup = {
         check_ts = true,
       },
-      after = utils.callback.new(),
     },
     surround = {
       enable = true,
@@ -238,6 +238,11 @@ function M.setup(minv, customize)
   require("extra.cmp_sources").apply(extra.cmp_sources, minv)
   require("extra.trouble").apply(extra.trouble, minv)
   require("extra.ts_modules").apply(extra.ts_modules, minv)
+
+  if extra.notify.enable then
+    minv.builtin.telescope.extensions:add("notify")
+    minv.autocmds.q_to_close:add("notify")
+  end
 end
 
 return M

@@ -5,6 +5,7 @@ function M.preset()
 
   ---@class MiNVPresetTree
   local preset = {
+    after = utils.callback.new(),
     keymaps = {
       prompt = utils.keymap.new({
         ["<S-j><S-k>"] = "<Esc><Cmd>close!<CR>",
@@ -22,7 +23,9 @@ function M.preset()
         },
       }),
     },
-    after = utils.callback.new(),
+    extensions = utils.set.new({
+      "fzf",
+    }),
   }
   return preset
 end
@@ -43,8 +46,9 @@ function M.setup(preset)
       },
     },
   })
-  telescope.load_extension("fzf")
-  telescope.load_extension("notify")
+  for _, ext in ipairs(preset.extensions:to_list()) do
+    telescope.load_extension(ext)
+  end
 
   -- Set mappings in TelescopePrompt.
   utils.autocmd("FileType", "TelescopePrompt", function()

@@ -5,6 +5,7 @@ function M.preset()
 
   ---@class MiNVPresetTree
   local preset = {
+    after = utils.callback.new(),
     setup = {
       disable_netrw = true,
       auto_close = false,
@@ -25,7 +26,6 @@ function M.preset()
       ["<C-b>"] = "<Cmd>NvimTreeToggle<CR>",
       ["<C-n>"] = "<Cmd>NvimTreeFocus<CR>",
     }),
-    after = utils.callback.new(),
     filters = utils.set.new({
       ".git",
       ".cache",

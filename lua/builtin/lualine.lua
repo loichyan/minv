@@ -25,6 +25,7 @@ function M.preset()
 
   ---@class MiNVPresetLualine
   local preset = {
+    after = utils.callback.new(),
     setup = {
       options = {
         theme = "auto",
@@ -53,7 +54,6 @@ function M.preset()
         },
       },
     },
-    after = utils.callback.new(),
     extensions = utils.set.new({
       "nvim-tree",
       "toggleterm",

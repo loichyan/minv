@@ -5,6 +5,7 @@ function M.preset()
 
   ---@class MiNVPresetGitsigns
   local preset = {
+    after = utils.callback.new(),
     setup = {
       current_line_blame = true,
     },
@@ -22,7 +23,6 @@ function M.preset()
         ["p"] = { "<Cmd>Gitsigns preview_hunk<CR>", "Preview hunk" },
       },
     }),
-    after = utils.callback.new(),
   }
   return preset
 end

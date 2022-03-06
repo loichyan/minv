@@ -5,10 +5,10 @@ function M.preset()
 
   ---@class MiNVPresetWhichKey
   local preset = {
+    after = utils.callback.new(),
     setup = {
       ignore_missing = true,
     },
-    after = utils.callback.new(),
   }
   return preset
 end

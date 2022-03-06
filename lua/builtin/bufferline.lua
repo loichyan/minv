@@ -5,6 +5,7 @@ function M.preset()
 
   ---@class MiNVPresetBufferline
   local preset = {
+    after = utils.callback.new(),
     setup = {
       options = {
         diagnostics = "nvim_lsp",
@@ -25,7 +26,6 @@ function M.preset()
       ["<S-l>"] = "<Cmd>BufferLineCycleNext<CR>",
       ["<Leader>x"] = "<Cmd>bdelete<CR>",
     }),
-    after = utils.callback.new(),
   }
   return preset
 end

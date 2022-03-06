@@ -6,6 +6,7 @@ function M.preset()
   ---@class MiNVPresetTrouble
   local preset = {
     enable = true,
+    after = utils.callback.new(),
     setup = {
       indent_lines = false,
       auto_close = true,
@@ -20,7 +21,6 @@ function M.preset()
         ["E"] = { "<Cmd>Trouble workspace_diagnostics<CR>", "Show workspace diagnostics" },
       },
     }),
-    after = utils.callback.new(),
   }
   return preset
 end

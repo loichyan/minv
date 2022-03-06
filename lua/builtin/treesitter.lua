@@ -5,15 +5,11 @@ function M.preset()
 
   ---@class MiNVPresetTreesitter
   local preset = {
-    setup = {
-      treesitter = {},
-      comments = {},
-    },
+    after = utils.callback.new(),
     keymaps = {
       toggle_line = "<Leader>/",
       toggle_block = "<Leader>a/",
     },
-    after = utils.callback.new(),
     install = utils.set.new({
       "bash",
       "c",
@@ -56,7 +52,7 @@ function M.setup(preset)
   preset.modules.context_commentstring.enable_autocmd = false
 
   -- Setup treesitter.
-  treesitter.setup(utils.tbl_merge(preset.setup.treesitter, preset.modules, {
+  treesitter.setup(utils.tbl_merge(preset.modules, {
     ensure_installed = preset.install:to_list(),
   }))
 
@@ -65,7 +61,7 @@ function M.setup(preset)
   local k_tg_block = utils.register_key()
   local k_op_line = utils.register_key()
   local k_op_block = utils.register_key()
-  comment.setup(utils.tbl_merge(preset.setup, {
+  comment.setup({
     pre_hook = function(ctx)
       local key = "__default"
       if ctx.ctype ~= comments_utils.ctype.line then
@@ -97,7 +93,7 @@ function M.setup(preset)
       extra = false,
       extended = false,
     },
-  }))
+  })
 
   -- Set keymaps.
   local keymaps = preset.keymaps

@@ -5,6 +5,7 @@ function M.preset()
 
   ---@class MiNVPresetLsp
   local preset = {
+    after = utils.callback.new(),
     setup = {
       lsp = {
         border = "rounded",
@@ -38,7 +39,6 @@ function M.preset()
         ["r"] = { "<Cmd>lua vim.lsp.buf.rename()<CR>", "Rename" },
       },
     }),
-    after = utils.callback.new(),
     install = utils.set.new({
       "sumneko_lua",
     }),

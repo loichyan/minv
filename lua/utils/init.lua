@@ -3,6 +3,7 @@ local M = {
   set = require("utils.set"),
   callback = require("utils.callback"),
   keymap = require("utils.keymap"),
+  lazy = require("utils.lazy"),
   register_key = others.register_key,
 }
 

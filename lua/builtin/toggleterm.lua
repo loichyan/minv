@@ -5,6 +5,7 @@ function M.preset()
 
   ---@class MiNVPresetTree
   local preset = {
+    after = utils.callback.new(),
     setup = {
       direction = "float",
       float_opts = {
@@ -15,7 +16,6 @@ function M.preset()
       ---Toggle terminal.
       toggle = "<C-t>",
     },
-    after = utils.callback.new(),
   }
   return preset
 end
