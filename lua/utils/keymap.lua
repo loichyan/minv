@@ -39,7 +39,7 @@ function M.new(init_mappings)
   local Keymap = {
     ---@type table<string,table<string,string|table>>
     _prefixed = {},
-    ---@type table<string, string|function>
+    ---@type table<string,string|function>
     _mappings = {},
   }
 
@@ -52,6 +52,11 @@ function M.new(init_mappings)
         self._mappings[key] = val
       end
     end
+  end
+
+  ---@param key string
+  function Keymap:get(key)
+    return self._prefixed[key] or self._mappings[key]
   end
 
   ---@param options table|nil
