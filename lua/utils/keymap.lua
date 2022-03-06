@@ -92,6 +92,10 @@ function M.new(init_mappings)
     end
   end
 
+  function Keymap:to_mappings()
+    return vim.tbl_extend("force", self._prefixed, self._prefixed)
+  end
+
   if init_mappings ~= nil then
     Keymap:extend(init_mappings)
   end

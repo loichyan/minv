@@ -29,9 +29,7 @@ end
 ---@param minv MiNV
 function M.apply(preset, minv)
   if preset.enable then
-    minv.builtin.lsp.on_attach:add(function(buf)
-      preset.keymaps:apply({ buffer = buf })
-    end)
+    minv.builtin.lsp.keymaps:extend(preset.keymaps:to_mappings())
   end
 end
 
