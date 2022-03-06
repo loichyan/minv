@@ -4,6 +4,7 @@ function M.preset()
   ---@class MiNVBuiltin
   local preset = {
     packer = require("core.packer").preset(),
+    which_key = require("builtin.which_key").preset(),
     treesitter = require("builtin.treesitter").preset(),
     cmp = require("builtin.cmp").preset(),
     lsp = require("builtin.lsp").preset(),
@@ -30,6 +31,13 @@ function M.setup(preset)
     ----------
     { "nvim-lua/plenary.nvim" },
     { "kyazdani42/nvim-web-devicons" },
+    {
+      "folke/which-key.nvim",
+      config = function()
+        require("builtin.which_key").setup(_MINV_BUILTIN.which_key)
+        _MINV_BUILTIN.which_key.after:apply()
+      end,
+    },
     {
       "lewis6991/gitsigns.nvim",
       config = function()

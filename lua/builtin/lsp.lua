@@ -18,21 +18,26 @@ function M.preset()
         debounce = 150,
       },
     },
-    keymaps = {
-      hover = "K",
-      signature_help = "gk",
-      show_line_diagnostics = "ge",
-      definition = "gd",
-      declaration = "gD",
-      implementation = "gI",
-      references = "gr",
-      document_diagnostics = "<Leader>le",
-      workspace_diagnostics = "<Leader>lE",
-      goto_next = "<Leader>lj",
-      goto_prev = "<Leader>lk",
-      rename = "<Leader>lr",
-      formatting = "<Leader>lf",
-    },
+    keymaps = utils.keymap.new({
+      ["K"] = "<Cmd>lua vim.lsp.buf.hover()<CR>",
+      ["g"] = {
+        ["k"] = { "<Cmd>lua vim.lsp.buf.signature_help()<CR>", "Show signature help" },
+        ["e"] = { "<Cmd>lua vim.diagnostic.open_float()<CR>", "Show diagnostic" },
+        ["d"] = { "<Cmd>lua vim.lsp.buf.definition()<CR>", "Goto definition" },
+        ["D"] = { "<Cmd>lua vim.lsp.buf.declaration()<CR>", "Goto declaration" },
+        ["I"] = { "<Cmd>lua vim.lsp.buf.implementation()<CR>", "Show implementation" },
+        ["r"] = { "<Cmd>lua vim.lsp.buf.references()<CR>", "Show references" },
+      },
+      ["<Leader>l"] = {
+        name = "Lsp",
+        ["e"] = { "<Cmd>lua vim.diagnostic.setloclist()<CR>", "Show document diagnostics" },
+        ["E"] = { "<Cmd>lua vim.diagnostic.setqflist()<CR>", "Show workspace diagnostics" },
+        ["j"] = { "<Cmd>lua vim.diagnostic.goto_next()<CR>", "Goto next diagnostic" },
+        ["k"] = { "<Cmd>lua vim.diagnostic.goto_prev()<CR>", "Goto prev diagnostic" },
+        ["f"] = { "<Cmd>lua vim.lsp.buf.formatting()<CR>", "Formatting" },
+        ["r"] = { "<Cmd>lua vim.lsp.buf.rename()<CR>", "Rename" },
+      },
+    }),
     after = utils.callback.new(),
     install = utils.set.new({
       "sumneko_lua",
@@ -53,27 +58,6 @@ function M.setup(preset)
   local lspconfig = require("lspconfig")
   local null_ls = require("null-ls")
   local utils = require("utils")
-
-  ---Set keymaps.
-  local function set_keymaps(buf)
-    local keymaps = preset.keymaps
-    utils.keymaps({
-      buffer = buf,
-      { keymaps.hover, "<Cmd>lua vim.lsp.buf.hover()<CR>" },
-      { keymaps.signature_help, "<Cmd>lua vim.lsp.buf.signature_help()<CR>" },
-      { keymaps.show_line_diagnostics, "<Cmd>lua vim.diagnostic.open_float()<CR>" },
-      { keymaps.definition, "<Cmd>lua vim.lsp.buf.definition()<CR>" },
-      { keymaps.declaration, "<Cmd>lua vim.lsp.buf.declaration()<CR>" },
-      { keymaps.implementation, "<Cmd>lua vim.lsp.buf.implementation()<CR>" },
-      { keymaps.references, "<Cmd>lua vim.lsp.buf.references()<CR>" },
-      { keymaps.document_diagnostics, "<Cmd>lua vim.diagnostic.setloclist()<CR>" },
-      { keymaps.workspace_diagnostics, "<Cmd>lua vim.diagnostic.setqflist()<CR>" },
-      { keymaps.goto_next, "<Cmd>lua vim.diagnostic.goto_next()<CR>" },
-      { keymaps.goto_prev, "<Cmd>lua vim.diagnostic.goto_prev()<CR>" },
-      { keymaps.formatting, "<Cmd>lua vim.lsp.buf.formatting()<CR>" },
-      { keymaps.rename, "<Cmd>lua vim.lsp.buf.rename()<CR>" },
-    })
-  end
 
   local function make_sources()
     local sources = {}
@@ -96,7 +80,7 @@ function M.setup(preset)
         augroup END
       ]])
     end
-    set_keymaps(buf)
+    preset.keymaps:apply({ buffer = buf })
     preset.on_attach:apply(buf)
   end
   local capabilities = cmp_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())

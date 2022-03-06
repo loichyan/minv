@@ -6,13 +6,21 @@ function M.preset()
   ---@class MiNVPresetTree
   local preset = {
     keymaps = {
-      close = { "<S-j><S-k>", "<S-k><S-j>" },
-      live_grep = "<Leader>ff",
-      marks = "<Leader>fm",
-      buffers = "<Leader>fb",
-      registers = "<Leader>fr",
-      git_commits = "<Leader>fg",
-      notify = "<Leader>fn",
+      prompt = utils.keymap.new({
+        ["<S-j><S-k>"] = "<Esc><Cmd>close!<CR>",
+        ["<S-k><S-j>"] = "<Esc><Cmd>close!<CR>",
+      }),
+      normal = utils.keymap.new({
+        ["<Leader>f"] = {
+          name = "Find",
+          ["f"] = { "<Cmd>Telescope live_grep<CR>", "Strings" },
+          ["m"] = { "<Cmd>Telescope marks<CR>", "Marks" },
+          ["b"] = { "<Cmd>Telescope buffers<CR>", "Buffers" },
+          ["r"] = { "<Cmd>Telescope registers<CR>", "Registers" },
+          ["g"] = { "<Cmd>Telescope git_commits<CR>", "Git commits" },
+          ["n"] = { "<Cmd>Telescope notify<CR>", "Notifications" },
+        },
+      }),
     },
     after = utils.callback.new(),
   }
@@ -39,23 +47,14 @@ function M.setup(preset)
   telescope.load_extension("notify")
 
   -- Set mappings in TelescopePrompt.
-  local keymaps = preset.keymaps
   utils.autocmd("FileType", "TelescopePrompt", function()
-    utils.keymaps({
+    preset.keymaps.prompt:apply({
       mode = "i",
       buffer = vim.api.nvim_get_current_buf(),
-      { keymaps.close, "<Esc><Cmd>close!<CR>" },
     })
   end)
 
   -- Set mappings for telescope commands.
-  utils.keymaps({
-    { keymaps.live_grep, "<Cmd>Telescope live_grep<CR>" },
-    { keymaps.marks, "<Cmd>Telescope marks<CR>" },
-    { keymaps.buffers, "<Cmd>Telescope buffers<CR>" },
-    { keymaps.registers, "<Cmd>Telescope registers<CR>" },
-    { keymaps.git_commits, "<Cmd>Telescope git_commits<CR>" },
-    { keymaps.notify, "<Cmd>Telescope notify<CR>" },
-  })
+  preset.keymaps.normal:apply()
 end
 return M

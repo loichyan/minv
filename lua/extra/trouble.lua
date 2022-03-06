@@ -10,12 +10,16 @@ function M.preset()
       indent_lines = false,
       auto_close = true,
     },
-    keymaps = {
-      implementation = "gI",
-      references = "gr",
-      document_diagnostics = "<Leader>le",
-      workspace_diagnostics = "<Leader>lE",
-    },
+    keymaps = utils.keymap.new({
+      ["g"] = {
+        ["I"] = { "<Cmd>Trouble lsp_implementations<CR>", "Show implementations" },
+        ["r"] = { "<Cmd>Trouble lsp_references<CR>", "Show references" },
+      },
+      ["<Leader>l"] = {
+        ["e"] = { "<Cmd>Trouble document_diagnostics<CR>", "Show document diagnostics" },
+        ["E"] = { "<Cmd>Trouble workspace_diagnostics<CR>", "Show workspace diagnostics" },
+      },
+    }),
     after = utils.callback.new(),
   }
   return preset
@@ -26,14 +30,7 @@ end
 function M.apply(preset, minv)
   if preset.enable then
     minv.builtin.lsp.on_attach:add(function(buf)
-      local keymaps = preset.keymaps
-      require("utils").keymaps({
-        buffer = buf,
-        { keymaps.implementation, "<Cmd>Trouble lsp_implementations<CR>" },
-        { keymaps.references, "<Cmd>Trouble lsp_references<CR>" },
-        { keymaps.document_diagnostics, "<Cmd>Trouble document_diagnostics<CR>" },
-        { keymaps.workspace_diagnostics, "<Cmd>Trouble workspace_diagnostics<CR>" },
-      })
+      preset.keymaps:apply({ buffer = buf })
     end)
   end
 end

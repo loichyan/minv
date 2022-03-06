@@ -102,15 +102,17 @@ function M.setup(preset)
   -- Set keymaps.
   local keymaps = preset.keymaps
   utils.keymaps({
-    noremap = false,
     { keymaps.toggle_line, k_tg_line },
     { keymaps.toggle_block, k_tg_block },
+  }, {
+    noremap = false,
   })
   utils.keymaps({
-    mode = "x",
-    noremap = false,
     { keymaps.toggle_line, k_op_line },
     { keymaps.toggle_block, k_op_block },
+  }, {
+    mode = "x",
+    noremap = false,
   })
 end
 

@@ -20,11 +20,11 @@ function M.preset()
         show_close_icon = false,
       },
     },
-    keymaps = {
-      prev = "<S-h>",
-      next = "<S-l>",
-      close = "<Leader>x",
-    },
+    keymaps = utils.keymap.new({
+      ["<S-h>"] = "<Cmd>BufferLineCyclePrev<CR>",
+      ["<S-l>"] = "<Cmd>BufferLineCycleNext<CR>",
+      ["<Leader>x"] = "<Cmd>bdelete<CR>",
+    }),
     after = utils.callback.new(),
   }
   return preset
@@ -32,19 +32,11 @@ end
 
 ---@param preset MiNVPresetBufferline
 function M.setup(preset)
-  local bufferline = require("bufferline")
-  local utils = require("utils")
-
   -- Setup BufferLine.
-  bufferline.setup(preset.setup)
+  require("bufferline").setup(preset.setup)
 
   -- Set keymaps.
-  local keymaps = preset.keymaps
-  utils.keymaps({
-    { keymaps.next, "<Cmd>BufferLineCycleNext<CR>" },
-    { keymaps.prev, "<Cmd>BufferLineCyclePrev<CR>" },
-    { keymaps.close, "<Cmd>bdelete<CR>" },
-  })
+  preset.keymaps:apply()
 end
 
 return M

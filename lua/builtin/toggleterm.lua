@@ -32,16 +32,18 @@ function M.setup(preset)
   -- Set keymaps.
   local keymaps = preset.keymaps
   utils.keymaps({
-    noremap = false,
     { keymaps.toggle, k_toggle },
+  }, {
+    noremap = false,
   })
   utils.autocmd("TermOpen", "term://*toggleterm#*", function()
     local buf = vim.api.nvim_get_current_buf()
     utils.keymaps({
+      { keymaps.toggle, k_toggle },
+    }, {
       mode = "t",
       buffer = buf,
       noremap = false,
-      { keymaps.toggle, k_toggle },
     })
   end)
 end

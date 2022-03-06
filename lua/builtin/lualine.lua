@@ -64,11 +64,10 @@ end
 
 ---@param preset MiNVPresetLualine
 function M.setup(preset)
-  local lualine = require("lualine")
   local utils = require("utils")
 
   -- Setup lualine.
-  lualine.setup(utils.tbl_merge(preset.setup, {
+  require("lualine").setup(utils.tbl_merge(preset.setup, {
     extensions = preset.extensions:to_list(),
   }))
 end

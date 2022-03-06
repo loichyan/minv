@@ -140,9 +140,13 @@ function M.setup(preset)
     local mappings = {}
     for k, f in pairs(map_fn) do
       local lhs = preset.keymaps[k]
-      utils.foreach_lhs(lhs, function(l)
-        mappings[l] = f
-      end)
+      if type(lhs) == "table" then
+        for _, l in ipairs(lhs) do
+          mappings[l] = f
+        end
+      else
+        mappings[lhs] = f
+      end
     end
     return mappings
   end

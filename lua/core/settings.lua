@@ -18,7 +18,7 @@ function M.preset()
     -- General
     clipboard = "unnamed",
     mouse = "a",
-    timeoutlen = 300,
+    timeoutlen = 200,
     updatetime = 300,
     -- Space
     expandtab = true,

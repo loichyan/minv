@@ -30,7 +30,6 @@ end
 
 ---@param preset MiNVPresetAlpha
 function M.setup(preset)
-  local alpha = require("alpha")
   local dashboard = require("alpha.themes.dashboard")
   local utils = require("utils")
 
@@ -40,7 +39,7 @@ function M.setup(preset)
     return dashboard.button(table.unpack(params))
   end)
   dashboard.section.footer.val = preset.footer
-  alpha.setup(dashboard.config)
+  require("alpha").setup(dashboard.config)
 end
 
 return M

@@ -19,8 +19,9 @@ function M.setup(keymaps)
     { "<Esc>", "<Cmd>nohlsearch<CR>" },
   })
   utils.keymaps({
-    mode = "i",
     { keymaps.esc_insert, "<esc>" },
+  }, {
+    mode = "i",
   })
   -- nohlsearch.
 end

@@ -37,9 +37,11 @@ function M.preset()
         },
       },
     },
-    keymaps = {
-      open = "<Leader>gg",
-    },
+    keymaps = utils.keymap.new({
+      ["<Leader>g"] = {
+        ["g"] = { "<Cmd>DiffviewOpen<CR>", "Open diffview" },
+      },
+    }),
     after = utils.callback.new(),
   }
   return preset
@@ -47,16 +49,11 @@ end
 
 ---@param preset MiNVPresetDiffview
 function M.setup(preset)
-  local utils = require("utils")
-
   -- Setup diffview.
   require("diffview").setup(preset.setup)
 
   -- Set keymaps.
-  local keymaps = preset.keymaps
-  utils.keymaps({
-    { keymaps.open, "<Cmd>DiffviewOpen<CR>" },
-  })
+  preset.keymaps:apply()
 end
 
 return M
