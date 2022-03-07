@@ -1,7 +1,8 @@
 local M = {}
 
-function M.components()
-  return {
+---@param minv MiNV
+function M.setup(minv)
+  local components = {
     mode = {
       function()
         return " "
@@ -17,59 +18,46 @@ function M.components()
     filetype = { "filetype", fmt = string.upper },
     progress = { "progress" },
   }
-end
 
-function M.preset()
-  local utils = require("utils")
-  local components = M.components()
-
-  ---@class MiNVPresetLualine
-  local preset = {
-    after = utils.callback.new(),
-    setup = {
-      options = {
-        theme = "auto",
-      },
-      sections = {
-        lualine_a = {
-          components.mode,
-        },
-        lualine_b = {
-          components.branch,
-          components.filename,
-        },
-        lualine_c = {
-          components.diff,
-        },
-        lualine_x = {
-          components.diagnostics,
-        },
-        lualine_y = {
-          components.encoding,
-          components.fileformat,
-          components.filetype,
-        },
-        lualine_z = {
-          components.progress,
-        },
-      },
-    },
-    extensions = utils.set.new({
-      "nvim-tree",
-      "toggleterm",
-    }),
+  local extensions = {
+    "nvim-tree",
+    "toggleterm",
+    "quickfix",
   }
-  return preset
-end
-
----@param preset MiNVPresetLualine
-function M.setup(preset)
-  local utils = require("utils")
+  for _, ext in ipairs(minv.builtin.lualine.extensions) do
+    table.insert(extensions, ext)
+  end
 
   -- Setup lualine.
-  require("lualine").setup(utils.tbl_merge(preset.setup, {
-    extensions = preset.extensions:to_list(),
-  }))
+  require("lualine").setup({
+    options = {
+      theme = "auto",
+    },
+    sections = {
+      lualine_a = {
+        components.mode,
+      },
+      lualine_b = {
+        components.branch,
+        components.filename,
+      },
+      lualine_c = {
+        components.diff,
+      },
+      lualine_x = {
+        components.diagnostics,
+      },
+      lualine_y = {
+        components.encoding,
+        components.fileformat,
+        components.filetype,
+      },
+      lualine_z = {
+        components.progress,
+      },
+    },
+    extensions = extensions,
+  })
 end
 
 return M

@@ -1,44 +1,19 @@
 local M = {}
 
-function M.preset()
-  local utils = require("utils")
-
-  ---@class MiNVPresetAlpha
-  local preset = {
-    after = utils.callback.new(),
-    header = {
-      "███╗   ██╗ ███████╗ ██████╗  ██╗   ██╗ ██╗ ███╗   ███╗",
-      "████╗  ██║ ██╔════╝██╔═══██╗ ██║   ██║ ██║ ████╗ ████║",
-      "██╔██╗ ██║ █████╗  ██║   ██║ ██║   ██║ ██║ ██╔████╔██║",
-      "██║╚██╗██║ ██╔══╝  ██║   ██║ ╚██╗ ██╔╝ ██║ ██║╚██╔╝██║",
-      "██║ ╚████║ ███████╗╚██████╔╝  ╚████╔╝  ██║ ██║ ╚═╝ ██║",
-      "╚═╝  ╚═══╝ ╚══════╝ ╚═════╝    ╚═══╝   ╚═╝ ╚═╝     ╚═╝",
-    },
-    buttons = {
-      { "f", "  Find File  ", ":Telescope find_files<CR>" },
-      { "o", "  Recent File  ", ":Telescope oldfiles<CR>" },
-      { "n", "  New File", ":ene<CR>" },
-      { "w", "  Find Word  ", ":Telescope live_grep<CR>" },
-      { "m", "  Bookmarks  ", ":Telescope marks<CR>" },
-      { "h", "  Themes  ", ":Telescope colorscheme<CR>" },
-      { "q", "  Quit", ":qa<CR>" },
-    },
-    footer = "Have fun with Neovim!",
-  }
-  return preset
-end
-
----@param preset MiNVPresetAlpha
-function M.setup(preset)
+---@param minv MiNV
+function M.setup(minv)
   local dashboard = require("alpha.themes.dashboard")
-  local utils = require("utils")
+
+  -- Load UI elements.
+  local buttons = {}
+  for _, val in ipairs(minv.builtin.dashboard.buttons) do
+    table.insert(buttons, dashboard.button(table.unpack(val)))
+  end
+  dashboard.section.buttons.val = buttons
+  dashboard.section.header.val = minv.builtin.dashboard.header()
+  dashboard.section.footer.val = minv.builtin.dashboard.footer()
 
   -- Setup alpha.
-  dashboard.section.header.val = preset.header
-  dashboard.section.buttons.val = utils.list_map(preset.buttons, function(params)
-    return dashboard.button(table.unpack(params))
-  end)
-  dashboard.section.footer.val = preset.footer
   require("alpha").setup(dashboard.config)
 end
 

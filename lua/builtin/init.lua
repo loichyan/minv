@@ -1,30 +1,155 @@
 local M = {}
 
 function M.preset()
+  --TODO: add more options
   ---@class MiNVBuiltin
   local preset = {
-    packer = require("core.packer").preset(),
-    which_key = require("builtin.which_key").preset(),
-    treesitter = require("builtin.treesitter").preset(),
-    cmp = require("builtin.cmp").preset(),
-    lsp = require("builtin.lsp").preset(),
-    telescope = require("builtin.telescope").preset(),
-    alpha = require("builtin.alpha").preset(),
-    bufferline = require("builtin.bufferline").preset(),
-    lualine = require("builtin.lualine").preset(),
-    tree = require("builtin.tree").preset(),
-    toggleterm = require("builtin.toggleterm").preset(),
-    tokyonight = require("builtin.tokyonight").preset(),
-    gitsigns = require("builtin.gitsigns").preset(),
+    lsp = {
+      ---Servers to be installed.
+      install = {
+        "sumneko_lua",
+      },
+      ---Settings passed to servers of `lsp-config`.
+      servers = {},
+      ---Additional `null-ls` formatters.
+      formatters = {},
+      ---Additional `null-ls` linters.
+      linters = {},
+    },
+    treesitter = {
+      ---Treesitters to be installed.
+      install = {
+        "lua",
+      },
+      highlight = {
+        enable = true,
+      },
+      incremental_selection = {
+        enable = true,
+      },
+      indent = {
+        enable = true,
+      },
+      context_commentstring = {
+        enable = true,
+      },
+    },
+    cmp = {
+      ---Sources to be loaded.
+      sources = {},
+      formatting = {
+        ---Single letter indicating the type of completion.
+        kind = {
+          Text = "",
+          Method = "",
+          Function = "",
+          Constructor = "",
+          Field = "ﰠ",
+          Variable = "",
+          Class = "ﴯ",
+          Interface = "",
+          Module = "",
+          Property = "ﰠ",
+          Unit = "塞",
+          Value = "",
+          Enum = "",
+          Keyword = "",
+          Snippet = "",
+          Color = "",
+          File = "",
+          Reference = "",
+          Folder = "",
+          EnumMember = "",
+          Constant = "",
+          Struct = "פּ",
+          Event = "",
+          Operator = "",
+          TypeParameter = "",
+        },
+        ---Text displayed after `word`.
+        menu = {
+          luasnip = "[SNIP]",
+          nvim_lsp = "[LSP]",
+          path = "[PATH]",
+          buffer = "[BUF]",
+        },
+        ---Indicates entries should not be added when same words present.
+        dup = {
+          ["buffer"] = true,
+        },
+      },
+    },
+    which_key = {
+      operators = { ["gc"] = "Toggle line comments", ["gb"] = "Toggle block comments" },
+      triggers = "auto",
+      ignore_missing = false,
+      groups = {
+        ["<Leader>l"] = "Lsp",
+        ["<Leader>f"] = "Search",
+        ["<Leader>g"] = "Git",
+      },
+    },
+    dashboard = {
+      header = function()
+        return {
+          "███╗   ██╗ ███████╗ ██████╗  ██╗   ██╗ ██╗ ███╗   ███╗",
+          "████╗  ██║ ██╔════╝██╔═══██╗ ██║   ██║ ██║ ████╗ ████║",
+          "██╔██╗ ██║ █████╗  ██║   ██║ ██║   ██║ ██║ ██╔████╔██║",
+          "██║╚██╗██║ ██╔══╝  ██║   ██║ ╚██╗ ██╔╝ ██║ ██║╚██╔╝██║",
+          "██║ ╚████║ ███████╗╚██████╔╝  ╚████╔╝  ██║ ██║ ╚═╝ ██║",
+          "╚═╝  ╚═══╝ ╚══════╝ ╚═════╝    ╚═══╝   ╚═╝ ╚═╝     ╚═╝",
+        }
+      end,
+      buttons = {
+        { "n", "  New Files", ":ene<CR>" },
+        { "o", "  Recent Files", ":Telescope oldfiles<CR>" },
+        { "f", "  Find Files", ":Telescope find_files<CR>" },
+        { "w", "  Find Words", ":Telescope live_grep<CR>" },
+        { "m", "  Find Bookmarks", ":Telescope marks<CR>" },
+        { "h", "  Find Themes", ":Telescope colorscheme<CR>" },
+        { "q", "  Quit", ":qa<CR>" },
+      },
+      footer = function()
+        ---@diagnostic disable-next-line:undefined-global
+        return string.format("Neovim loaded %d plugins  ", vim.tbl_count(packer_plugins))
+      end,
+    },
+    bufferline = {
+      offsets = {},
+    },
+    lualine = {
+      extensions = {},
+    },
+    tree = {
+      respect_buf_cwd = 0,
+      update_cwd = true,
+      update_focused_file = {
+        enable = true,
+        update_cwd = false,
+      },
+      git = {
+        enable = true,
+        ignore = true,
+        timeout = 500,
+      },
+      view = {
+        auto_resize = true,
+      },
+      filters = {
+        custom = {
+          ".git",
+          ".cache",
+          "node_modules",
+        },
+      },
+    },
   }
   return preset
 end
 
----@param preset MiNVBuiltin
-function M.setup(preset)
-  _MINV_BUILTIN = preset
-  local ts_modules = preset.treesitter.modules
-  local cmp_sources = preset.cmp.sources
+---@param minv MiNV
+function M.setup(minv)
+  M._MINV = minv
   return {
     ----------
     -- Deps --
@@ -34,107 +159,62 @@ function M.setup(preset)
     {
       "folke/which-key.nvim",
       config = function()
-        require("builtin.which_key").setup(_MINV_BUILTIN.which_key)
-        _MINV_BUILTIN.which_key.after:apply()
+        require("builtin.which_key").setup(require("builtin")._MINV)
       end,
     },
     {
       "lewis6991/gitsigns.nvim",
       config = function()
-        require("builtin.gitsigns").setup(_MINV_BUILTIN.gitsigns)
-        _MINV_BUILTIN.gitsigns.after:apply()
+        require("builtin.gitsigns").setup(require("builtin")._MINV)
       end,
     },
-    -----------------
-    -- Tree Sitter --
-    -----------------
+    ----------------
+    -- Treesitter --
+    ----------------
     {
       "nvim-treesitter/nvim-treesitter",
       config = function()
-        require("builtin.treesitter").setup(_MINV_BUILTIN.treesitter)
-        _MINV_BUILTIN.treesitter.after:apply()
+        require("builtin.treesitter").setup(require("builtin")._MINV)
       end,
     },
-    {
-      "andymass/vim-matchup",
-      requires = "nvim-treesitter/nvim-treesitter",
-      disable = not ts_modules.matchup.enable,
-    },
     -- Comments
-    {
-      "numToStr/Comment.nvim",
-      requires = "JoosepAlviste/nvim-ts-context-commentstring",
-    },
-    {
-      "JoosepAlviste/nvim-ts-context-commentstring",
-      requires = "nvim-treesitter/nvim-treesitter",
-    },
+    { "numToStr/Comment.nvim" },
+    { "JoosepAlviste/nvim-ts-context-commentstring" },
     ---------
     -- LSP --
     ---------
     {
       "neovim/nvim-lspconfig",
-      requires = {
-        "jose-elias-alvarez/null-ls.nvim",
-        "williamboman/nvim-lsp-installer",
-        "folke/trouble.nvim",
-        "folke/lua-dev.nvim",
-      },
       config = function()
-        require("builtin.lsp").setup(_MINV_BUILTIN.lsp)
-        _MINV_BUILTIN.lsp.after:apply()
+        require("builtin.lsp").setup(require("builtin")._MINV)
       end,
     },
     { "jose-elias-alvarez/null-ls.nvim" },
     { "williamboman/nvim-lsp-installer" },
-    { "folke/lua-dev.nvim" },
     ----------------
     -- Completion --
     ----------------
     {
       "hrsh7th/nvim-cmp",
-      requires = { "L3MON4D3/LuaSnip" },
       config = function()
-        require("builtin.cmp").setup(_MINV_BUILTIN.cmp)
-        _MINV_BUILTIN.cmp.after:apply()
+        require("builtin.cmp").setup(require("builtin")._MINV)
       end,
     },
     -- Completion sources
-    {
-      "saadparwaiz1/cmp_luasnip",
-      disable = not cmp_sources:has("luasnip"),
-      requires = "hrsh7th/nvim-cmp",
-    },
-    {
-      "hrsh7th/cmp-nvim-lsp",
-      disable = not cmp_sources:has("nvim_lsp"),
-      requires = "hrsh7th/nvim-cmp",
-    },
-    {
-      "hrsh7th/cmp-path",
-      disable = not cmp_sources:has("path"),
-      requires = "hrsh7th/nvim-cmp",
-    },
-    {
-      "hrsh7th/cmp-buffer",
-      disable = not cmp_sources:has("buffer"),
-      requires = "hrsh7th/nvim-cmp",
-    },
+    { "saadparwaiz1/cmp_luasnip" },
+    { "hrsh7th/cmp-nvim-lsp" },
+    { "hrsh7th/cmp-path" },
+    { "hrsh7th/cmp-buffer" },
     -- Snippets
-    {
-      "L3MON4D3/LuaSnip",
-      requires = "rafamadriz/friendly-snippets",
-    },
+    { "L3MON4D3/LuaSnip" },
     { "rafamadriz/friendly-snippets" },
     ---------------
     -- Telescope --
     ---------------
     {
       "nvim-telescope/telescope.nvim",
-      requires = { "nvim-telescope/telescope-fzf-native.nvim", "rcarriga/nvim-notify" },
       config = function()
-        require("builtin.telescope").setup(_MINV_BUILTIN.telescope)
-        _MINV_BUILTIN.telescope.after:apply()
+        require("builtin.telescope").setup(require("builtin")._MINV)
       end,
     },
     { "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
@@ -144,43 +224,39 @@ function M.setup(preset)
     {
       "goolord/alpha-nvim",
       config = function()
-        require("builtin.alpha").setup(_MINV_BUILTIN.alpha)
-        _MINV_BUILTIN.alpha.after:apply()
+        require("builtin.alpha").setup(require("builtin")._MINV)
       end,
     },
     {
       "nvim-lualine/lualine.nvim",
       config = function()
-        require("builtin.lualine").setup(_MINV_BUILTIN.lualine)
-        _MINV_BUILTIN.lualine.after:apply()
+        require("builtin.lualine").setup(require("builtin")._MINV)
       end,
     },
     {
       "akinsho/bufferline.nvim",
       config = function()
-        require("builtin.bufferline").setup(_MINV_BUILTIN.bufferline)
-        _MINV_BUILTIN.bufferline.after:apply()
+        require("builtin.bufferline").setup(require("builtin")._MINV)
       end,
     },
     {
       "kyazdani42/nvim-tree.lua",
       config = function()
-        require("builtin.tree").setup(_MINV_BUILTIN.tree)
-        _MINV_BUILTIN.tree.after:apply()
+        require("builtin.tree").setup(require("builtin")._MINV)
       end,
     },
     {
       "akinsho/toggleterm.nvim",
       config = function()
-        require("builtin.toggleterm").setup(_MINV_BUILTIN.toggleterm)
-        _MINV_BUILTIN.toggleterm.after:apply()
+        require("builtin.toggleterm").setup(require("builtin")._MINV)
       end,
     },
     {
       "folke/tokyonight.nvim",
       config = function()
-        require("builtin.tokyonight").setup(_MINV_BUILTIN.tokyonight)
-        _MINV_BUILTIN.tokyonight.after:apply()
+        -- Setup tokyonight.
+        vim.g.tokyonight_style = "night"
+        vim.cmd([[colorscheme tokyonight]])
       end,
     },
   }

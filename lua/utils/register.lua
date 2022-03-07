@@ -47,7 +47,7 @@ end
 ---@param f function
 ---@return string
 function M.cmd(f)
-  return string.format([[lua require("utils.others").call_fn(%d)]], M.register_fn(f))
+  return string.format([[lua require("utils.register").call_fn(%d)]], M.register_fn(f))
 end
 
 local _registered_keys = _random_map()
@@ -55,7 +55,7 @@ local _registered_keys = _random_map()
 ---Register a `<Plug>` key to the global variable.
 ---@return string
 function M.register_key()
-  return string.format("<Plug>(_MiNVKeymap#%d)", _registered_keys:insert(true))
+  return string.format("<Plug>(MiNVRegisteredKey#%d)", _registered_keys:insert(true))
 end
 
 return M

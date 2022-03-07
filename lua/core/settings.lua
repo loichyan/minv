@@ -1,20 +1,20 @@
 local M = {}
 
 function M.preset()
-  local utils = require("utils")
-
   ---@class MiNVSettings
   local preset = {
+    -- Window
+    border = "rounded",
     -- Leader
     leader = " ",
-    markdown_highlight = utils.set.new({
+    markdown_highlight = {
       "bash",
       "c",
       "json",
       "lua",
       "python",
       "sh",
-    }),
+    },
     -- General
     clipboard = "unnamed",
     mouse = "a",
@@ -39,39 +39,34 @@ function M.preset()
   return preset
 end
 
----@param preset MiNVSettings
-function M.setup(preset)
-  local utils = require("utils")
+---@param minv MiNV
+function M.setup(minv)
+  local settings = minv.settings
 
   -- Apply options
-  utils.g({
-    mapleader = preset.leader,
-    markdown_fenced_languages = preset.markdown_highlight:to_list(),
-  })
-  utils.o({
+  local g = {
+    mapleader = settings.leader,
+    markdown_fenced_languages = settings.markdown_highlight,
+  }
+  local o = {
     -- General
-    clipboard = preset.clipboard,
-    mouse = preset.mouse,
-    timeoutlen = preset.timeoutlen,
-    updatetime = preset.updatetime,
+    clipboard = settings.clipboard,
+    mouse = settings.mouse,
+    timeoutlen = settings.timeoutlen,
+    updatetime = settings.updatetime,
     -- Spaces
-    tabstop = preset.tabstop,
-    shiftwidth = preset.shiftwidth,
+    tabstop = settings.tabstop,
+    shiftwidth = settings.shiftwidth,
     -- Search
-    hlsearch = preset.hlsearch,
-    ignorecase = preset.ignorecase,
-    smartcase = preset.smartcase,
+    hlsearch = settings.hlsearch,
+    ignorecase = settings.ignorecase,
+    smartcase = settings.smartcase,
     -- File
-    swapfile = preset.swapfile,
-    undofile = preset.undofile,
-    relativenumber = preset.relativenumber,
-  })
-
-  -- Reserved options
-  utils.o({
-
+    swapfile = settings.swapfile,
+    undofile = settings.undofile,
     -- Line number
-    number = true,
+    number = settings.number,
+    relativenumber = settings.relativenumber,
     -- Space
     expandtab = true,
     smartindent = true,
@@ -84,7 +79,13 @@ function M.setup(preset)
     -- Window
     splitbelow = true,
     splitright = true,
-  })
+  }
+  for k, v in pairs(g) do
+    vim.g[k] = v
+  end
+  for k, v in pairs(o) do
+    vim.o[k] = v
+  end
 end
 
 return M

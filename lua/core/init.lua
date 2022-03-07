@@ -3,44 +3,37 @@ local M = {}
 function M.preset()
   ---@class MiNV
   local preset = {
-    ---Builtin plugins.
     builtin = require("builtin").preset(),
-    ---Extra plugins.
-    extra = {},
-    ---Vim settings.
-    settings = require("core.settings").preset(),
-    ---Auto commands.
     autocmds = require("core.autocmds").preset(),
-    ---Keymaps.
-    keymaps = require("core.keymaps").preset(),
+    settings = require("core.settings").preset(),
+    keybindings = require("core.keybindings").preset(),
+    -- TODO: add hooks
   }
   return preset
 end
 
 function M.setup()
   -- Speed up startup time.
-  local ok_impatient, impatient = pcall(require, "impatient")
-  if ok_impatient then
-    impatient.enable_profile()
-  end
+  pcall(require, "impatient")
 
   -- Load presets.
   local minv = M.preset()
 
   -- Load customization.
+  local extra = {}
   local ok_custom, custom = pcall(require, "custom")
   if ok_custom then
-    custom.setup(minv)
+    extra = custom.setup(minv)
   end
 
   -- Plugins.
-  require("core.plugins").setup(minv)
+  require("core.plugins").setup(minv, extra)
   -- Settings.
-  require("core.settings").setup(minv.settings)
-  -- Keymaps.
-  require("core.keymaps").setup(minv.keymaps)
+  require("core.settings").setup(minv)
+  -- Keybindings.
+  require("core.keybindings").setup(minv)
   -- Auto commands.
-  require("core.autocmds").setup(minv.autocmds)
+  require("core.autocmds").setup(minv)
 end
 
 return M

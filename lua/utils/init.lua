@@ -1,88 +1,38 @@
-local others = require("utils.others")
+local register = require("utils.register")
+local keybinding = require("utils.keybinding")
 local M = {
-  set = require("utils.set"),
-  callback = require("utils.callback"),
-  keymap = require("utils.keymap"),
-  lazy = require("utils.lazy"),
-  register_key = others.register_key,
+  Keybinding = keybinding.new,
+  register_key = register.register_key,
 }
 
------------
--- Table --
------------
-
----Merge tables.
----@return table
-function M.tbl_merge(...)
-  local merged = {}
-  for _, rhs in ipairs({ ... }) do
-    if rhs ~= nil then
-      merged = vim.tbl_extend("force", merged, rhs)
-    end
-  end
-  return merged
+---@param bindings table<string,string|any[]|table<string,string|any[]>>
+---@param options table<string,boolean>
+function M.set_keybindings(bindings, options)
+  keybinding.new(bindings):apply(true, nil, options)
 end
 
----@param list any[]
----@return any[]
-function M.list_map(list, f)
-  local mapped = {}
-  for _, v in ipairs(list) do
-    table.insert(mapped, f(v))
+---@generic T
+---@param list T[]
+---@return table<T,boolean>
+function M.list_to_set(list)
+  local set = {}
+  for _, val in ipairs(list) do
+    set[val] = true
   end
-  return mapped
+  return set
 end
-
------------------
--- VIM Options --
------------------
-
----Set Vim options.
----@param opts table<string, any>
-function M.o(opts)
-  for k, v in pairs(opts) do
-    vim.o[k] = v
-  end
-end
-
----Set Vim globals.
----@param vars table<string, any>
-function M.g(vars)
-  for k, v in pairs(vars) do
-    vim.g[k] = v
-  end
-end
-
-------------
--- Others --
-------------
 
 ---Auto command.
 ---@param event string
 ---@param pat string
----@param cmd string
+---@param cmd string|function
 function M.autocmd(event, pat, cmd)
   if type(cmd) == "function" then
-    cmd = others.cmd(cmd)
+    cmd = register.cmd(cmd)
   end
-  vim.cmd(string.format("autocmd %s %s %s", event, pat, cmd))
-end
-
----Set keymaps.
----@param mappings table[]
-function M.keymaps(mappings, opts)
-  local mappings2 = {}
-  for _, m in ipairs(mappings) do
-    local lhs, rhs = table.unpack(m)
-    if type(lhs) == "table" then
-      for _, l in ipairs(lhs) do
-        mappings2[l] = rhs
-      end
-    else
-      mappings2[lhs] = rhs
-    end
+  if type(cmd) == "string" then
+    vim.cmd(string.format("autocmd %s %s %s", event, pat, cmd))
   end
-  M.keymap.set(mappings2, opts)
 end
 
 return M

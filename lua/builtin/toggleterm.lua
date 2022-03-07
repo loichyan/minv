@@ -1,50 +1,27 @@
 local M = {}
 
-function M.preset()
-  local utils = require("utils")
-
-  ---@class MiNVPresetTree
-  local preset = {
-    after = utils.callback.new(),
-    setup = {
-      direction = "float",
-      float_opts = {
-        border = "rounded",
-      },
-    },
-    keymaps = {
-      ---Toggle terminal.
-      toggle = "<C-t>",
-    },
-  }
-  return preset
-end
-
----@param preset MiNVPresetTree
-function M.setup(preset)
-  local toggleterm = require("toggleterm")
+---@param minv MiNV
+function M.setup(minv)
   local utils = require("utils")
 
   -- Setup toggleterm.
   local k_toggle = utils.register_key()
-  toggleterm.setup(utils.tbl_merge(preset.setup, { open_mapping = k_toggle }))
+  require("toggleterm").setup({
+    direction = "float",
+    float_opts = {
+      border = minv.settings.border,
+    },
+    open_mapping = k_toggle,
+  })
 
-  -- Set keymaps.
-  local keymaps = preset.keymaps
-  utils.keymaps({
-    { keymaps.toggle, k_toggle },
-  }, {
-    noremap = false,
+  -- Set keybindings.
+  minv.keybindings.n:apply(false, {
+    ["terminal.toggle"] = { k_toggle, "Toggle terminal", noremap = false },
   })
   utils.autocmd("TermOpen", "term://*toggleterm#*", function()
-    local buf = vim.api.nvim_get_current_buf()
-    utils.keymaps({
-      { keymaps.toggle, k_toggle },
-    }, {
-      mode = "t",
-      buffer = buf,
-      noremap = false,
-    })
+    minv.keybindings.terminal:apply(true, {
+      ["terminal.toggle"] = { k_toggle, "Toggle terminal", noremap = false },
+    }, { mode = "t", buffer = 0 })
   end)
 end
 

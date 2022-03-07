@@ -1,115 +1,89 @@
 local M = {}
 
-function M.preset()
+---@param minv MiNV
+function M.setup(minv)
   local utils = require("utils")
-
-  ---@class MiNVPresetTreesitter
-  local preset = {
-    after = utils.callback.new(),
-    keymaps = {
-      toggle_line = "<Leader>/",
-      toggle_block = "<Leader>a/",
-    },
-    install = utils.set.new({
-      "bash",
-      "c",
-      "json",
-      "lua",
-      "python",
-    }),
-    modules = {
-      highlight = {
-        enable = true,
-      },
-      incremental_selection = {
-        enable = true,
-      },
-      indent = {
-        enable = true,
-      },
-      matchup = {
-        enable = true,
-      },
-      context_commentstring = {
-        config = {},
-      },
-    },
-  }
-  return preset
-end
-
----@param preset MiNVPresetTreesitter
-function M.setup(preset)
-  local treesitter = require("nvim-treesitter.configs")
-  local comment = require("Comment")
-  local comments_utils = require("Comment.utils")
-  local cmstring_utils = require("ts_context_commentstring.utils")
-  local cmstring_internal = require("ts_context_commentstring.internal")
-  local utils = require("utils")
-
-  -- Ensure `context_commentstring` is enabled.
-  preset.modules.context_commentstring.enable = true
-  preset.modules.context_commentstring.enable_autocmd = false
+  local preset = minv.builtin.treesitter
 
   -- Setup treesitter.
-  treesitter.setup(utils.tbl_merge(preset.modules, {
-    ensure_installed = preset.install:to_list(),
-  }))
+  require("nvim-treesitter.configs").setup({
+    ensure_installed = preset.install,
+    highlight = preset.highlight,
+    incremental_selection = preset.incremental_selection,
+    indent = preset.indent,
+    context_commentstring = preset.context_commentstring,
+  })
+
+  local function pre_hook(ctx)
+    local comment_utils = require("Comment.utils")
+    local cmstring_utils = require("ts_context_commentstring.utils")
+
+    local key = "__default"
+    if ctx.ctype ~= comment_utils.ctype.line then
+      key = "__multiline"
+    end
+
+    local location = nil
+    if ctx.ctype == comment_utils.ctype.block then
+      location = cmstring_utils.get_cursor_location()
+    elseif ctx.cmotion == comment_utils.cmotion.v or ctx.cmotion == comment_utils.cmotion.V then
+      location = cmstring_utils.get_visual_start_location()
+    end
+
+    return require("ts_context_commentstring.internal").calculate_commentstring({
+      key = key,
+      location = location,
+    })
+  end
 
   -- Setup comments.
-  local k_tg_line = utils.register_key()
-  local k_tg_block = utils.register_key()
-  local k_op_line = utils.register_key()
-  local k_op_block = utils.register_key()
-  comment.setup({
-    pre_hook = function(ctx)
-      local key = "__default"
-      if ctx.ctype ~= comments_utils.ctype.line then
-        key = "__multiline"
-      end
-
-      local location = nil
-      if ctx.ctype == comments_utils.ctype.block then
-        location = cmstring_utils.get_cursor_location()
-      elseif ctx.cmotion == comments_utils.cmotion.v or ctx.cmotion == comments_utils.cmotion.V then
-        location = cmstring_utils.get_visual_start_location()
-      end
-
-      return cmstring_internal.calculate_commentstring({
-        key = key,
-        location = location,
-      })
-    end,
+  local keys = {
+    toggle_line = utils.register_key(),
+    toggle_block = utils.register_key(),
+    operator_line = utils.register_key(),
+    operator_block = utils.register_key(),
+    insert_above = utils.register_key(),
+    insert_below = utils.register_key(),
+    insert_eol = utils.register_key(),
+  }
+  require("Comment").setup({
+    pre_hook = pre_hook,
     toggler = {
-      line = k_tg_line,
-      block = k_tg_block,
+      line = keys.toggle_line,
+      block = keys.toggle_block,
     },
     opleader = {
-      line = k_op_line,
-      block = k_op_block,
+      line = keys.operator_line,
+      block = keys.operator_block,
+    },
+    extra = {
+      above = keys.insert_above,
+      below = keys.insert_below,
+      eol = keys.insert_eol,
     },
     mappings = {
       basic = true,
-      extra = false,
+      extra = true,
       extended = false,
     },
   })
 
-  -- Set keymaps.
-  local keymaps = preset.keymaps
-  utils.keymaps({
-    { keymaps.toggle_line, k_tg_line },
-    { keymaps.toggle_block, k_tg_block },
-  }, {
-    noremap = false,
+  -- Set keybindings.
+  local label_line = "Toggle line comments"
+  local lable_block = "Toggle block comments"
+  minv.keybindings.n:apply(false, {
+    ["comment.toggle_line"] = { keys.toggle_line, label_line, noremap = false },
+    ["comment.toggle_block"] = { keys.toggle_block, lable_block, noremap = false },
+    ["comment.operator_line"] = { keys.operator_line, label_line, noremap = false },
+    ["comment.operator_block"] = { keys.operator_block, lable_block, noremap = false },
+    ["comment.insert_above"] = { keys.insert_above, "Insert comment above", noremap = false },
+    ["comment.insert_below"] = { keys.insert_below, "Insert comment below", noremap = false },
+    ["comment.insert_eol"] = { keys.insert_eol, "Insert comment at EOL", noremap = false },
   })
-  utils.keymaps({
-    { keymaps.toggle_line, k_op_line },
-    { keymaps.toggle_block, k_op_block },
-  }, {
-    mode = "x",
-    noremap = false,
-  })
+  minv.keybindings.x:apply(false, {
+    ["comment.operator_line"] = { keys.operator_line, label_line, noremap = false },
+    ["comment.operator_block"] = { keys.operator_block, lable_block, noremap = false },
+  }, { mode = "x" })
 end
 
 return M

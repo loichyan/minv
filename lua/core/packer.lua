@@ -1,18 +1,6 @@
 local M = {}
 
-function M.preset()
-  ---@class MiNVPresetPacker
-  local preset = {
-    setup = {
-      prompt_border = "rounded",
-    },
-  }
-  return preset
-end
-
----@param preset MiNVPresetPacker
-function M.setup(preset)
-  local utils = require("utils")
+function M.setup(...)
   local present, packer = pcall(require, "packer")
 
   -- Install packer.
@@ -34,15 +22,7 @@ function M.setup(preset)
     packer = require("packer")
   end
 
-  -- Setup packer.
-  packer.init(utils.tbl_merge(preset.setup, {
-    display = {
-      open_fn = function()
-        return require("packer.util").float({ border = preset.setup.prompt_border })
-      end,
-    },
-  }))
-
+  packer.startup(...)
   return packer
 end
 

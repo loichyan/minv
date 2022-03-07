@@ -1,6 +1,7 @@
 local M = {}
 
-local function _make_mapping()
+---@param minv MiNV
+function M.setup(minv)
   local cmp = require("cmp")
   local luasnip = require("luasnip")
 
@@ -13,15 +14,13 @@ local function _make_mapping()
     return luasnip.jumpable(dir) and luasnip.in_snippet()
   end
 
-  return {
-    ["<C-d>"] = cmp.mapping.scroll_docs(-4),
-    ["<C-u>"] = cmp.mapping.scroll_docs(4),
-    ["<C-Space>"] = cmp.mapping.complete(),
-    ["<CR>"] = cmp.mapping.confirm({
-      select = true,
-    }),
-    ["<C-e>"] = cmp.mapping.close(),
-    ["<Tab>"] = cmp.mapping(function(fallback)
+  local mapping, _ = minv.keybindings.cmp:map({
+    ["cmp.scroll_down"] = cmp.mapping.scroll_docs(-4),
+    ["cmp.scroll_up"] = cmp.mapping.scroll_docs(4),
+    ["cmp.complete"] = cmp.mapping.complete(),
+    ["cmp.confirm"] = cmp.mapping.confirm({ select = true }),
+    ["cmp.close"] = cmp.mapping.close(),
+    ["cmp.select_next"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
       elseif luasnip.expandable() then
@@ -34,7 +33,7 @@ local function _make_mapping()
         fallback()
       end
     end),
-    ["<S-Tab>"] = cmp.mapping(function(fallback)
+    ["cmp.select_prev"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
       elseif locally_jumpable(-1) then
@@ -45,106 +44,29 @@ local function _make_mapping()
         fallback()
       end
     end),
+  })
+
+  local sources = {
+    { name = "luasnip" },
+    { name = "nvim_lsp" },
+    { name = "path" },
+    { name = "buffer" },
   }
-end
-
-function M.preset()
-  local utils = require("utils")
-
-  ---@class MiNVPresetCmp
-  local preset = {
-    after = utils.callback.new(),
-    setup = utils.lazy.new(function()
-      local cmp = require("cmp")
-
-      ---@class MiNVBuiltinCmpSetup
-      local setup = {
-        cmp = {
-          documentation = {
-            border = "rounded",
-          },
-          confirmation = {
-            default_behavior = cmp.ConfirmBehavior.Replace,
-          },
-          mapping = _make_mapping(),
-        },
-        luasnip = {
-          histroy = false,
-        },
-      }
-      return setup
-    end),
-    formatting = {
-      kind = {
-        Class = " ",
-        Color = " ",
-        Constant = "ﲀ ",
-        Constructor = " ",
-        Enum = "練 ",
-        EnumMember = " ",
-        Event = " ",
-        Field = " ",
-        File = " ",
-        Folder = " ",
-        Function = " ",
-        Interface = "ﰮ ",
-        Keyword = " ",
-        Method = " ",
-        Module = " ",
-        Operator = " ",
-        Property = " ",
-        Reference = " ",
-        Snippet = " ",
-        Struct = " ",
-        Text = " ",
-        TypeParameter = " ",
-        Unit = "塞 ",
-        Value = " ",
-        Variable = " ",
-      },
-      menu = {
-        luasnip = "[SNIP]",
-        nvim_lsp = "[LSP]",
-        path = "[PATH]",
-        buffer = "[BUF]",
-      },
-      dup = {
-        luasnip = 1,
-        nvim_lsp = 1,
-        path = 1,
-        buffer = 0,
-      },
-      dup_default = 1,
-    },
-    sources = utils.set.new({
-      "luasnip",
-      "nvim_lsp",
-      "path",
-      "buffer",
-    }),
-  }
-  return preset
-end
-
----@param preset MiNVPresetCmp
-function M.setup(preset)
-  local cmp = require("cmp")
-  local luasnip = require("luasnip")
-  local utils = require("utils")
-
-  ---Make sources.
-  local function make_sources()
-    local sources = {}
-    for _, name in ipairs(preset.sources:to_list()) do
-      table.insert(sources, { name = name })
-    end
-    return cmp.config.sources(sources)
+  for _, src in ipairs(minv.builtin.cmp.sources) do
+    table.insert(sources, src)
   end
 
-  -- Setup plugins.
-  local setup = preset.setup:apply()
-  luasnip.config.setup(setup.luasnip)
-  cmp.setup(utils.tbl_merge(setup.cmp, {
+  -- Setup luasnip.
+  luasnip.config.setup({})
+
+  -- Setup cmp.
+  cmp.setup({
+    documentation = {
+      border = minv.settings.border,
+    },
+    confirmation = {
+      default_behavior = cmp.ConfirmBehavior.Replace,
+    },
     snippet = {
       expand = function(args)
         luasnip.lsp_expand(args.body)
@@ -153,16 +75,20 @@ function M.setup(preset)
     formatting = {
       fields = { "kind", "abbr", "menu" },
       format = function(entry, vim_item)
-        vim_item.kind = preset.formatting.kind[vim_item.kind]
-        vim_item.menu = preset.formatting.menu[entry.source.name]
-        vim_item.dup = preset.formatting.dup[entry.source.name] or preset.formatting.dup_default
+        vim_item.kind = minv.builtin.cmp.formatting.kind[vim_item.kind]
+        vim_item.menu = minv.builtin.cmp.formatting.menu[entry.source.name]
+        vim_item.dup = 1
+        if minv.builtin.cmp.formatting.dup[entry.source.name] == true then
+          vim_item.dup = 0
+        end
         return vim_item
       end,
     },
-    sources = make_sources(),
-  }))
+    mapping = mapping,
+    sources = sources,
+  })
 
-  -- Load friendly snippets.
+  -- Load friendly-snippets.
   require("luasnip.loaders.from_vscode").lazy_load()
 end
 

@@ -1,53 +1,17 @@
 local M = {}
 
-function M.preset()
-  local utils = require("utils")
-
-  ---@class MiNVPresetTree
-  local preset = {
-    after = utils.callback.new(),
-    setup = {
-      disable_netrw = true,
-      auto_close = false,
-      update_cwd = true,
-      update_focused_file = {
-        enable = true,
-      },
-      git = {
-        enable = true,
-        ignore = true,
-        timeout = 500,
-      },
-      view = {
-        auto_resize = true,
-      },
-    },
-    keymaps = utils.keymap.new({
-      ["<C-b>"] = "<Cmd>NvimTreeToggle<CR>",
-      ["<C-n>"] = "<Cmd>NvimTreeFocus<CR>",
-    }),
-    filters = utils.set.new({
-      ".git",
-      ".cache",
-      "node_modules",
-    }),
-  }
-  return preset
-end
-
----@param preset MiNVPresetTree
-function M.setup(preset)
-  local utils = require("utils")
-
+---@param minv MiNV
+function M.setup(minv)
+  local preset = minv.builtin.tree
   -- Setup nvim-tree.
-  require("nvim-tree").setup(utils.tbl_merge(preset.setup, {
-    filters = {
-      custom = preset.filters:to_list(),
-    },
-  }))
-
-  -- Set keymaps.
-  preset.keymaps:apply()
+  vim.g.nvim_tree_respect_buf_cwd = preset.respect_buf_cwd
+  require("nvim-tree").setup({
+    update_cwd = preset.update_cwd,
+    update_focused_file = preset.update_focused_file,
+    git = preset.git,
+    view = preset.view,
+    filters = preset.filters,
+  })
 end
 
 return M
