@@ -3,7 +3,7 @@ local M = {}
 function M.preset()
   ---@class MiNVSettings
   local preset = {
-    -- Window
+    -- Global
     border = "rounded",
     -- Leader
     leader = " ",
@@ -41,32 +41,32 @@ end
 
 ---@param minv MiNV
 function M.setup(minv)
-  local settings = minv.settings
+  local preset = minv.settings
 
   -- Apply options
   local g = {
-    mapleader = settings.leader,
-    markdown_fenced_languages = settings.markdown_highlight,
+    mapleader = preset.leader,
+    markdown_fenced_languages = preset.markdown_highlight,
   }
   local o = {
     -- General
-    clipboard = settings.clipboard,
-    mouse = settings.mouse,
-    timeoutlen = settings.timeoutlen,
-    updatetime = settings.updatetime,
+    clipboard = preset.clipboard,
+    mouse = preset.mouse,
+    timeoutlen = preset.timeoutlen,
+    updatetime = preset.updatetime,
     -- Spaces
-    tabstop = settings.tabstop,
-    shiftwidth = settings.shiftwidth,
+    tabstop = preset.tabstop,
+    shiftwidth = preset.shiftwidth,
     -- Search
-    hlsearch = settings.hlsearch,
-    ignorecase = settings.ignorecase,
-    smartcase = settings.smartcase,
+    hlsearch = preset.hlsearch,
+    ignorecase = preset.ignorecase,
+    smartcase = preset.smartcase,
     -- File
-    swapfile = settings.swapfile,
-    undofile = settings.undofile,
+    swapfile = preset.swapfile,
+    undofile = preset.undofile,
     -- Line number
-    number = settings.number,
-    relativenumber = settings.relativenumber,
+    number = preset.number,
+    relativenumber = preset.relativenumber,
     -- Space
     expandtab = true,
     smartindent = true,

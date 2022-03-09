@@ -4,6 +4,10 @@ function M.preset()
   --TODO: add more options
   ---@class MiNVBuiltin
   local preset = {
+    tokyonight = {
+      enable = true,
+      stype = "night",
+    },
     lsp = {
       ---Servers to be installed.
       install = {
@@ -151,17 +155,31 @@ end
 function M.setup(minv)
   M._MINV = minv
   return {
-    ----------
-    -- Deps --
-    ----------
+    -----------
+    -- Basic --
+    -----------
+    -- Deps.
     { "nvim-lua/plenary.nvim" },
     { "kyazdani42/nvim-web-devicons" },
+    -- Theme.
+    {
+      "folke/tokyonight.nvim",
+      config = function()
+        local preset = require("builtin")._MINV.builtin.tokyonight
+        if preset.enable then
+          vim.cmd("colorscheme tokyonight")
+          vim.g.tokyonight_style = minv.builtin.tokyonight.stype
+        end
+      end,
+    },
+    -- Keybinding.
     {
       "folke/which-key.nvim",
       config = function()
         require("builtin.which_key").setup(require("builtin")._MINV)
       end,
     },
+    -- Git.
     {
       "lewis6991/gitsigns.nvim",
       config = function()
@@ -249,14 +267,6 @@ function M.setup(minv)
       "akinsho/toggleterm.nvim",
       config = function()
         require("builtin.toggleterm").setup(require("builtin")._MINV)
-      end,
-    },
-    {
-      "folke/tokyonight.nvim",
-      config = function()
-        -- Setup tokyonight.
-        vim.g.tokyonight_style = "night"
-        vim.cmd([[colorscheme tokyonight]])
       end,
     },
   }
