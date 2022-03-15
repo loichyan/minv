@@ -1,2 +1,1 @@
--- Setup.
 require("core").setup()

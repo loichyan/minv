@@ -65,12 +65,12 @@ function M.setup(minv)
     -----------
     -- Basic --
     -----------
-    -- Deps.
+    -- Deps
     { "nvim-lua/plenary.nvim" },
     { "kyazdani42/nvim-web-devicons" },
-    -- Theme.
+    -- Theme
     { "folke/tokyonight.nvim" },
-    -- Keybinding.
+    -- Keybinding
     { "folke/which-key.nvim" },
     ---------
     -- Git --

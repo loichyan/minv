@@ -17,10 +17,10 @@ function M.setup(minv)
   -- Add extra treesitters.
   vim.list_extend(minv.builtin.treesitter.ensure_installed, { "rust" })
 
-  -- Lsp servers.
+  -- Lsp servers
   vim.list_extend(minv.builtin.lsp.install, { "rust_analyzer" })
 
-  -- Rust-analyzer.
+  -- Rust-analyzer
   minv.builtin.lsp.servers.rust_analyzer = {
     ["rust-analyzer"] = {
       experimental = {
@@ -51,7 +51,7 @@ function M.setup(minv)
         })
       end,
     },
-    -- Todo comments.
+    -- Todo comments
     {
       "folke/todo-comments.nvim",
       config = function()
@@ -76,7 +76,7 @@ function M.setup(minv)
         })
       end,
     },
-    -- Project.
+    -- Project
     {
       "ahmedkhalf/project.nvim",
       config = function()
@@ -85,14 +85,14 @@ function M.setup(minv)
         })
       end,
     },
-    -- Surround.
+    -- Surround
     { "tpope/vim-surround" },
     { "tpope/vim-repeat" },
     -- Auto adjusts `shiftwidth` and `expandtab`
     { "tpope/vim-sleuth" },
-    -- Signature help.
+    -- Signature help
     { "hrsh7th/cmp-nvim-lsp-signature-help" },
-    -- Autopairs.
+    -- Autopairs
     {
       "windwp/nvim-autopairs",
       config = function()

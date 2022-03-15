@@ -35,10 +35,10 @@ function M.setup(minv)
   local header = dashboard.section.header
   local buttons = dashboard.section.buttons
   local footer = dashboard.section.footer
-  -- Header.
+  -- Header
   header.val = minv.builtin.dashboard.header()
   header.opts.hl = "DashboardHeader"
-  -- Buttons.
+  -- Buttons
   buttons.val = {}
   for _, val in ipairs(minv.builtin.dashboard.buttons) do
     local butn = dashboard.button(unpack(val))
@@ -46,7 +46,7 @@ function M.setup(minv)
     butn.opts.hl_shortcut = "DashboardShortcut"
     table.insert(buttons.val, butn)
   end
-  -- Footer.
+  -- Footer
   footer.val = minv.builtin.dashboard.footer()
   footer.opts.hl = "DashboardFooter"
 
