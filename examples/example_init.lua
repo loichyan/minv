@@ -15,7 +15,7 @@ function M.setup(minv)
   )
 
   -- Add extra treesitters.
-  vim.list_extend(minv.builtin.treesitter.install, { "rust" })
+  vim.list_extend(minv.builtin.treesitter.ensure_installed, { "rust" })
 
   -- Lsp servers.
   vim.list_extend(minv.builtin.lsp.install, { "rust_analyzer" })
@@ -30,9 +30,12 @@ function M.setup(minv)
   }
 
   -- Extend sumneko_lua with vim library.
-  local lua_dev = require("lua-dev").setup({})
-  lua_dev.settings["Lua"].workspace.library[vim.fn.expand("~/.config/nvim")] = true
-  minv.builtin.lsp.servers.sumneko_lua = lua_dev.settings
+  local ok_lua_dev, lua_dev = pcall(require, "lua-dev")
+  if ok_lua_dev then
+    lua_dev = lua_dev.setup({})
+    lua_dev.settings["Lua"].workspace.library[vim.fn.expand("~/.config/nvim")] = true
+    minv.builtin.lsp.servers.sumneko_lua = lua_dev.settings
+  end
   minv.builtin.lsp.formatters.stylua = {}
 
   -- Return extra plugins.

@@ -1,5 +1,84 @@
 local M = {}
 
+function M.preset()
+  local ok, cmp = pcall(require, "cmp")
+  local default_behavior = nil
+  if ok then
+    default_behavior = cmp.ConfirmBehavior.Replace
+  end
+
+  local kind = {
+    Text = "",
+    Method = "",
+    Function = "",
+    Constructor = "",
+    Field = "ﰠ",
+    Variable = "",
+    Class = "ﴯ",
+    Interface = "",
+    Module = "",
+    Property = "ﰠ",
+    Unit = "塞",
+    Value = "",
+    Enum = "",
+    Keyword = "",
+    Snippet = "",
+    Color = "",
+    File = "",
+    Reference = "",
+    Folder = "",
+    EnumMember = "",
+    Constant = "",
+    Struct = "פּ",
+    Event = "",
+    Operator = "",
+    TypeParameter = "",
+  }
+  local menu = {
+    luasnip = "[SNIP]",
+    nvim_lsp = "[LSP]",
+    path = "[PATH]",
+    buffer = "[BUF]",
+  }
+  local dup = {
+    ["buffer"] = true,
+  }
+
+  return {
+    documentation = {
+      border = "rounded",
+    },
+    confirmation = {
+      default_behavior = default_behavior,
+    },
+    ---Sources to be loaded.
+    sources = {
+      { name = "luasnip" },
+      { name = "nvim_lsp" },
+      { name = "path" },
+      { name = "buffer" },
+    },
+    formatting = {
+      ---Single letter indicating the type of completion.
+      kind = kind,
+      ---Text displayed after `word`.
+      menu = menu,
+      ---Indicates entries should not be added when same words present.
+      dup = dup,
+      fields = { "kind", "abbr", "menu" },
+      format = function(entry, vim_item)
+        vim_item.kind = kind[vim_item.kind]
+        vim_item.menu = menu[entry.source.name]
+        vim_item.dup = 1
+        if dup[entry.source.name] == true then
+          vim_item.dup = 0
+        end
+        return vim_item
+      end,
+    },
+  }
+end
+
 ---@param minv MiNV
 function M.setup(minv)
   local cmp = require("cmp")
@@ -14,7 +93,7 @@ function M.setup(minv)
     return luasnip.jumpable(dir) and luasnip.in_snippet()
   end
 
-  local mapping, _ = minv.keybindings.cmp:map({
+  local mapping, unmapped = minv.keybindings.cmp:map({
     ["cmp.scroll_down"] = cmp.mapping.scroll_docs(-4),
     ["cmp.scroll_up"] = cmp.mapping.scroll_docs(4),
     ["cmp.complete"] = cmp.mapping.complete(),
@@ -45,47 +124,27 @@ function M.setup(minv)
       end
     end),
   })
-
-  local sources = {
-    { name = "luasnip" },
-    { name = "nvim_lsp" },
-    { name = "path" },
-    { name = "buffer" },
-  }
-  for _, src in ipairs(minv.builtin.cmp.sources) do
-    table.insert(sources, src)
+  for key, val in pairs(unmapped) do
+    local fn, _ = table.unpack(val)
+    mapping[key] = fn
   end
 
   -- Setup luasnip.
-  luasnip.config.setup({})
+  luasnip.config.setup(minv.builtin.luasnip)
 
   -- Setup cmp.
+  local preset = minv.builtin.cmp
   cmp.setup({
-    documentation = {
-      border = minv.settings.border,
-    },
-    confirmation = {
-      default_behavior = cmp.ConfirmBehavior.Replace,
-    },
     snippet = {
       expand = function(args)
         luasnip.lsp_expand(args.body)
       end,
     },
     formatting = {
-      fields = { "kind", "abbr", "menu" },
-      format = function(entry, vim_item)
-        vim_item.kind = minv.builtin.cmp.formatting.kind[vim_item.kind]
-        vim_item.menu = minv.builtin.cmp.formatting.menu[entry.source.name]
-        vim_item.dup = 1
-        if minv.builtin.cmp.formatting.dup[entry.source.name] == true then
-          vim_item.dup = 0
-        end
-        return vim_item
-      end,
+      fields = preset.formatting.fields,
+      format = preset.formatting.format,
     },
     mapping = mapping,
-    sources = sources,
   })
 
   -- Load friendly-snippets.

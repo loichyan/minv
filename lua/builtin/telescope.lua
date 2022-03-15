@@ -1,10 +1,9 @@
 local M = {}
 
-function M.setup(_)
-  local telescope = require("telescope")
-
-  -- Setup telescope.
-  telescope.setup({
+function M.preset()
+  return {
+    defaults = {},
+    pickers = {},
     extensions = {
       fzf = {
         fuzzy = true,
@@ -13,10 +12,17 @@ function M.setup(_)
         case_mode = "smart_case",
       },
     },
-  })
+  }
+end
+
+---@param minv MiNV
+function M.setup(minv)
+  local telescope = require("telescope")
+
+  -- Setup telescope.
+  telescope.setup(minv.builtin.telescope)
 
   -- Laad extensions.
   telescope.load_extension("fzf")
-  telescope.load_extension("projects")
 end
 return M

@@ -3,7 +3,7 @@ local M = {}
 
 ---@param options table<string,any>
 ---@return string?,number?,table<string,boolean>
-local function parse_options(options)
+function M.parse_options(options)
   local mode = options.mode
   local buffer = options.buffer
   local opts = {
@@ -17,58 +17,29 @@ local function parse_options(options)
   return mode, buffer, opts
 end
 
-local function get_binding_handler()
-  ---@param mode string
-  ---@param buffer? integer
-  ---@param bindings table<string,any[]>
-  ---@param options table<string,boolean>
-  local handler = function(mode, buffer, bindings, options)
-    -- Determine bindings handler.
-    local map = vim.api.nvim_set_keymap
-    if buffer ~= nil then
-      map = function(...)
-        vim.api.nvim_buf_set_keymap(buffer, ...)
-      end
-    end
-
-    -- Apply bindings.
-    for lhs, val in pairs(bindings) do
-      local rhs, _ = table.unpack(val)
-      local _, _, opts = parse_options(val)
-      if type(rhs) == "function" then
-        rhs = string.format("<Cmd>%s<CR>", register.cmd(rhs))
-      end
-      map(mode, lhs, rhs, vim.tbl_extend("force", options, opts))
+---@param mode string
+---@param buffer? integer
+---@param bindings table<string,any[]>
+---@param options table<string,boolean>
+function M.handler(mode, buffer, bindings, options)
+  -- Determine bindings handler.
+  local map = vim.api.nvim_set_keymap
+  if buffer ~= nil then
+    map = function(...)
+      vim.api.nvim_buf_set_keymap(buffer, ...)
     end
   end
 
-  -- Use which-key to handle bindings.
-  local ok, wk = pcall(require, "which-key")
-  if ok then
-    ---@param mode string
-    ---@param buffer? integer
-    ---@param bindings table<string,any[]>
-    ---@param options table<string,boolean>
-    handler = function(mode, buffer, bindings, options)
-      for lhs, val in pairs(bindings) do
-        local rhs, name = table.unpack(val)
-        local _, _, opts = parse_options(val)
-        wk.register(
-          { [lhs] = { rhs, name } },
-          vim.tbl_extend("force", options, opts, {
-            prefix = "",
-            mode = mode,
-            buffer = buffer,
-          })
-        )
-      end
+  -- Apply bindings.
+  for lhs, val in pairs(bindings) do
+    local rhs, _ = table.unpack(val)
+    local _, _, opts = M.parse_options(val)
+    if type(rhs) == "function" then
+      rhs = string.format("<Cmd>%s<CR>", register.cmd(rhs))
     end
+    map(mode, lhs, rhs, vim.tbl_extend("force", options, opts))
   end
-
-  return handler
 end
-
-local binding_handler = get_binding_handler()
 
 ---@param init_bindings?  table<string,string|any[]|table<string,string|any[]>>
 function M.new(init_bindings)
@@ -132,7 +103,7 @@ function M.new(init_bindings)
   ---@param sources? table<string,any[]>
   ---@param options? table<string,any>
   function Keybinding:apply(unsourced, sources, options)
-    local mode, buffer, opts = parse_options(options or {})
+    local mode, buffer, opts = M.parse_options(options or {})
     -- Default options.
     mode = mode or "n"
     opts.noremap = opts.noremap ~= false or false
@@ -141,9 +112,9 @@ function M.new(init_bindings)
     local bindings, unmapped = self:map(sources or {})
     -- Apply unsourced bindings.
     if unsourced then
-      binding_handler(mode, buffer, unmapped, opts)
+      M.handler(mode, buffer, unmapped, opts)
     end
-    binding_handler(mode, buffer, bindings, opts)
+    M.handler(mode, buffer, bindings, opts)
   end
 
   if init_bindings ~= nil then

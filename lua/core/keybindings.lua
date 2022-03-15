@@ -5,15 +5,15 @@ function M.preset()
 
   ---@class MiNVKeybindings
   local preset = {
-    ---Mappings in n mode.
-    n = utils.Keybinding({
+    [""] = utils.Keybinding(),
+    ["n"] = utils.Keybinding({
       -- normal
       ["<C-s>"] = "normal.write",
       ["<Esc>"] = "normal.nohlsearch",
       -- bufferline
       ["<S-l>"] = "bufferline.goto_next",
       ["<S-h>"] = "bufferline.goto_prev",
-      ["<C-c>"] = "bufferline.close",
+      ["<Leader>x"] = "bufferline.close",
       -- nvim-tree
       ["<C-b>"] = "tree.toggle",
       ["<C-n>"] = "tree.focus",
@@ -48,18 +48,23 @@ function M.preset()
       -- terminal
       ["<C-t>"] = "terminal.toggle",
     }),
-    ---Mappings in i mode.
-    i = utils.Keybinding({
-      -- insert
-      ["jk"] = "insert.escape",
-      ["kj"] = "insert.escape",
-    }),
-    ---Mappings in x mode.
-    x = utils.Keybinding({
+    ["v"] = utils.Keybinding(),
+    ["x"] = utils.Keybinding({
       -- comment
       ["gc"] = "comment.operator_line",
       ["gb"] = "comment.operator_block",
     }),
+    ["s"] = utils.Keybinding(),
+    ["o"] = utils.Keybinding(),
+    ["!"] = utils.Keybinding(),
+    ["i"] = utils.Keybinding({
+      -- insert
+      ["jk"] = "insert.escape",
+      ["kj"] = "insert.escape",
+    }),
+    ["l"] = utils.Keybinding(),
+    ["c"] = utils.Keybinding(),
+    ["t"] = utils.Keybinding(),
     ---Bindings for terminals.
     terminal = utils.Keybinding({
       ["<C-t>"] = "terminal.toggle",
@@ -100,38 +105,51 @@ end
 
 ---@param minv MiNV
 function M.setup(minv)
-  minv.keybindings.n:apply(true, {
-    -- normal
-    ["normal.write"] = { "<Cmd>write<CR>", "Write buffer" },
-    ["normal.nohlsearch"] = { "<Cmd>nohlsearch<CR>", "No hlsearch" },
-    -- bufferline
-    ["bufferline.goto_next"] = { "<Cmd>BufferLineCycleNext<CR>", "Goto next buffer" },
-    ["bufferline.goto_prev"] = { "<Cmd>BufferLineCyclePrev<CR>", "Goto prev buffer" },
-    ["bufferline.close"] = { "<Cmd>bdelete<CR>", "Close buffer" },
-    -- nvim-tree
-    ["tree.toggle"] = { "<Cmd>NvimTreeToggle<CR>", "Toggle tree" },
-    ["tree.focus"] = { "<Cmd>NvimTreeFocus<CR>", "Focus tree" },
-    -- git
-    ["git.goto_next_hunk"] = { "<Cmd>Gitsigns next_hunk<CR>", "Goto next hunk" },
-    ["git.goto_prev_hunk"] = { "<Cmd>Gitsigns prev_hunk<CR>", "Goto prev hunk" },
-    ["git.blame_line"] = { "<Cmd>Gitsigns blame_line<CR>", "Blame line" },
-    ["git.reset_line"] = { "<Cmd>Gitsigns reset_hunk<CR>", "Reset hun" },
-    ["git.reset_buffer"] = { "<Cmd>Gitsigns reset_buffer<CR>", "Reset buffer" },
-    ["git.state_hunk"] = { "<Cmd>Gitsigns stage_hunk<CR>", "Stage hunk" },
-    ["git.stage_buffer"] = { "<Cmd>Gitsigns stage_buffer<CR>", "Stage buffer" },
-    ["git.undo_stage_hunk"] = { "<Cmd>Gitsigns undo_stage_hunk<CR>", "Undo stage hunk" },
-    ["git.preview_hunk"] = { "<Cmd>Gitsigns preview_hunk<CR>", "Preview hunk" },
-    -- telescope
-    ["telescope.grep"] = { "<Cmd>Telescope live_grep<CR>", "Search strings" },
-    ["telescope.marks"] = { "<Cmd>Telescope marks<CR>", "Search marks" },
-    ["telescope.buffers"] = { "<Cmd>Telescope buffers<CR>", "Search buffers" },
-    ["telescope.registers"] = { "<Cmd>Telescope registers<CR>", "Search registers" },
-    ["telescope.git_commits"] = { "<Cmd>Telescope git_commits<CR>", "Search git commits" },
-  })
-  minv.keybindings.i:apply(true, {
-    ["insert.escape"] = { "<Esc>", "Escape" },
-  }, { mode = "i" })
-  minv.keybindings.x:apply(true, {}, { mode = "x" })
+  local sources = {
+    [""] = {},
+    ["n"] = {
+      -- normal
+      ["normal.write"] = { "<Cmd>write<CR>", "Write buffer" },
+      ["normal.nohlsearch"] = { "<Cmd>nohlsearch<CR>", "No hlsearch" },
+      -- bufferline
+      ["bufferline.goto_next"] = { "<Cmd>BufferLineCycleNext<CR>", "Goto next buffer" },
+      ["bufferline.goto_prev"] = { "<Cmd>BufferLineCyclePrev<CR>", "Goto prev buffer" },
+      ["bufferline.close"] = { "<Cmd>bdelete<CR>", "Close buffer" },
+      -- nvim-tree
+      ["tree.toggle"] = { "<Cmd>NvimTreeToggle<CR>", "Toggle tree" },
+      ["tree.focus"] = { "<Cmd>NvimTreeFocus<CR>", "Focus tree" },
+      -- git
+      ["git.goto_next_hunk"] = { "<Cmd>Gitsigns next_hunk<CR>", "Goto next hunk" },
+      ["git.goto_prev_hunk"] = { "<Cmd>Gitsigns prev_hunk<CR>", "Goto prev hunk" },
+      ["git.blame_line"] = { "<Cmd>Gitsigns blame_line<CR>", "Blame line" },
+      ["git.reset_line"] = { "<Cmd>Gitsigns reset_hunk<CR>", "Reset hunk" },
+      ["git.reset_buffer"] = { "<Cmd>Gitsigns reset_buffer<CR>", "Reset buffer" },
+      ["git.state_hunk"] = { "<Cmd>Gitsigns stage_hunk<CR>", "Stage hunk" },
+      ["git.stage_buffer"] = { "<Cmd>Gitsigns stage_buffer<CR>", "Stage buffer" },
+      ["git.undo_stage_hunk"] = { "<Cmd>Gitsigns undo_stage_hunk<CR>", "Undo stage hunk" },
+      ["git.preview_hunk"] = { "<Cmd>Gitsigns preview_hunk<CR>", "Preview hunk" },
+      -- telescope
+      ["telescope.grep"] = { "<Cmd>Telescope live_grep<CR>", "Search strings" },
+      ["telescope.marks"] = { "<Cmd>Telescope marks<CR>", "Search marks" },
+      ["telescope.buffers"] = { "<Cmd>Telescope buffers<CR>", "Search buffers" },
+      ["telescope.registers"] = { "<Cmd>Telescope registers<CR>", "Search registers" },
+      ["telescope.git_commits"] = { "<Cmd>Telescope git_commits<CR>", "Search git commits" },
+    },
+    ["v"] = {},
+    ["x"] = {},
+    ["s"] = {},
+    ["o"] = {},
+    ["!"] = {},
+    ["i"] = {
+      ["insert.escape"] = { "<Esc>", "Escape" },
+    },
+    ["l"] = {},
+    ["c"] = {},
+    ["t"] = {},
+  }
+  for m, src in pairs(sources) do
+    minv.keybindings[m]:apply(true, src, { mode = m })
+  end
 end
 
 return M

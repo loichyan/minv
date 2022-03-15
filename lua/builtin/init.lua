@@ -1,152 +1,46 @@
 local M = {}
 
 function M.preset()
-  --TODO: add more options
   ---@class MiNVBuiltin
   local preset = {
     tokyonight = {
       enable = true,
-      stype = "night",
+      style = "night",
     },
-    lsp = {
-      ---Servers to be installed.
-      install = {
-        "sumneko_lua",
-      },
-      ---Settings passed to servers of `lsp-config`.
-      servers = {},
-      ---Additional `null-ls` formatters.
-      formatters = {},
-      ---Additional `null-ls` linters.
-      linters = {},
-    },
-    treesitter = {
-      ---Treesitters to be installed.
-      install = {
-        "lua",
-      },
-      highlight = {
-        enable = true,
-      },
-      incremental_selection = {
-        enable = true,
-      },
-      indent = {
-        enable = true,
-      },
-      context_commentstring = {
-        enable = true,
+    packer = {
+      display = {
+        open_fn = function()
+          return require("packer.util").float({ border = "rounded" })
+        end,
       },
     },
-    cmp = {
-      ---Sources to be loaded.
-      sources = {},
-      formatting = {
-        ---Single letter indicating the type of completion.
-        kind = {
-          Text = "",
-          Method = "",
-          Function = "",
-          Constructor = "",
-          Field = "ﰠ",
-          Variable = "",
-          Class = "ﴯ",
-          Interface = "",
-          Module = "",
-          Property = "ﰠ",
-          Unit = "塞",
-          Value = "",
-          Enum = "",
-          Keyword = "",
-          Snippet = "",
-          Color = "",
-          File = "",
-          Reference = "",
-          Folder = "",
-          EnumMember = "",
-          Constant = "",
-          Struct = "פּ",
-          Event = "",
-          Operator = "",
-          TypeParameter = "",
-        },
-        ---Text displayed after `word`.
-        menu = {
-          luasnip = "[SNIP]",
-          nvim_lsp = "[LSP]",
-          path = "[PATH]",
-          buffer = "[BUF]",
-        },
-        ---Indicates entries should not be added when same words present.
-        dup = {
-          ["buffer"] = true,
-        },
+    which_key = require("builtin.which_key").preset(),
+    gitsigns = require("builtin.gitsigns").preset(),
+    treesitter = require("builtin.treesitter").preset(),
+    comment = {
+      sticky = true,
+      padding = true,
+    },
+    lsp = require("builtin.lsp").preset(),
+    lspconfig = {
+      flags = {
+        debounce_text_changes = 250,
       },
     },
-    which_key = {
-      operators = { ["gc"] = "Toggle line comments", ["gb"] = "Toggle block comments" },
-      triggers = "auto",
-      ignore_missing = false,
-      groups = {
-        ["<Leader>l"] = "Lsp",
-        ["<Leader>f"] = "Search",
-        ["<Leader>g"] = "Git",
-      },
+    null_ls = {
+      debounce = 250,
     },
-    dashboard = {
-      header = function()
-        return {
-          "███╗   ██╗ ███████╗ ██████╗  ██╗   ██╗ ██╗ ███╗   ███╗",
-          "████╗  ██║ ██╔════╝██╔═══██╗ ██║   ██║ ██║ ████╗ ████║",
-          "██╔██╗ ██║ █████╗  ██║   ██║ ██║   ██║ ██║ ██╔████╔██║",
-          "██║╚██╗██║ ██╔══╝  ██║   ██║ ╚██╗ ██╔╝ ██║ ██║╚██╔╝██║",
-          "██║ ╚████║ ███████╗╚██████╔╝  ╚████╔╝  ██║ ██║ ╚═╝ ██║",
-          "╚═╝  ╚═══╝ ╚══════╝ ╚═════╝    ╚═══╝   ╚═╝ ╚═╝     ╚═╝",
-        }
-      end,
-      buttons = {
-        { "n", "  New Files", ":ene<CR>" },
-        { "o", "  Recent Files", ":Telescope oldfiles<CR>" },
-        { "f", "  Find Files", ":Telescope find_files<CR>" },
-        { "w", "  Find Words", ":Telescope live_grep<CR>" },
-        { "m", "  Find Bookmarks", ":Telescope marks<CR>" },
-        { "h", "  Find Themes", ":Telescope colorscheme<CR>" },
-        { "q", "  Quit", ":qa<CR>" },
-      },
-      footer = function()
-        ---@diagnostic disable-next-line:undefined-global
-        return string.format("Neovim loaded %d plugins  ", vim.tbl_count(packer_plugins))
-      end,
+    lsp_installer = {},
+    cmp = require("builtin.cmp").preset(),
+    luasnip = {
+      history = false,
     },
-    bufferline = {
-      offsets = {},
-    },
-    lualine = {
-      extensions = {},
-    },
-    tree = {
-      respect_buf_cwd = 0,
-      update_cwd = true,
-      update_focused_file = {
-        enable = true,
-        update_cwd = false,
-      },
-      git = {
-        enable = true,
-        ignore = true,
-        timeout = 500,
-      },
-      view = {
-        auto_resize = true,
-      },
-      filters = {
-        custom = {
-          ".git",
-          ".cache",
-          "node_modules",
-        },
-      },
-    },
+    telescope = require("builtin.telescope").preset(),
+    toggleterm = require("builtin.toggleterm").preset(),
+    tree = require("builtin.tree").preset(),
+    bufferline = require("builtin.bufferline").preset(),
+    lualine = require("builtin.lualine").preset(),
+    dashboard = require("builtin.alpha").preset(),
   }
   return preset
 end
@@ -154,6 +48,19 @@ end
 ---@param minv MiNV
 function M.setup(minv)
   M._MINV = minv
+
+  -- Set colorscheme.
+  local tokyonight = minv.builtin.tokyonight
+  if tokyonight.enable then
+    vim.g.tokyonight_style = tokyonight.style
+    pcall(vim.cmd, "colorscheme tokyonight")
+  end
+
+  -- Setup which-key.
+  if minv.builtin.which_key.enable then
+    require("builtin.which_key").setup(minv)
+  end
+
   return {
     -----------
     -- Basic --
@@ -162,24 +69,12 @@ function M.setup(minv)
     { "nvim-lua/plenary.nvim" },
     { "kyazdani42/nvim-web-devicons" },
     -- Theme.
-    {
-      "folke/tokyonight.nvim",
-      config = function()
-        local preset = require("builtin")._MINV.builtin.tokyonight
-        if preset.enable then
-          vim.cmd("colorscheme tokyonight")
-          vim.g.tokyonight_style = minv.builtin.tokyonight.stype
-        end
-      end,
-    },
+    { "folke/tokyonight.nvim" },
     -- Keybinding.
-    {
-      "folke/which-key.nvim",
-      config = function()
-        require("builtin.which_key").setup(require("builtin")._MINV)
-      end,
-    },
-    -- Git.
+    { "folke/which-key.nvim" },
+    ---------
+    -- Git --
+    ---------
     {
       "lewis6991/gitsigns.nvim",
       config = function()
@@ -240,21 +135,9 @@ function M.setup(minv)
     -- UI --
     --------
     {
-      "goolord/alpha-nvim",
+      "akinsho/toggleterm.nvim",
       config = function()
-        require("builtin.alpha").setup(require("builtin")._MINV)
-      end,
-    },
-    {
-      "nvim-lualine/lualine.nvim",
-      config = function()
-        require("builtin.lualine").setup(require("builtin")._MINV)
-      end,
-    },
-    {
-      "akinsho/bufferline.nvim",
-      config = function()
-        require("builtin.bufferline").setup(require("builtin")._MINV)
+        require("builtin.toggleterm").setup(require("builtin")._MINV)
       end,
     },
     {
@@ -264,9 +147,21 @@ function M.setup(minv)
       end,
     },
     {
-      "akinsho/toggleterm.nvim",
+      "akinsho/bufferline.nvim",
       config = function()
-        require("builtin.toggleterm").setup(require("builtin")._MINV)
+        require("builtin.bufferline").setup(require("builtin")._MINV)
+      end,
+    },
+    {
+      "nvim-lualine/lualine.nvim",
+      config = function()
+        require("builtin.lualine").setup(require("builtin")._MINV)
+      end,
+    },
+    {
+      "goolord/alpha-nvim",
+      config = function()
+        require("builtin.alpha").setup(require("builtin")._MINV)
       end,
     },
   }

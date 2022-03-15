@@ -1,5 +1,24 @@
 local M = {}
 
+function M.preset()
+  return {
+    ---Servers to be installed.
+    install = {
+      "sumneko_lua",
+    },
+    ---Settings passed to servers of `lsp-config`.
+    servers = {},
+    ---Additional `null-ls` formatters.
+    formatters = {},
+    ---Additional `null-ls` linters.
+    linters = {},
+    border = "rounded",
+    on_server_setup = function(opts)
+      return opts
+    end,
+  }
+end
+
 ---@param minv MiNV
 function M.setup(minv)
   local lsp_installer = require("nvim-lsp-installer")
@@ -78,20 +97,17 @@ function M.setup(minv)
     vim.lsp.protocol.make_client_capabilities()
   )
 
-  local debounce = 150
-
-  -- TODO: add hooks to minv
   local function on_server_setup(name, setup_server)
-    local opts = {
+    local opts = vim.tbl_extend("force", minv.builtin.lspconfig, {
       on_attach = on_attach,
       capabilities = capabilities,
       settings = preset.servers[name],
-      flags = {
-        debounce_text_changes = debounce,
-      },
-    }
-    setup_server(opts)
+    })
+    setup_server(preset.on_server_setup(opts))
   end
+
+  -- Setup lsp-installer
+  lsp_installer.settings(minv.builtin.lsp_installer)
 
   -- Install not installed servers.
   local installed_servers = utils.list_to_set(
@@ -127,17 +143,16 @@ function M.setup(minv)
   end
 
   -- Setup null-ls.
-  null_ls.setup({
+  null_ls.setup(vim.tbl_extend("force", minv.builtin.null_ls, {
     on_attach = on_attach,
     sources = sources,
-    debounce = debounce,
-  })
+  }))
 
   -- Set border of popup windows.
   local open_float_preview = vim.lsp.util.open_floating_preview
   vim.lsp.util.open_floating_preview = function(contents, syntax, opts, ...)
     opts = opts or {}
-    opts.border = minv.settings.border
+    opts.border = preset.border
     return open_float_preview(contents, syntax, opts, ...)
   end
 end

@@ -1,63 +1,50 @@
 local M = {}
 
----@param minv MiNV
-function M.setup(minv)
-  local components = {
-    mode = {
-      function()
-        return " "
-      end,
-      padding = { left = 1, right = 1 },
-    },
-    branch = { "branch" },
-    filename = { "filename" },
-    diff = { "diff" },
-    diagnostics = { "diagnostics", sources = { "nvim_diagnostic" } },
-    encoding = { "encoding", fmt = string.upper },
-    fileformat = { "fileformat" },
-    filetype = { "filetype", fmt = string.upper },
-    progress = { "progress" },
-  }
-
-  local extensions = {
-    "nvim-tree",
-    "toggleterm",
-    "quickfix",
-  }
-  for _, ext in ipairs(minv.builtin.lualine.extensions) do
-    table.insert(extensions, ext)
-  end
-
-  -- Setup lualine.
-  require("lualine").setup({
+function M.preset()
+  return {
     options = {
       theme = "auto",
+      section_separators = "",
+      component_separators = "│",
     },
     sections = {
       lualine_a = {
-        components.mode,
+        {
+          function()
+            return " "
+          end,
+        },
       },
       lualine_b = {
-        components.branch,
-        components.filename,
+        { "branch" },
       },
       lualine_c = {
-        components.diff,
+        { "diff" },
+        { "diagnostics", sources = { "nvim_diagnostic" } },
       },
       lualine_x = {
-        components.diagnostics,
+        { "encoding", fmt = string.upper },
+        { "fileformat" },
+        { "filetype" },
       },
       lualine_y = {
-        components.encoding,
-        components.fileformat,
-        components.filetype,
+        { "progress" },
       },
       lualine_z = {
-        components.progress,
+        { "location" },
       },
     },
-    extensions = extensions,
-  })
+    extensions = {
+      "nvim-tree",
+      "toggleterm",
+      "quickfix",
+    },
+  }
+end
+
+---@param minv MiNV
+function M.setup(minv)
+  require("lualine").setup(minv.builtin.lualine)
 end
 
 return M

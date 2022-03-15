@@ -1,17 +1,34 @@
 local M = {}
 
+function M.preset()
+  return {
+    update_cwd = true,
+    update_focused_file = {
+      enable = true,
+      update_cwd = false,
+    },
+    git = {
+      enable = true,
+      ignore = true,
+      timeout = 500,
+    },
+    view = {
+      auto_resize = true,
+    },
+    filters = {
+      custom = {
+        ".git",
+        ".cache",
+        "node_modules",
+      },
+    },
+  }
+end
+
 ---@param minv MiNV
 function M.setup(minv)
-  local preset = minv.builtin.tree
   -- Setup nvim-tree.
-  vim.g.nvim_tree_respect_buf_cwd = preset.respect_buf_cwd
-  require("nvim-tree").setup({
-    update_cwd = preset.update_cwd,
-    update_focused_file = preset.update_focused_file,
-    git = preset.git,
-    view = preset.view,
-    filters = preset.filters,
-  })
+  require("nvim-tree").setup(minv.builtin.tree)
 end
 
 return M
