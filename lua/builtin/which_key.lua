@@ -3,14 +3,34 @@ local M = {}
 function M.preset()
   return {
     enable = true,
-    operators = { ["gc"] = "Toggle line comments", ["gb"] = "Toggle block comments" },
-    triggers = "auto",
-    ignore_missing = false,
     groups = {
       ["<Leader>l"] = "Lsp",
       ["<Leader>f"] = "Search",
       ["<Leader>g"] = "Git",
     },
+    plugins = {
+      marks = true,
+      registers = true,
+      presets = {
+        operators = true,
+        motions = true,
+        text_objects = true,
+        windows = true,
+        nav = true,
+        z = true,
+        g = true,
+      },
+    },
+    operators = { ["gc"] = "Toggle line comments", ["gb"] = "Toggle block comments" },
+    window = {
+      border = "rounded",
+    },
+    layout = {
+      align = "left",
+    },
+    ignore_missing = false,
+    show_help = true,
+    triggers = "auto",
   }
 end
 
@@ -22,11 +42,7 @@ function M.setup(minv)
   end
 
   local preset = minv.builtin.which_key
-  which_key.setup({
-    operators = preset.operators,
-    triggers = preset.triggers,
-    ignore_missing = preset.ignore_missing,
-  })
+  which_key.setup(preset)
   local groups = {}
   for key, name in pairs(preset.groups) do
     groups[key] = { name = name }

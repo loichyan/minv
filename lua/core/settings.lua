@@ -22,6 +22,7 @@ function M.preset()
       mouse = "a",
       timeoutlen = 300,
       updatetime = 300,
+      autoread = true,
       -- Space
       expandtab = true,
       tabstop = 4,
