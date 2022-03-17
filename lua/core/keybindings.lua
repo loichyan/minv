@@ -40,8 +40,8 @@ function M.preset()
       -- comment
       ["gcc"] = "comment.toggle_line",
       ["gbc"] = "comment.toggle_block",
-      ["gc"] = "comment.operator_line",
-      ["gb"] = "comment.operator_block",
+      ["gc"] = "comment.oplead_line",
+      ["gb"] = "comment.oplead_block",
       ["gcO"] = "comment.insert_above",
       ["gco"] = "comment.insert_below",
       ["gcA"] = "comment.insert_eol",
@@ -51,8 +51,8 @@ function M.preset()
     ["v"] = utils.Keybinding(),
     ["x"] = utils.Keybinding({
       -- comment
-      ["gc"] = "comment.operator_line",
-      ["gb"] = "comment.operator_block",
+      ["gc"] = "comment.oplead_line",
+      ["gb"] = "comment.oplead_block",
     }),
     ["s"] = utils.Keybinding(),
     ["o"] = utils.Keybinding(),

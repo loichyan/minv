@@ -48,23 +48,37 @@ function M.setup(minv)
   end
 
   local keys = {
-    n = {
-      toggle_line = { utils.register_key(), "Toggle line comments" },
-      toggle_block = { utils.register_key(), "Toggle block comments" },
-      insert_above = { utils.register_key(), "Insert comment above" },
-      insert_below = { utils.register_key(), "Insert comment below" },
-      insert_eol = { utils.register_key(), "Insert comment at EOL" },
+    toggle = {
+      line = { utils.register_key(), "Toggle line comments" },
+      block = { utils.register_key(), "Toggle block comments" },
     },
-    x = {
-      operator_line = { utils.register_key(), "Toggle line comments" },
-      operator_block = { utils.register_key(), "Toggle block comments" },
+    oplead = {
+      line = { utils.register_key(), "Toggle line comments" },
+      block = { utils.register_key(), "Toggle block comments" },
+    },
+    insert = {
+      above = { utils.register_key(), "Insert comment above" },
+      below = { utils.register_key(), "Insert comment below" },
+      eol = { utils.register_key(), "Insert comment at EOL" },
     },
   }
 
-  local function load_source(opts)
+  ---@param group string
+  local function make_mapping(group)
+    local mapping = {}
+    for k, v in pairs(keys[group]) do
+      mapping[k] = v[1]
+    end
+    return mapping
+  end
+
+  ---@vararg string[]
+  local function make_source(...)
     local source = {}
-    for k, v in pairs(opts) do
-      source["comment." .. k] = { v[1], v[2], noremap = false }
+    for _, group in ipairs({ ... }) do
+      for k, v in pairs(keys[group]) do
+        source[string.format("comment.%s_%s", group, k)] = { v[1], v[2], noremap = false }
+      end
     end
     return source
   end
@@ -75,19 +89,9 @@ function M.setup(minv)
   -- Setup comments.
   require("Comment").setup(vim.tbl_extend("force", minv.builtin.comment, {
     pre_hook = pre_hook,
-    toggler = {
-      line = keys.n.toggle_line[1],
-      block = keys.n.toggle_block[1],
-    },
-    opleader = {
-      line = keys.x.operator_line[1],
-      block = keys.x.operator_block[1],
-    },
-    extra = {
-      above = keys.n.insert_above[1],
-      below = keys.n.insert_below[1],
-      eol = keys.n.insert_eol[1],
-    },
+    toggler = make_mapping("toggle"),
+    opleader = make_mapping("oplead"),
+    extra = make_mapping("insert"),
     mappings = {
       basic = true,
       extra = true,
@@ -96,8 +100,8 @@ function M.setup(minv)
   }))
 
   -- Set keybindings.
-  minv.keybindings.n:apply(false, load_source(keys.n))
-  minv.keybindings.x:apply(false, load_source(keys.x), { mode = "x" })
+  minv.keybindings.n:apply(false, make_source("toggle", "oplead", "insert"))
+  minv.keybindings.x:apply(false, make_source("oplead"), { mode = "x" })
 end
 
 return M
