@@ -91,7 +91,12 @@ function M.setup(minv)
       end,
     },
     -- Comments
-    { "numToStr/Comment.nvim" },
+    {
+      "numToStr/Comment.nvim",
+      config = function()
+        require("builtin.comment").setup(require("builtin")._MINV)
+      end,
+    },
     { "JoosepAlviste/nvim-ts-context-commentstring" },
     ---------
     -- LSP --
