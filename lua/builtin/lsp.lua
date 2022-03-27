@@ -43,6 +43,10 @@ function M.setup(minv)
         "<Cmd>lua vim.lsp.buf.hover()<CR>",
         "Hover",
       },
+      ["lsp.show_code_action"] = {
+        "<Cmd>lua vim.lsp.buf.code_action()<CR>",
+        "Show code action",
+      },
       ["lsp.show_signature_help"] = {
         "<Cmd>lua vim.lsp.buf.signature_help()<CR>",
         "Show signature help",

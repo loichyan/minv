@@ -32,10 +32,14 @@ function M.preset()
       -- telescope
       ["<Leader>f"] = {
         ["f"] = "telescope.grep",
+        ["F"] = "telescope.files",
         ["m"] = "telescope.marks",
         ["b"] = "telescope.buffers",
         ["r"] = "telescope.registers",
         ["g"] = "telescope.git_commits",
+        ["o"] = "telescope.recent_files",
+        ["s"] = "telescope.document_symbols",
+        ["S"] = "telescope.workspace_symbol",
       },
       -- comment
       ["gcc"] = "comment.toggle_line",
@@ -83,6 +87,7 @@ function M.preset()
       ["]e"] = "lsp.goto_next_diagnostic",
       ["[e"] = "lsp.goto_prev_diagnostic",
       ["<Leader>l"] = {
+        ["a"] = "lsp.show_code_action",
         ["e"] = "lsp.show_document_diagnostics",
         ["E"] = "lsp.show workspace_diagnostics",
         ["f"] = "lsp.formatting",
@@ -129,11 +134,21 @@ function M.setup(minv)
       ["git.undo_stage_hunk"] = { "<Cmd>Gitsigns undo_stage_hunk<CR>", "Undo stage hunk" },
       ["git.preview_hunk"] = { "<Cmd>Gitsigns preview_hunk<CR>", "Preview hunk" },
       -- telescope
+      ["telescope.files"] = { "<Cmd>Telescope find_files<CR>", "Search files" },
       ["telescope.grep"] = { "<Cmd>Telescope live_grep<CR>", "Search strings" },
       ["telescope.marks"] = { "<Cmd>Telescope marks<CR>", "Search marks" },
       ["telescope.buffers"] = { "<Cmd>Telescope buffers<CR>", "Search buffers" },
       ["telescope.registers"] = { "<Cmd>Telescope registers<CR>", "Search registers" },
       ["telescope.git_commits"] = { "<Cmd>Telescope git_commits<CR>", "Search git commits" },
+      ["telescope.recent_files"] = { "<Cmd>Telescope oldfiles<CR>", "Search recent files" },
+      ["telescope.document_symbols"] = {
+        "<Cmd>Telescope lsp_document_symbols<CR>",
+        "Search document symbols",
+      },
+      ["telescope.workspace_symbols"] = {
+        "<Cmd>Telescope lsp_workspace_symbols<CR>",
+        "Search workspace symbols",
+      },
     },
     ["v"] = {},
     ["x"] = {},
