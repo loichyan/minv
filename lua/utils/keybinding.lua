@@ -32,7 +32,7 @@ function M.handler(mode, buffer, bindings, options)
 
   -- Apply bindings.
   for lhs, val in pairs(bindings) do
-    local rhs, _ = table.unpack(val)
+    local rhs, _ = unpack(val)
     local _, _, opts = M.parse_options(val)
     if type(rhs) == "function" then
       rhs = string.format("<Cmd>%s<CR>", register.cmd(rhs))

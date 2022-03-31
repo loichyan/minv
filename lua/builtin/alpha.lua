@@ -41,7 +41,7 @@ function M.setup(minv)
   -- Buttons.
   buttons.val = {}
   for _, val in ipairs(minv.builtin.dashboard.buttons) do
-    local butn = dashboard.button(table.unpack(val))
+    local butn = dashboard.button(unpack(val))
     butn.opts.hl = "DashboardCenter"
     butn.opts.hl_shortcut = "DashboardShortcut"
     table.insert(buttons.val, butn)

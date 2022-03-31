@@ -125,7 +125,7 @@ function M.setup(minv)
     end),
   })
   for key, val in pairs(unmapped) do
-    local fn, _ = table.unpack(val)
+    local fn, _ = unpack(val)
     mapping[key] = fn
   end
 

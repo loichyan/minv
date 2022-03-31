@@ -41,7 +41,7 @@ function M.setup(minv)
   ---@param options table<string,boolean>
   kb.handler = function(mode, buffer, bindings, options)
     for lhs, val in pairs(bindings) do
-      local rhs, name = table.unpack(val)
+      local rhs, name = unpack(val)
       local _, _, opts = kb.parse_options(val)
       which_key.register(
         { [lhs] = { rhs, name } },
