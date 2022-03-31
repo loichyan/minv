@@ -134,7 +134,7 @@ function M.setup(minv)
 
   -- Setup cmp.
   local preset = minv.builtin.cmp
-  cmp.setup({
+  cmp.setup(vim.tbl_extend("force", preset, {
     snippet = {
       expand = function(args)
         luasnip.lsp_expand(args.body)
@@ -145,7 +145,7 @@ function M.setup(minv)
       format = preset.formatting.format,
     },
     mapping = mapping,
-  })
+  }))
 
   -- Load friendly-snippets.
   require("luasnip.loaders.from_vscode").lazy_load()
