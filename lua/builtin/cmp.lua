@@ -94,8 +94,8 @@ function M.setup(minv)
   end
 
   local mapping, unmapped = minv.keybindings.cmp:map({
-    ["cmp.scroll_down"] = cmp.mapping.scroll_docs(-4),
-    ["cmp.scroll_up"] = cmp.mapping.scroll_docs(4),
+    ["cmp.scroll_down"] = cmp.mapping.scroll_docs(4),
+    ["cmp.scroll_up"] = cmp.mapping.scroll_docs(-4),
     ["cmp.complete"] = cmp.mapping.complete(),
     ["cmp.confirm"] = cmp.mapping.confirm({ select = true }),
     ["cmp.close"] = cmp.mapping.close(),

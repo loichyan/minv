@@ -39,7 +39,7 @@ function M.preset()
         ["g"] = "telescope.git_commits",
         ["o"] = "telescope.recent_files",
         ["s"] = "telescope.document_symbols",
-        ["S"] = "telescope.workspace_symbol",
+        ["S"] = "telescope.workspace_symbols",
       },
       -- comment
       ["gcc"] = "comment.toggle_line",
@@ -97,7 +97,7 @@ function M.preset()
     ---Bindings for nvim-cmp.
     cmp = utils.Keybinding({
       ["<C-d>"] = "cmp.scroll_down",
-      ["<C-u>"] = "cmp.scrool_up",
+      ["<C-u>"] = "cmp.scroll_up",
       ["<C-Space>"] = "cmp.complete",
       ["<CR>"] = "cmp.confirm",
       ["<C-e>"] = "cmp.close",
