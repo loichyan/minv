@@ -21,7 +21,7 @@ function M.setup(minv)
   vim.list_extend(minv.builtin.lsp.install, { "rust_analyzer" })
 
   -- Rust-analyzer
-  minv.builtin.lsp.servers.rust_analyzer = {
+  minv.builtin.lsp.configs.rust_analyzer = {
     ["rust-analyzer"] = {
       experimental = {
         procAttrMacros = true,
@@ -34,7 +34,7 @@ function M.setup(minv)
   if ok_lua_dev then
     lua_dev = lua_dev.setup({})
     lua_dev.settings["Lua"].workspace.library[vim.fn.expand("~/.config/nvim")] = true
-    minv.builtin.lsp.servers.sumneko_lua = lua_dev.settings
+    minv.builtin.lsp.configs.sumneko_lua = lua_dev
   end
   minv.builtin.lsp.formatters.stylua = {}
 

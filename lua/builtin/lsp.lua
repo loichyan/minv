@@ -6,16 +6,13 @@ function M.preset()
     install = {
       "sumneko_lua",
     },
-    ---Settings passed to servers of `lsp-config`.
-    servers = {},
+    ---Configs passed to servers of `lsp-config`.
+    configs = {},
     ---Additional `null-ls` formatters.
     formatters = {},
     ---Additional `null-ls` linters.
     linters = {},
     border = "rounded",
-    on_server_setup = function(opts)
-      return opts
-    end,
   }
 end
 
@@ -109,13 +106,19 @@ function M.setup(minv)
     vim.lsp.protocol.make_client_capabilities()
   )
 
-  local function on_server_setup(name, setup_server)
+  local function on_server_setup(name, setup_func)
+    local custom = preset.configs[name] or {}
     local opts = vim.tbl_extend("force", minv.builtin.lspconfig, {
-      on_attach = on_attach,
+      on_attach = function(cilent, buf)
+        on_attach(cilent, buf)
+        if custom.on_attach ~= nil then
+          custom.on_attach(cilent, buf)
+        end
+      end,
       capabilities = capabilities,
-      settings = preset.servers[name],
+      settings = custom.settings,
     })
-    setup_server(preset.on_server_setup(opts))
+    setup_func(opts)
   end
 
   -- Setup lsp-installer
@@ -132,7 +135,7 @@ function M.setup(minv)
   end
 
   -- Setup servers not installed.
-  for name, _ in pairs(preset.servers) do
+  for name, _ in pairs(preset.configs) do
     if installed_servers[name] ~= true then
       on_server_setup(name, lspconfig[name].setup)
     end
