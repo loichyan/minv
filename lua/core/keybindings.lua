@@ -84,8 +84,10 @@ function M.preset()
         ["I"] = "lsp.show_implementation",
         ["r"] = "lsp.show_references",
       },
-      ["]e"] = "lsp.goto_next_diagnostic",
-      ["[e"] = "lsp.goto_prev_diagnostic",
+      ["]e"] = "lsp.goto_next_error",
+      ["[e"] = "lsp.goto_prev_error",
+      ["]d"] = "lsp.goto_next_diagnostic",
+      ["[d"] = "lsp.goto_prev_diagnostic",
       ["<Leader>l"] = {
         ["a"] = "lsp.show_code_action",
         ["e"] = "lsp.show_document_diagnostics",

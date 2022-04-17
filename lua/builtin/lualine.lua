@@ -6,6 +6,7 @@ function M.preset()
       theme = "auto",
       section_separators = "",
       component_separators = "│",
+      globalstatus = true,
     },
     sections = {
       lualine_a = {

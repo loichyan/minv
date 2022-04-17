@@ -1,4 +1,3 @@
-local register = require("utils.register")
 local M = {}
 
 ---@param options table<string,any>
@@ -32,10 +31,12 @@ function M.handler(mode, buffer, bindings, options)
 
   -- Apply bindings.
   for lhs, val in pairs(bindings) do
-    local rhs, _ = unpack(val)
+    local rhs, desc = unpack(val)
     local _, _, opts = M.parse_options(val)
+    opts.desc = desc
     if type(rhs) == "function" then
-      rhs = string.format("<Cmd>%s<CR>", register.cmd(rhs))
+      opts.callback = rhs
+      rhs = ""
     end
     map(mode, lhs, rhs, vim.tbl_extend("force", options, opts))
   end

@@ -87,6 +87,14 @@ function M.setup(minv)
         "<Cmd>lua vim.diagnostic.goto_prev()<CR>",
         "Goto prev diagnostic",
       },
+      ["lsp.goto_next_error"] = {
+        "<Cmd>lua vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })<CR>",
+        "Goto next error",
+      },
+      ["lsp.goto_prev_error"] = {
+        "<Cmd>lua vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })<CR>",
+        "Goto prev error",
+      },
       ["lsp.formatting"] = {
         "<Cmd>lua vim.lsp.buf.formatting()<CR>",
         "Formatting",

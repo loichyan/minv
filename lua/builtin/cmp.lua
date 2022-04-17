@@ -1,12 +1,6 @@
 local M = {}
 
 function M.preset()
-  local ok, cmp = pcall(require, "cmp")
-  local default_behavior = nil
-  if ok then
-    default_behavior = cmp.ConfirmBehavior.Replace
-  end
-
   local kind = {
     Text = "",
     Method = "",
@@ -44,13 +38,7 @@ function M.preset()
     ["buffer"] = true,
   }
 
-  return {
-    documentation = {
-      border = "rounded",
-    },
-    confirmation = {
-      default_behavior = default_behavior,
-    },
+  local preset = {
     ---Sources to be loaded.
     sources = {
       { name = "luasnip" },
@@ -77,6 +65,21 @@ function M.preset()
       end,
     },
   }
+
+  local ok, cmp = pcall(require, "cmp")
+  if ok then
+    preset = vim.tbl_extend("force", preset, {
+      window = {
+        completion = cmp.config.window.bordered(),
+        documentation = cmp.config.window.bordered(),
+      },
+      confirmation = {
+        default_behavior = cmp.ConfirmBehavior.Replace,
+      },
+    })
+  end
+
+  return preset
 end
 
 ---@param minv MiNV

@@ -28,28 +28,6 @@ local function _random_map()
   return RandomMap
 end
 
-local _registered_funs = _random_map()
-
----Register function to the global variable.
----@param f function
----@return integer
-function M.register_fn(f)
-  return _registered_funs:insert(f)
-end
-
----Call registered function.
----@param id integer
-function M.call_fn(id, ...)
-  _registered_funs:get(id)(...)
-end
-
----Make command strings.
----@param f function
----@return string
-function M.cmd(f)
-  return string.format([[lua require("utils.register").call_fn(%d)]], M.register_fn(f))
-end
-
 local _registered_keys = _random_map()
 
 ---Register a `<Plug>` key to the global variable.

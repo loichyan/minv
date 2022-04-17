@@ -23,16 +23,19 @@ function M.list_to_set(list)
 end
 
 ---Auto command.
----@param event string
----@param pat string
+---@param event string|table
+---@param pat string|table
 ---@param cmd string|function
 function M.autocmd(event, pat, cmd)
-  if type(cmd) == "function" then
-    cmd = register.cmd(cmd)
-  end
+  local opts = {
+    pattern = pat,
+  }
   if type(cmd) == "string" then
-    vim.cmd(string.format("autocmd %s %s %s", event, pat, cmd))
+    opts.command = cmd
+  elseif type(cmd) == "function" then
+    opts.callback = cmd
   end
+  vim.api.nvim_create_autocmd(event, opts)
 end
 
 return M

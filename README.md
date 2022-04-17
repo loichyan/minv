@@ -7,6 +7,13 @@ Super lightweight collections of configs and plugins for
 
 ## Setup
 
+### Pre-requisites
+
+- Neovim 0.7.0+
+- Use a [Nerd Font](https://www.nerdfonts.com/) in your terminal emulator
+- [ripgrep](https://github.com/BurntSushi/ripgrep) is required for grep
+  searching with [Telescope](https://github.com/nvim-telescope/telescope.nvim)
+
 ### Install
 
 ```sh
