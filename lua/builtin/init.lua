@@ -1,7 +1,7 @@
 local M = {}
 
 function M.preset()
-  ---@class MiNVBuiltin
+  ---@class MiNV.Builtin
   local preset = {
     tokyonight = {
       enable = true,

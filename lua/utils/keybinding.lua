@@ -44,7 +44,7 @@ end
 
 ---@param init_bindings?  table<string,string|any[]|table<string,string|any[]>>
 function M.new(init_bindings)
-  ---@class MiNVKeybinding
+  ---@class MiNV.Keybinding
   local Keybinding = {
     ---@type table<string,any[]|string>
     _bindings = {},

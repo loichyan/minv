@@ -1,7 +1,7 @@
 local M = {}
 
 function M.preset()
-  ---@class MiNVAutocmds
+  ---@class MiNV.Autocmds
   local preset = {
     ---Hightlight yanked text.
     hl_yank = {
@@ -60,7 +60,7 @@ function M.setup(minv)
     local ft = table.concat(preset.q_to_close, ",")
     au("FileType", ft, "nnoremap <silent> <buffer> q <Cmd>close!<CR>")
   end
-  au_if(preset.trim_spaces, "BufWritePre", "*", [[silent %s/\s\+$//e]])
+  au_if(preset.trim_spaces, "BufWritePre", "*", [[silent s/\s\+$//e]])
   au_if(preset.auto_resize, "VimResized", "*", "wincmd =")
 end
 

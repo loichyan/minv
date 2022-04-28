@@ -1,7 +1,7 @@
 local M = {}
 
 function M.preset()
-  ---@class MiNVSettings
+  ---@class MiNV.Settings
   local preset = {
     g = {
       -- Leader

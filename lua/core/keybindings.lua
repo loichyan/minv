@@ -3,7 +3,7 @@ local M = {}
 function M.preset()
   local utils = require("utils")
 
-  ---@class MiNVKeybindings
+  ---@class MiNV.Keybindings
   local preset = {
     [""] = utils.Keybinding(),
     ["n"] = utils.Keybinding({
