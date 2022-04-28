@@ -7,13 +7,15 @@ function M.preset()
       enable = true,
       update_cwd = false,
     },
+    actions = {
+      open_file = {
+        resize_window = true,
+      },
+    },
     git = {
       enable = true,
       ignore = true,
       timeout = 500,
-    },
-    view = {
-      auto_resize = true,
     },
     filters = {
       custom = {
