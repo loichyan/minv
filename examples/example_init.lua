@@ -2,8 +2,17 @@ local M = {}
 
 ---@param minv MiNV
 function M.setup(minv)
+  -- Add keybindings.
+  minv.keybindings.n:extend({
+    ["<Leader>f"] = {
+      ["n"] = { "<Cmd>Telescope notify<CR>", "Search notifications" },
+      ["t"] = { "<Cmd>TodoTelescope<CR>", "Search TODOs" },
+    },
+  })
+
   -- Add cmp sources.
   vim.list_extend(minv.builtin.cmp.sources, { { name = "nvim_lsp_signature_help" } })
+
   -- Configure autocmds.
   vim.list_extend(minv.autocmds.q_to_close, { "notify" })
 
@@ -11,7 +20,7 @@ function M.setup(minv)
   table.insert(
     minv.builtin.dashboard.buttons,
     3,
-    { "p", "  Recent Projects", ":Telescope projects<CR>" }
+    { "p", "  Recent Projects", "<Cmd>Telescope projects<CR>" }
   )
 
   -- Add extra treesitters.
@@ -22,9 +31,11 @@ function M.setup(minv)
 
   -- Rust-analyzer
   minv.builtin.lsp.configs.rust_analyzer = {
-    ["rust-analyzer"] = {
-      experimental = {
-        procAttrMacros = true,
+    settings = {
+      ["rust-analyzer"] = {
+        experimental = {
+          procAttrMacros = true,
+        },
       },
     },
   }
@@ -32,10 +43,22 @@ function M.setup(minv)
   -- Extend sumneko_lua with vim library.
   local ok_lua_dev, lua_dev = pcall(require, "lua-dev")
   if ok_lua_dev then
-    lua_dev = lua_dev.setup({})
+    lua_dev = lua_dev.setup({
+      lspconfig = {
+        on_attach = function(client, _)
+          local cap = client.resolved_capabilities
+          -- Disable formatting feature.
+          cap.document_formatting = false
+          print(vim.inspect(cap))
+        end,
+      },
+    })
+    -- Add MiNV to runtime paths.
     lua_dev.settings["Lua"].workspace.library[vim.fn.expand("~/.config/nvim")] = true
     minv.builtin.lsp.configs.sumneko_lua = lua_dev
   end
+
+  -- Use stylua as Lua formatter.
   minv.builtin.lsp.formatters.stylua = {}
 
   -- Return extra plugins.
@@ -56,9 +79,6 @@ function M.setup(minv)
       "folke/todo-comments.nvim",
       config = function()
         require("todo-comments").setup({})
-        require("utils").set_keybindings({
-          ["<Leader>ft"] = { "<Cmd>TodoTelescope<CR>", "Search TODOs" },
-        })
       end,
     },
     -- Nvim lua libs.
@@ -71,9 +91,6 @@ function M.setup(minv)
         vim.notify.setup({ max_width = 70 })
         -- Load telescope extensions.
         require("telescope").load_extension("notify")
-        require("utils").set_keybindings({
-          ["<Leader>fn"] = { "<Cmd>Telescope notify<CR>", "Search notifications" },
-        })
       end,
     },
     -- Project
