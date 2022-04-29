@@ -1,4 +1,5 @@
 # Custom configs.
 /lua/custom
+/lua/custom.lua
 # Generate by packer.
 /plugin

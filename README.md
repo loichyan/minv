@@ -14,6 +14,13 @@ Super lightweight collections of configs and plugins for
 - [ripgrep](https://github.com/BurntSushi/ripgrep) is required for grep
   searching with [Telescope](https://github.com/nvim-telescope/telescope.nvim)
 
+### Try winthin Docker
+
+```sh
+docker build -t minv .
+docker run -it minv
+```
+
 ### Install
 
 ```sh
@@ -22,7 +29,7 @@ mv ~/.config/nvim ~/.config/nvim.bak
 # Install MiNV
 git clone https://github.com/loichyan/minv ~/.config/nvim
 # Install plugins
-nvim +PackerSync
+nvim --headless -c "autocmd User PackerComplete quitall" -c PackerSync &> /dev/null
 ```
 
 ### Uninstall
@@ -38,7 +45,7 @@ mv ~/.config/nvim.bak ~/.config/nvim
 
 ```sh
 # Copy example file
-cp ~/.config/nvim/examples/example_init.lua ~/.config/nvim/lua/custom/init.lua
+cp ~/.config/nvim/examples/example_init.lua ~/.config/nvim/lua/custom.lua
 # Install plugins
 nvim +PackerSync
 ```
