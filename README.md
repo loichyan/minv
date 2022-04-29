@@ -14,7 +14,7 @@ Super lightweight collections of configs and plugins for
 - [ripgrep](https://github.com/BurntSushi/ripgrep) is required for grep
   searching with [Telescope](https://github.com/nvim-telescope/telescope.nvim)
 
-### Try winthin Docker
+### Try within Docker
 
 ```sh
 docker build -t minv .

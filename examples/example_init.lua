@@ -27,7 +27,7 @@ function M.setup(minv)
   vim.list_extend(minv.builtin.treesitter.ensure_installed, { "rust" })
 
   -- Lsp servers
-  vim.list_extend(minv.builtin.lsp.install, { "rust_analyzer" })
+  vim.list_extend(minv.builtin.lsp.installer.ensure_installed, { "rust_analyzer" })
 
   -- Rust-analyzer
   minv.builtin.lsp.configs.rust_analyzer = {
