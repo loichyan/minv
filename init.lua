@@ -1,1 +1,1 @@
-require("core").setup()
+pcall(require, "custom")

@@ -1,7 +1,6 @@
-local M = {}
-
 ---@param minv MiNV
-function M.setup(minv)
+---@return any[]
+local function custom(minv)
   -- Add keybindings.
   minv.keybindings.n:extend({
     ["<Leader>f"] = {
@@ -122,4 +121,4 @@ function M.setup(minv)
   }
 end
 
-return M
+require("minv").setup(custom)

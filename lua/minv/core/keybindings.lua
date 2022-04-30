@@ -1,7 +1,7 @@
 local M = {}
 
 function M.preset()
-  local utils = require("utils")
+  local utils = require("minv.utils")
 
   return {
     [""] = utils.Keybinding(),

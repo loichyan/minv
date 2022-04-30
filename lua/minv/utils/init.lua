@@ -1,5 +1,5 @@
-local register = require("utils.register")
-local keybinding = require("utils.keybinding")
+local register = require("minv.utils.register")
+local keybinding = require("minv.utils.keybinding")
 local M = {
   Keybinding = keybinding.new,
   register_key = register.register_key,

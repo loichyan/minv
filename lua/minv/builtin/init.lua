@@ -13,14 +13,14 @@ function M.preset()
         end,
       },
     },
-    which_key = require("builtin.which_key").preset(),
-    gitsigns = require("builtin.gitsigns").preset(),
-    treesitter = require("builtin.treesitter").preset(),
+    which_key = require("minv.builtin.which_key").preset(),
+    gitsigns = require("minv.builtin.gitsigns").preset(),
+    treesitter = require("minv.builtin.treesitter").preset(),
     comment = {
       sticky = true,
       padding = true,
     },
-    lsp = require("builtin.lsp").preset(),
+    lsp = require("minv.builtin.lsp").preset(),
     lspconfig = {
       flags = {
         debounce_text_changes = 250,
@@ -30,16 +30,16 @@ function M.preset()
       debounce = 250,
     },
     lsp_installer = {},
-    cmp = require("builtin.cmp").preset(),
+    cmp = require("minv.builtin.cmp").preset(),
     luasnip = {
       history = false,
     },
-    telescope = require("builtin.telescope").preset(),
-    toggleterm = require("builtin.toggleterm").preset(),
-    tree = require("builtin.tree").preset(),
-    bufferline = require("builtin.bufferline").preset(),
-    lualine = require("builtin.lualine").preset(),
-    dashboard = require("builtin.alpha").preset(),
+    telescope = require("minv.builtin.telescope").preset(),
+    toggleterm = require("minv.builtin.toggleterm").preset(),
+    tree = require("minv.builtin.tree").preset(),
+    bufferline = require("minv.builtin.bufferline").preset(),
+    lualine = require("minv.builtin.lualine").preset(),
+    dashboard = require("minv.builtin.alpha").preset(),
   }
 end
 
@@ -56,7 +56,7 @@ function M.setup(minv)
 
   -- Setup which-key.
   if minv.builtin.which_key.enable then
-    require("builtin.which_key").setup(minv)
+    require("minv.builtin.which_key").setup(minv)
   end
 
   return {
@@ -76,7 +76,7 @@ function M.setup(minv)
     {
       "lewis6991/gitsigns.nvim",
       config = function()
-        require("builtin.gitsigns").setup(require("builtin")._MINV)
+        require("minv.builtin.gitsigns").setup(require("minv.builtin")._MINV)
       end,
     },
     ----------------
@@ -85,14 +85,14 @@ function M.setup(minv)
     {
       "nvim-treesitter/nvim-treesitter",
       config = function()
-        require("builtin.treesitter").setup(require("builtin")._MINV)
+        require("minv.builtin.treesitter").setup(require("minv.builtin")._MINV)
       end,
     },
     -- Comments
     {
       "numToStr/Comment.nvim",
       config = function()
-        require("builtin.comment").setup(require("builtin")._MINV)
+        require("minv.builtin.comment").setup(require("minv.builtin")._MINV)
       end,
     },
     { "JoosepAlviste/nvim-ts-context-commentstring" },
@@ -102,7 +102,7 @@ function M.setup(minv)
     {
       "neovim/nvim-lspconfig",
       config = function()
-        require("builtin.lsp").setup(require("builtin")._MINV)
+        require("minv.builtin.lsp").setup(require("minv.builtin")._MINV)
       end,
     },
     { "jose-elias-alvarez/null-ls.nvim" },
@@ -113,7 +113,7 @@ function M.setup(minv)
     {
       "hrsh7th/nvim-cmp",
       config = function()
-        require("builtin.cmp").setup(require("builtin")._MINV)
+        require("minv.builtin.cmp").setup(require("minv.builtin")._MINV)
       end,
     },
     -- Completion sources
@@ -130,7 +130,7 @@ function M.setup(minv)
     {
       "nvim-telescope/telescope.nvim",
       config = function()
-        require("builtin.telescope").setup(require("builtin")._MINV)
+        require("minv.builtin.telescope").setup(require("minv.builtin")._MINV)
       end,
     },
     { "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
@@ -140,31 +140,31 @@ function M.setup(minv)
     {
       "akinsho/toggleterm.nvim",
       config = function()
-        require("builtin.toggleterm").setup(require("builtin")._MINV)
+        require("minv.builtin.toggleterm").setup(require("minv.builtin")._MINV)
       end,
     },
     {
       "kyazdani42/nvim-tree.lua",
       config = function()
-        require("builtin.tree").setup(require("builtin")._MINV)
+        require("minv.builtin.tree").setup(require("minv.builtin")._MINV)
       end,
     },
     {
       "akinsho/bufferline.nvim",
       config = function()
-        require("builtin.bufferline").setup(require("builtin")._MINV)
+        require("minv.builtin.bufferline").setup(require("minv.builtin")._MINV)
       end,
     },
     {
       "nvim-lualine/lualine.nvim",
       config = function()
-        require("builtin.lualine").setup(require("builtin")._MINV)
+        require("minv.builtin.lualine").setup(require("minv.builtin")._MINV)
       end,
     },
     {
       "goolord/alpha-nvim",
       config = function()
-        require("builtin.alpha").setup(require("builtin")._MINV)
+        require("minv.builtin.alpha").setup(require("minv.builtin")._MINV)
       end,
     },
   }

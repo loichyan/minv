@@ -13,7 +13,7 @@ end
 function M.setup(minv)
   -- Setup toggleterm.
   local preset = minv.builtin.toggleterm
-  local k_toggle = require("utils").register_key()
+  local k_toggle = require("minv.utils").register_key()
   require("toggleterm").setup(vim.tbl_extend("force", preset, {
     insert_mappings = true,
     terminal_mappings = true,

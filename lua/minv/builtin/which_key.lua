@@ -50,7 +50,7 @@ function M.setup(minv)
   which_key.register(groups)
 
   -- Use which-key to handle bindings.
-  local kb = require("utils.keybinding")
+  local kb = require("minv.utils.keybinding")
   ---@param mode string
   ---@param buffer? integer
   ---@param bindings table<string,any[]>

@@ -32,7 +32,7 @@ end
 ---@param minv MiNV
 function M.setup(minv)
   local preset = minv.autocmds
-  local au = require("utils").autocmd
+  local au = require("minv.utils").autocmd
   local function au_if(enable, ...)
     if enable then
       au(...)

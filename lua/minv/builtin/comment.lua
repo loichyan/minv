@@ -2,7 +2,7 @@ local M = {}
 
 ---@param minv MiNV
 function M.setup(minv)
-  local utils = require("utils")
+  local utils = require("minv.utils")
 
   local function pre_hook(ctx)
     local comment_utils = require("Comment.utils")
