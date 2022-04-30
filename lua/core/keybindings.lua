@@ -3,8 +3,7 @@ local M = {}
 function M.preset()
   local utils = require("utils")
 
-  ---@class MiNV.Keybindings
-  local preset = {
+  return {
     [""] = utils.Keybinding(),
     ["n"] = utils.Keybinding({
       -- normal
@@ -107,7 +106,6 @@ function M.preset()
       ["<S-Tab>"] = "cmp.select_prev",
     }),
   }
-  return preset
 end
 
 ---@param minv MiNV

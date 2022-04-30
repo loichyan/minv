@@ -1,5 +1,6 @@
 local M = {}
 
+---@return MiNV
 function M.preset()
   ---@class MiNV
   local preset = {

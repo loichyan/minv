@@ -1,8 +1,7 @@
 local M = {}
 
 function M.preset()
-  ---@class MiNV.Settings
-  local preset = {
+  return {
     g = {
       -- Leader
       mapleader = " ",
@@ -49,7 +48,6 @@ function M.preset()
       splitright = true,
     },
   }
-  return preset
 end
 
 ---@param minv MiNV

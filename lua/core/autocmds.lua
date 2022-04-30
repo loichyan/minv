@@ -1,8 +1,7 @@
 local M = {}
 
 function M.preset()
-  ---@class MiNV.Autocmds
-  local preset = {
+  return {
     ---Hightlight yanked text.
     hl_yank = {
       highgroup = "Search",
@@ -28,7 +27,6 @@ function M.preset()
     ---Auto resize windows when changed.
     auto_resize = true,
   }
-  return preset
 end
 
 ---@param minv MiNV

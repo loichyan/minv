@@ -1,8 +1,7 @@
 local M = {}
 
 function M.preset()
-  ---@class MiNV.Builtin
-  local preset = {
+  return {
     tokyonight = {
       enable = true,
       style = "night",
@@ -42,7 +41,6 @@ function M.preset()
     lualine = require("builtin.lualine").preset(),
     dashboard = require("builtin.alpha").preset(),
   }
-  return preset
 end
 
 ---@param minv MiNV
