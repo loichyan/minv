@@ -49,12 +49,11 @@ function M.setup(minv)
           local cap = client.resolved_capabilities
           -- Disable formatting feature.
           cap.document_formatting = false
-          print(vim.inspect(cap))
         end,
       },
     })
     -- Add MiNV to runtime paths.
-    lua_dev.settings["Lua"].workspace.library[vim.fn.expand("~/.config/nvim")] = true
+    lua_dev.settings["Lua"].workspace.library[vim.fn.expand("~/.config/nvim/lua")] = true
     minv.builtin.lsp.configs.sumneko_lua = lua_dev
   end
 
