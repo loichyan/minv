@@ -29,7 +29,13 @@ function M.preset()
     null_ls = {
       debounce = 250,
     },
-    lsp_installer = {},
+    lsp_installer = {
+      ---Servers to be installed.
+      ensure_installed = {
+        "sumneko_lua",
+      },
+      automatic_installation = false,
+    },
     cmp = require("minv.builtin.cmp").preset(),
     luasnip = {
       history = false,

@@ -2,13 +2,6 @@ local M = {}
 
 function M.preset()
   return {
-    installer = {
-      ---Servers to be installed.
-      ensure_installed = {
-        "sumneko_lua",
-      },
-      automatic_installation = false,
-    },
     ---Configs passed to servers of `lsp-config`.
     configs = {},
     ---Additional `null-ls` formatters.
@@ -110,11 +103,11 @@ function M.setup(minv)
   )
 
   -- Setup lsp-installer
-  require("nvim-lsp-installer").setup(preset.installer)
+  require("nvim-lsp-installer").setup(minv.builtin.lsp_installer)
 
   -- Setup LSP servers.
   for name, conf in pairs(preset.configs) do
-    local opts = vim.tbl_extend("force", minv.builtin.lspconfig, {
+    local opts = vim.tbl_extend("force", minv.builtin.lspconfig, conf, {
       on_attach = function(cilent, buf)
         on_attach(cilent, buf)
         if conf.on_attach ~= nil then
@@ -122,7 +115,6 @@ function M.setup(minv)
         end
       end,
       capabilities = capabilities,
-      settings = conf.settings,
     })
     lspconfig[name].setup(opts)
   end
