@@ -14,8 +14,7 @@ function M.preset()
       ["<S-h>"] = "bufferline.goto_prev",
       ["<Leader>x"] = "bufferline.close",
       -- nvim-tree
-      ["<C-b>"] = "tree.toggle",
-      ["<C-n>"] = "tree.focus",
+      ["<C-n>"] = "tree.toggle",
       -- git
       ["]g"] = "git.goto_next_hunk",
       ["[g"] = "git.goto_prev_hunk",
