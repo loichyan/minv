@@ -32,10 +32,6 @@ end
 function M.setup(minv)
   local preset = minv.builtin.tree
   -- Setup nvim-tree.
-  if preset.respect_buf_cwd then
-    vim.g.nvim_tree_respect_buf_cwd = 1
-  end
-  preset.respect_buf_cwd = nil
   require("nvim-tree").setup(preset)
 end
 
