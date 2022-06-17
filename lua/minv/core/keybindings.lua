@@ -109,6 +109,7 @@ end
 
 ---@param minv MiNV
 function M.setup(minv)
+  -- TODO: apply when plugin setup
   local sources = {
     [""] = {},
     ["n"] = {
@@ -116,30 +117,72 @@ function M.setup(minv)
       ["normal.write"] = { "<Cmd>write<CR>", "Write buffer" },
       ["normal.nohlsearch"] = { "<Cmd>nohlsearch<CR>", "No hlsearch" },
       -- bufferline
-      ["bufferline.goto_next"] = { "<Cmd>BufferLineCycleNext<CR>", "Goto next buffer" },
-      ["bufferline.goto_prev"] = { "<Cmd>BufferLineCyclePrev<CR>", "Goto prev buffer" },
+      ["bufferline.goto_next"] = {
+        "<Cmd>BufferLineCycleNext<CR>",
+        "Goto next buffer",
+      },
+      ["bufferline.goto_prev"] = {
+        "<Cmd>BufferLineCyclePrev<CR>",
+        "Goto prev buffer",
+      },
       ["bufferline.close"] = { "<Cmd>bdelete<CR>", "Close buffer" },
       -- nvim-tree
       ["tree.toggle"] = { "<Cmd>NvimTreeToggle<CR>", "Toggle tree" },
       ["tree.focus"] = { "<Cmd>NvimTreeFocus<CR>", "Focus tree" },
       -- git
-      ["git.goto_next_hunk"] = { "<Cmd>Gitsigns next_hunk<CR>", "Goto next hunk" },
-      ["git.goto_prev_hunk"] = { "<Cmd>Gitsigns prev_hunk<CR>", "Goto prev hunk" },
+      ["git.goto_next_hunk"] = {
+        "<Cmd>Gitsigns next_hunk<CR>",
+        "Goto next hunk",
+      },
+      ["git.goto_prev_hunk"] = {
+        "<Cmd>Gitsigns prev_hunk<CR>",
+        "Goto prev hunk",
+      },
       ["git.blame_line"] = { "<Cmd>Gitsigns blame_line<CR>", "Blame line" },
       ["git.reset_line"] = { "<Cmd>Gitsigns reset_hunk<CR>", "Reset hunk" },
-      ["git.reset_buffer"] = { "<Cmd>Gitsigns reset_buffer<CR>", "Reset buffer" },
+      ["git.reset_buffer"] = {
+        "<Cmd>Gitsigns reset_buffer<CR>",
+        "Reset buffer",
+      },
       ["git.state_hunk"] = { "<Cmd>Gitsigns stage_hunk<CR>", "Stage hunk" },
-      ["git.stage_buffer"] = { "<Cmd>Gitsigns stage_buffer<CR>", "Stage buffer" },
-      ["git.undo_stage_hunk"] = { "<Cmd>Gitsigns undo_stage_hunk<CR>", "Undo stage hunk" },
-      ["git.preview_hunk"] = { "<Cmd>Gitsigns preview_hunk<CR>", "Preview hunk" },
+      ["git.stage_buffer"] = {
+        "<Cmd>Gitsigns stage_buffer<CR>",
+        "Stage buffer",
+      },
+      ["git.undo_stage_hunk"] = {
+        "<Cmd>Gitsigns undo_stage_hunk<CR>",
+        "Undo stage hunk",
+      },
+      ["git.preview_hunk"] = {
+        "<Cmd>Gitsigns preview_hunk<CR>",
+        "Preview hunk",
+      },
       -- telescope
-      ["telescope.files"] = { "<Cmd>Telescope find_files<CR>", "Search files" },
-      ["telescope.grep"] = { "<Cmd>Telescope live_grep<CR>", "Search strings" },
+      ["telescope.files"] = {
+        "<Cmd>Telescope find_files<CR>",
+        "Search files",
+      },
+      ["telescope.grep"] = {
+        "<Cmd>Telescope live_grep<CR>",
+        "Search strings",
+      },
       ["telescope.marks"] = { "<Cmd>Telescope marks<CR>", "Search marks" },
-      ["telescope.buffers"] = { "<Cmd>Telescope buffers<CR>", "Search buffers" },
-      ["telescope.registers"] = { "<Cmd>Telescope registers<CR>", "Search registers" },
-      ["telescope.git_commits"] = { "<Cmd>Telescope git_commits<CR>", "Search git commits" },
-      ["telescope.recent_files"] = { "<Cmd>Telescope oldfiles<CR>", "Search recent files" },
+      ["telescope.buffers"] = {
+        "<Cmd>Telescope buffers<CR>",
+        "Search buffers",
+      },
+      ["telescope.registers"] = {
+        "<Cmd>Telescope registers<CR>",
+        "Search registers",
+      },
+      ["telescope.git_commits"] = {
+        "<Cmd>Telescope git_commits<CR>",
+        "Search git commits",
+      },
+      ["telescope.recent_files"] = {
+        "<Cmd>Telescope oldfiles<CR>",
+        "Search recent files",
+      },
       ["telescope.document_symbols"] = {
         "<Cmd>Telescope lsp_document_symbols<CR>",
         "Search document symbols",

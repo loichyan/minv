@@ -26,7 +26,7 @@ end
 ---@param minv MiNV
 function M.setup(minv)
   require("bufferline").setup({
-    options = minv.builtin.bufferline,
+    options = minv.plugins.ui.bufferline,
   })
 end
 

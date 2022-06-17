@@ -133,10 +133,10 @@ function M.setup(minv)
   end
 
   -- Setup luasnip.
-  luasnip.config.setup(minv.builtin.luasnip)
+  luasnip.config.setup(minv.plugins.cmp.luasnip)
 
   -- Setup cmp.
-  local preset = minv.builtin.cmp
+  local preset = minv.plugins.cmp.config
   cmp.setup(vim.tbl_extend("force", preset, {
     snippet = {
       expand = function(args)

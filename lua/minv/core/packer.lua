@@ -1,6 +1,7 @@
 local M = {}
 
-function M.setup(...)
+---@param opt table
+function M.setup(opt)
   local present, packer = pcall(require, "packer")
 
   -- Install packer.
@@ -22,7 +23,7 @@ function M.setup(...)
     packer = require("packer")
   end
 
-  packer.startup(...)
+  packer.startup(opt)
   return packer
 end
 

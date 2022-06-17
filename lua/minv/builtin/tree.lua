@@ -30,9 +30,8 @@ end
 
 ---@param minv MiNV
 function M.setup(minv)
-  local preset = minv.builtin.tree
   -- Setup nvim-tree.
-  require("nvim-tree").setup(preset)
+  require("nvim-tree").setup(minv.plugins.ui.tree)
 end
 
 return M

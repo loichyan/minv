@@ -20,7 +20,7 @@ function M.setup(minv)
   local telescope = require("telescope")
 
   -- Setup telescope.
-  telescope.setup(minv.builtin.telescope)
+  telescope.setup(minv.plugins.telescope.config)
 
   -- Laad extensions.
   telescope.load_extension("fzf")

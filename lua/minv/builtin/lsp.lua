@@ -2,8 +2,16 @@ local M = {}
 
 function M.preset()
   return {
+    ---Configs passed to all servers.
+    server_default = {
+      flags = {
+        debounce_text_changes = 250,
+      },
+    },
     ---Configs passed to servers of `lsp-config`.
-    configs = {},
+    servers = {
+      sumneko_lua = {},
+    },
     ---Additional `null-ls` formatters.
     formatters = {},
     ---Additional `null-ls` linters.
@@ -83,7 +91,8 @@ local keybindings = {
 function M.setup(minv)
   local lspconfig = require("lspconfig")
   local null_ls = require("null-ls")
-  local preset = minv.builtin.lsp
+  local preset = minv.plugins.lsp
+  local config = preset.config
 
   local function on_attach(client, buf)
     -- Auto highlight references.
@@ -98,16 +107,17 @@ function M.setup(minv)
     end
     minv.keybindings.lsp:apply(true, keybindings, { buffer = buf })
   end
+
   local capabilities = require("cmp_nvim_lsp").update_capabilities(
     vim.lsp.protocol.make_client_capabilities()
   )
 
   -- Setup lsp-installer
-  require("nvim-lsp-installer").setup(minv.builtin.lsp_installer)
+  require("nvim-lsp-installer").setup(preset.installer)
 
   -- Setup LSP servers.
-  for name, conf in pairs(preset.configs) do
-    local opts = vim.tbl_extend("force", minv.builtin.lspconfig, conf, {
+  for name, conf in pairs(config.servers) do
+    local opts = vim.tbl_extend("force", config.server_default, conf, {
       on_attach = function(cilent, buf)
         on_attach(cilent, buf)
         if conf.on_attach ~= nil then
@@ -121,15 +131,15 @@ function M.setup(minv)
 
   -- Collect null-ls sources.
   local sources = {}
-  for k, v in pairs(preset.formatters) do
+  for k, v in pairs(config.formatters) do
     table.insert(sources, null_ls.builtins.formatting[k].with(v))
   end
-  for k, v in pairs(preset.linters) do
+  for k, v in pairs(config.linters) do
     table.insert(sources, null_ls.builtins.diagnostics[k].with(v))
   end
 
   -- Setup null-ls.
-  null_ls.setup(vim.tbl_extend("force", minv.builtin.null_ls, {
+  null_ls.setup(vim.tbl_extend("force", preset.null_ls, {
     on_attach = on_attach,
     sources = sources,
   }))
@@ -138,7 +148,7 @@ function M.setup(minv)
   local open_float_preview = vim.lsp.util.open_floating_preview
   vim.lsp.util.open_floating_preview = function(contents, syntax, opts, ...)
     opts = opts or {}
-    opts.border = preset.border
+    opts.border = config.border
     return open_float_preview(contents, syntax, opts, ...)
   end
 end

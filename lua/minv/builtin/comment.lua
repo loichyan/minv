@@ -56,14 +56,18 @@ function M.setup(minv)
     local source = {}
     for _, group in ipairs({ ... }) do
       for k, v in pairs(keys[group]) do
-        source[string.format("comment.%s_%s", group, k)] = { v[1], v[2], noremap = false }
+        source[string.format("comment.%s_%s", group, k)] = {
+          v[1],
+          v[2],
+          noremap = false,
+        }
       end
     end
     return source
   end
 
   -- Setup comments.
-  require("Comment").setup(vim.tbl_extend("force", minv.builtin.comment, {
+  require("Comment").setup(vim.tbl_extend("force", minv.plugins.treesitter.comment, {
     pre_hook = pre_hook,
     toggler = make_mapping("toggle"),
     opleader = make_mapping("oplead"),

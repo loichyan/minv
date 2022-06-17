@@ -18,7 +18,7 @@ end
 ---@param minv MiNV
 function M.setup(minv)
   -- Setup gitsigns.
-  require("gitsigns").setup(minv.builtin.gitsigns)
+  require("gitsigns").setup(minv.plugins.ui.gitsigns)
 end
 
 return M

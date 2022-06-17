@@ -2,7 +2,6 @@ local M = {}
 
 function M.preset()
   return {
-    enable = true,
     groups = {
       ["<Leader>l"] = "Lsp",
       ["<Leader>f"] = "Search",
@@ -21,7 +20,10 @@ function M.preset()
         g = true,
       },
     },
-    operators = { ["gc"] = "Toggle line comments", ["gb"] = "Toggle block comments" },
+    operators = {
+      ["gc"] = "Toggle line comments",
+      ["gb"] = "Toggle block comments",
+    },
     window = {
       border = "rounded",
     },
@@ -41,12 +43,13 @@ function M.setup(minv)
     return
   end
 
-  local preset = minv.builtin.which_key
-  which_key.setup(preset)
+  local preset = minv.plugins.ui.which_key
   local groups = {}
   for key, name in pairs(preset.groups) do
     groups[key] = { name = name }
   end
+  preset.groups = nil
+  which_key.setup(preset)
   which_key.register(groups)
 
   -- Use which-key to handle bindings.

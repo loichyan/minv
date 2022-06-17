@@ -2,14 +2,9 @@ local register = require("minv.utils.register")
 local keybinding = require("minv.utils.keybinding")
 local M = {
   Keybinding = keybinding.new,
+  PluginGroup = require("minv.utils.plugin_group").new,
   register_key = register.register_key,
 }
-
----@param bindings table<string,string|any[]|table<string,string|any[]>>
----@param options table<string,boolean>
-function M.set_keybindings(bindings, options)
-  keybinding.new(bindings):apply(true, nil, options)
-end
 
 ---@generic T
 ---@param list T[]

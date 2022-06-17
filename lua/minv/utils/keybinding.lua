@@ -43,6 +43,7 @@ function M.handler(mode, buffer, bindings, options)
 end
 
 ---@param init_bindings?  table<string,string|any[]|table<string,string|any[]>>
+---@return MiNV.Keybinding
 function M.new(init_bindings)
   ---@class MiNV.Keybinding
   local Keybinding = {
@@ -56,33 +57,29 @@ function M.new(init_bindings)
     return self._bindings[key]
   end
 
-  ---@param key string
-  ---@param binding string|any[]|table<string,string|any[]>
-  function Keybinding:insert(key, binding)
-    if type(binding) == "table" then
-      if #binding == 2 then
-        -- Bind to a command.
-        self._bindings[key] = binding
-      elseif #binding == 0 then
-        -- Nested bindings.
-        for key2, val in pairs(binding) do
-          -- allow using "nop" to ignore a binding
-          if (type(val) == "string" and val ~= "nop") or (type(val) == "table" and #val == 2) then
-            self._bindings[key .. key2] = val
+  ---@param bindings table<string,string|any[]|table<string,string|any[]>>
+  ---@return MiNV.Keybinding
+  function Keybinding:extend(bindings)
+    for key, binding in pairs(bindings) do
+      if type(binding) == "table" then
+        if #binding == 2 then
+          -- Bind to a command.
+          self._bindings[key] = binding
+        elseif #binding == 0 then
+          -- Nested bindings.
+          for key2, val in pairs(binding) do
+            -- allow using "nop" to ignore a binding
+            if (type(val) == "string" and val ~= "nop") or (type(val) == "table" and #val == 2) then
+              self._bindings[key .. key2] = val
+            end
           end
         end
+      elseif type(binding) == "string" then
+        -- Bind to a source.
+        self._bindings[key] = binding
       end
-    elseif type(binding) == "string" then
-      -- Bind to a source.
-      self._bindings[key] = binding
     end
-  end
-
-  ---@param bindings table<string,string|any[]|table<string,string|any[]>>
-  function Keybinding:extend(bindings)
-    for key, val in pairs(bindings) do
-      self:insert(key, val)
-    end
+    return self
   end
 
   ---@generic T
@@ -119,11 +116,7 @@ function M.new(init_bindings)
     M.handler(mode, buffer, bindings, opts)
   end
 
-  if init_bindings ~= nil then
-    Keybinding:extend(init_bindings)
-  end
-
-  return Keybinding
+  return Keybinding:extend(init_bindings or {})
 end
 
 return M

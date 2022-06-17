@@ -45,7 +45,7 @@ end
 
 ---@param minv MiNV
 function M.setup(minv)
-  require("lualine").setup(minv.builtin.lualine)
+  require("lualine").setup(minv.plugins.ui.lualine)
 end
 
 return M

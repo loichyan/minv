@@ -24,7 +24,7 @@ end
 ---@param minv MiNV
 function M.setup(minv)
   -- Setup treesitter.
-  require("nvim-treesitter.configs").setup(minv.builtin.treesitter)
+  require("nvim-treesitter.configs").setup(minv.plugins.treesitter.config)
 end
 
 return M

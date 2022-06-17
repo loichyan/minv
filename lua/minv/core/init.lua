@@ -4,7 +4,7 @@ local M = {}
 function M.preset()
   ---@class MiNV
   local preset = {
-    builtin = require("minv.builtin").preset(),
+    plugins = require("minv.core.plugins").preset(),
     autocmds = require("minv.core.autocmds").preset(),
     settings = require("minv.core.settings").preset(),
     keybindings = require("minv.core.keybindings").preset(),
@@ -18,26 +18,18 @@ function M.setup(custom)
   pcall(require, "impatient")
 
   -- Load presets.
-  local minv = M.preset()
-
-  M._plugins = {
-    -- Packer
-    { "wbthomason/packer.nvim" },
-    -- Speed up startup time.
-    { "lewis6991/impatient.nvim" },
-  }
-  local plugins = M._plugins
+  _G._MINV = M.preset()
 
   -- Load customization.
-  vim.list_extend(plugins, custom(minv))
+  local ok, msg = pcall(custom, _MINV)
+  if not ok then
+    vim.notify(msg, vim.log.levels.ERROR)
+  end
 
-  -- Builtin plugins.
-  vim.list_extend(plugins, require("minv.builtin").setup(minv))
-
-  require("minv.core.settings").setup(minv)
-  require("minv.core.autocmds").setup(minv)
-  require("minv.core.plugins").setup(minv, plugins)
-  require("minv.core.keybindings").setup(minv)
+  require("minv.core.settings").setup(_MINV)
+  require("minv.core.autocmds").setup(_MINV)
+  require("minv.core.plugins").setup(_MINV)
+  require("minv.core.keybindings").setup(_MINV)
 end
 
 return M
