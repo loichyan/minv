@@ -6,7 +6,8 @@ function M.setup(opt)
 
   -- Install packer.
   if not present then
-    local packer_path = vim.fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
+    local packer_path = vim.fn.stdpath("data")
+      .. "/site/pack/packer/start/packer.nvim"
 
     print("Install packer...")
     vim.fn.system({

@@ -33,7 +33,10 @@ local _registered_keys = _random_map()
 ---Register a `<Plug>` key to the global variable.
 ---@return string
 function M.register_key()
-  return string.format("<Plug>(MiNVRegisteredKey#%d)", _registered_keys:insert(true))
+  return string.format(
+    "<Plug>(MiNVRegisteredKey#%d)",
+    _registered_keys:insert(true)
+  )
 end
 
 return M

@@ -22,8 +22,11 @@ function M.preset()
       { "q", "  Quit", "<Cmd>qa<CR>" },
     },
     footer = function()
-      ---@diagnostic disable-next-line:undefined-global
-      return string.format("Neovim loaded %s plugins  ", vim.tbl_count(packer_plugins))
+      return string.format(
+        "Neovim loaded %s plugins  ",
+        ---@diagnostic disable-next-line:undefined-global
+        vim.tbl_count(packer_plugins)
+      )
     end,
   }
 end

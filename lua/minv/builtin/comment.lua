@@ -16,7 +16,10 @@ function M.setup(minv)
     local location = nil
     if ctx.ctype == comment_utils.ctype.block then
       location = cmstring_utils.get_cursor_location()
-    elseif ctx.cmotion == comment_utils.cmotion.v or ctx.cmotion == comment_utils.cmotion.V then
+    elseif
+      ctx.cmotion == comment_utils.cmotion.v
+      or ctx.cmotion == comment_utils.cmotion.V
+    then
       location = cmstring_utils.get_visual_start_location()
     end
 
@@ -67,17 +70,19 @@ function M.setup(minv)
   end
 
   -- Setup comments.
-  require("Comment").setup(vim.tbl_extend("force", minv.plugins.treesitter.comment, {
-    pre_hook = pre_hook,
-    toggler = make_mapping("toggle"),
-    opleader = make_mapping("oplead"),
-    extra = make_mapping("insert"),
-    mappings = {
-      basic = true,
-      extra = true,
-      extended = false,
-    },
-  }))
+  require("Comment").setup(
+    vim.tbl_extend("force", minv.plugins.treesitter.comment, {
+      pre_hook = pre_hook,
+      toggler = make_mapping("toggle"),
+      opleader = make_mapping("oplead"),
+      extra = make_mapping("insert"),
+      mappings = {
+        basic = true,
+        extra = true,
+        extended = false,
+      },
+    })
+  )
 
   -- Set keybindings.
   minv.keybindings.n:apply(false, make_source("toggle", "oplead", "insert"))

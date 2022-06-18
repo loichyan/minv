@@ -69,7 +69,10 @@ function M.new(init_bindings)
           -- Nested bindings.
           for key2, val in pairs(binding) do
             -- allow using "nop" to ignore a binding
-            if (type(val) == "string" and val ~= "nop") or (type(val) == "table" and #val == 2) then
+            if
+              (type(val) == "string" and val ~= "nop")
+              or (type(val) == "table" and #val == 2)
+            then
               self._bindings[key .. key2] = val
             end
           end

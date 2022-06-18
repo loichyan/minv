@@ -10,7 +10,10 @@ local function custom(minv)
   })
 
   -- Add cmp sources.
-  vim.list_extend(minv.plugins.cmp.config.sources, { { name = "nvim_lsp_signature_help" } })
+  vim.list_extend(
+    minv.plugins.cmp.config.sources,
+    { { name = "nvim_lsp_signature_help" } }
+  )
 
   -- Configure autocmds.
   vim.list_extend(minv.autocmds.q_to_close, { "notify" })
@@ -26,7 +29,10 @@ local function custom(minv)
   vim.list_extend(minv.plugins.treesitter.config.ensure_installed, { "rust" })
 
   -- Lsp servers
-  vim.list_extend(minv.plugins.lsp.installer.ensure_installed, { "rust_analyzer" })
+  vim.list_extend(
+    minv.plugins.lsp.installer.ensure_installed,
+    { "rust_analyzer" }
+  )
 
   local lsp = minv.plugins.lsp.config
   -- Rust-analyzer
@@ -53,7 +59,10 @@ local function custom(minv)
       },
     })
     -- Add MiNV to runtime paths.
-    lua_dev.settings["Lua"].workspace.library[vim.fn.expand("~/.config/nvim/lua")] = true
+    lua_dev.settings["Lua"].workspace.library[vim.fn.expand(
+      "~/.config/nvim/lua"
+    )] =
+      true
     lsp.configs.sumneko_lua = lua_dev
   end
 
