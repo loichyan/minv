@@ -105,7 +105,7 @@ function M.setup(minv)
         augroup END
       ]])
     end
-    minv.keybindings.lsp:apply(true, keybindings, { buffer = buf })
+    minv.keybindings.lsp:apply(keybindings, { buffer = buf })
   end
 
   local capabilities = require("cmp_nvim_lsp").update_capabilities(

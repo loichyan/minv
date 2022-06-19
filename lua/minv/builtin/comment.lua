@@ -85,8 +85,8 @@ function M.setup(minv)
   )
 
   -- Set keybindings.
-  minv.keybindings.n:apply(false, make_source("toggle", "oplead", "insert"))
-  minv.keybindings.x:apply(false, make_source("oplead"), { mode = "x" })
+  minv.keybindings.comment:apply(make_source("toggle", "oplead", "insert"))
+  minv.keybindings.comment:apply(make_source("oplead"), { mode = "x" })
 end
 
 return M

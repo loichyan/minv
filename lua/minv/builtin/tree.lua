@@ -32,6 +32,10 @@ end
 function M.setup(minv)
   -- Setup nvim-tree.
   require("nvim-tree").setup(minv.plugins.ui.tree)
+  minv.keybindings.tree:apply({
+    ["tree.toggle"] = { "<Cmd>NvimTreeToggle<CR>", "Toggle tree" },
+    ["tree.focus"] = { "<Cmd>NvimTreeFocus<CR>", "Focus tree" },
+  })
 end
 
 return M

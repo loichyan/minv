@@ -49,37 +49,30 @@ function M.new(init_bindings)
   local Keybinding = {
     ---@type table<string,any[]|string>
     _bindings = {},
+    ---@type table<string,string>
+    _unbinded = {},
   }
 
-  ---@key string
-  ---@return string
-  function Keybinding:get(key)
-    return self._bindings[key]
-  end
-
-  ---@param bindings table<string,string|any[]|table<string,string|any[]>>
+  ---@param bindings table<string,string|table>
+  ---@param prefix? string
   ---@return MiNV.Keybinding
-  function Keybinding:extend(bindings)
+  function Keybinding:extend(bindings, prefix)
+    prefix = prefix or ""
     for key, binding in pairs(bindings) do
-      if type(binding) == "table" then
-        if #binding == 2 then
-          -- Bind to a command.
-          self._bindings[key] = binding
-        elseif #binding == 0 then
-          -- Nested bindings.
-          for key2, val in pairs(binding) do
-            -- allow using "nop" to ignore a binding
-            if
-              (type(val) == "string" and val ~= "nop")
-              or (type(val) == "table" and #val == 2)
-            then
-              self._bindings[key .. key2] = val
-            end
-          end
-        end
+      if binding == "nop" then
+        -- Allow using "nop" to remove a binding.
+        self._unbinded[prefix .. key] = nil
       elseif type(binding) == "string" then
         -- Bind to a source.
-        self._bindings[key] = binding
+        self._unbinded[prefix .. key] = binding
+      elseif type(binding) == "table" then
+        if #binding > 0 then
+          -- Bind to a command.
+          self._bindings[prefix .. key] = binding
+        else
+          -- Nested binding.
+          self:extend(binding, prefix .. key)
+        end
       end
     end
     return self
@@ -87,35 +80,27 @@ function M.new(init_bindings)
 
   ---@generic T
   ---@param map table<string,T>
-  ---@return table<string,T>,table<string,any[]>
+  ---@return table<string,T>|table<string,any>
   function Keybinding:map(map)
-    local bindings = {}
-    local unmapped = {}
-    for key, val in pairs(self._bindings) do
-      if type(val) == "string" then
-        bindings[key] = map[val]
-      else
-        unmapped[key] = val
-      end
+    local mapped = {}
+    for key, src in pairs(self._unbinded) do
+      local binding = map[src]
+      mapped[key] = binding
     end
-    return bindings, unmapped
+    return mapped, self._bindings
   end
 
-  ---@param unsourced boolean
   ---@param sources? table<string,any[]>
   ---@param options? table<string,any>
-  function Keybinding:apply(unsourced, sources, options)
+  function Keybinding:apply(sources, options)
     local mode, buffer, opts = M.parse_options(options or {})
     -- Default options.
     mode = mode or "n"
     opts.noremap = opts.noremap ~= false or false
     opts.silent = opts.silent ~= false or false
 
-    local bindings, unmapped = self:map(sources or {})
-    -- Apply unsourced bindings.
-    if unsourced then
-      M.handler(mode, buffer, unmapped, opts)
-    end
+    local mapped, bindings = self:map(sources or {})
+    M.handler(mode, buffer, mapped, opts)
     M.handler(mode, buffer, bindings, opts)
   end
 

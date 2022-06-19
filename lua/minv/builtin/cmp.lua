@@ -96,7 +96,7 @@ function M.setup(minv)
     return luasnip.jumpable(dir) and luasnip.in_snippet()
   end
 
-  local mapping, unmapped = minv.keybindings.cmp:map({
+  local mapped, bindings = minv.keybindings.cmp:map({
     ["cmp.scroll_down"] = cmp.mapping.scroll_docs(4),
     ["cmp.scroll_up"] = cmp.mapping.scroll_docs(-4),
     ["cmp.complete"] = cmp.mapping.complete(),
@@ -127,9 +127,9 @@ function M.setup(minv)
       end
     end),
   })
-  for key, val in pairs(unmapped) do
+  for key, val in pairs(bindings) do
     local fn, _ = unpack(val)
-    mapping[key] = fn
+    mapped[key] = fn
   end
 
   -- Setup luasnip.
@@ -147,7 +147,7 @@ function M.setup(minv)
       fields = preset.formatting.fields,
       format = preset.formatting.format,
     },
-    mapping = mapping,
+    mapping = mapped,
   }))
 
   -- Load friendly-snippets.

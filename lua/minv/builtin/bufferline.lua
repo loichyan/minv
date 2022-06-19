@@ -28,6 +28,17 @@ function M.setup(minv)
   require("bufferline").setup({
     options = minv.plugins.ui.bufferline,
   })
+  minv.keybindings.bufferline:apply({
+    ["bufferline.goto_next"] = {
+      "<Cmd>BufferLineCycleNext<CR>",
+      "Goto next buffer",
+    },
+    ["bufferline.goto_prev"] = {
+      "<Cmd>BufferLineCyclePrev<CR>",
+      "Goto prev buffer",
+    },
+    ["bufferline.close"] = { "<Cmd>bdelete<CR>", "Close buffer" },
+  })
 end
 
 return M

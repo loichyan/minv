@@ -48,7 +48,6 @@ function M.setup(minv)
   for key, name in pairs(preset.groups) do
     groups[key] = { name = name }
   end
-  preset.groups = nil
   which_key.setup(preset)
   which_key.register(groups)
 

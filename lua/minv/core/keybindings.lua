@@ -1,33 +1,40 @@
 local M = {}
 
 function M.preset()
-  local utils = require("minv.utils")
+  local Kb = require("minv.utils").Keybinding
 
   return {
-    [""] = utils.Keybinding(),
-    ["n"] = utils.Keybinding({
+    [""] = Kb(),
+    ["n"] = Kb({
       -- normal
       ["<C-s>"] = "normal.write",
       ["<Esc>"] = "normal.nohlsearch",
-      -- bufferline
+    }),
+    ["v"] = Kb(),
+    ["x"] = Kb(),
+    ["s"] = Kb(),
+    ["o"] = Kb(),
+    ["!"] = Kb(),
+    ["i"] = Kb({
+      -- insert
+      ["jk"] = "insert.escape",
+      ["kj"] = "insert.escape",
+    }),
+    ["l"] = Kb(),
+    ["c"] = Kb(),
+    ["t"] = Kb(),
+    -- nvim-tree
+    tree = Kb({
+      ["<C-n>"] = "tree.toggle",
+    }),
+    -- Bufferline
+    bufferline = Kb({
       ["<S-l>"] = "bufferline.goto_next",
       ["<S-h>"] = "bufferline.goto_prev",
       ["<Leader>x"] = "bufferline.close",
-      -- nvim-tree
-      ["<C-n>"] = "tree.toggle",
-      -- git
-      ["]g"] = "git.goto_next_hunk",
-      ["[g"] = "git.goto_prev_hunk",
-      ["<Leader>g"] = {
-        ["b"] = "git.blame_line",
-        ["r"] = "git.reset_line",
-        ["R"] = "git.reset_buffer",
-        ["s"] = "git.state_hunk",
-        ["S"] = "git.stage_buffer",
-        ["u"] = "git.undo_stage_hunk",
-        ["p"] = "git.preview_hunk",
-      },
-      -- telescope
+    }),
+    -- Telescope
+    telescope = Kb({
       ["<Leader>f"] = {
         ["f"] = "telescope.grep",
         ["F"] = "telescope.files",
@@ -39,7 +46,23 @@ function M.preset()
         ["s"] = "telescope.document_symbols",
         ["S"] = "telescope.workspace_symbols",
       },
-      -- comment
+    }),
+    -- Gitsigns
+    gitsigns = Kb({
+      ["]g"] = "gitsigns.goto_next_hunk",
+      ["[g"] = "gitsigns.goto_prev_hunk",
+      ["<Leader>g"] = {
+        ["b"] = "gitsigns.blame_line",
+        ["r"] = "gitsigns.reset_line",
+        ["R"] = "gitsigns.reset_buffer",
+        ["s"] = "gitsigns.state_hunk",
+        ["S"] = "gitsigns.stage_buffer",
+        ["u"] = "gitsigns.undo_stage_hunk",
+        ["p"] = "gitsigns.preview_hunk",
+      },
+    }),
+    ---Bindings for toggle comments.
+    comment = Kb({
       ["gcc"] = "comment.toggle_line",
       ["gbc"] = "comment.toggle_block",
       ["gc"] = "comment.oplead_line",
@@ -47,32 +70,13 @@ function M.preset()
       ["gcO"] = "comment.insert_above",
       ["gco"] = "comment.insert_below",
       ["gcA"] = "comment.insert_eol",
-      -- terminal
-      ["<C-t>"] = "terminal.toggle",
     }),
-    ["v"] = utils.Keybinding(),
-    ["x"] = utils.Keybinding({
-      -- comment
-      ["gc"] = "comment.oplead_line",
-      ["gb"] = "comment.oplead_block",
-    }),
-    ["s"] = utils.Keybinding(),
-    ["o"] = utils.Keybinding(),
-    ["!"] = utils.Keybinding(),
-    ["i"] = utils.Keybinding({
-      -- insert
-      ["jk"] = "insert.escape",
-      ["kj"] = "insert.escape",
-    }),
-    ["l"] = utils.Keybinding(),
-    ["c"] = utils.Keybinding(),
-    ["t"] = utils.Keybinding(),
     ---Bindings for terminals.
-    terminal = utils.Keybinding({
+    terminal = Kb({
       ["<C-t>"] = "terminal.toggle",
     }),
     ---Bindings on lsp clients attached.
-    lsp = utils.Keybinding({
+    lsp = Kb({
       ["K"] = "lsp.hover",
       ["g"] = {
         ["k"] = "lsp.show_signature_help",
@@ -95,7 +99,7 @@ function M.preset()
       },
     }),
     ---Bindings for nvim-cmp.
-    cmp = utils.Keybinding({
+    cmp = Kb({
       ["<C-d>"] = "cmp.scroll_down",
       ["<C-u>"] = "cmp.scroll_up",
       ["<C-Space>"] = "cmp.complete",
@@ -109,88 +113,11 @@ end
 
 ---@param minv MiNV
 function M.setup(minv)
-  -- TODO: apply when plugin setup
   local sources = {
     [""] = {},
     ["n"] = {
-      -- normal
       ["normal.write"] = { "<Cmd>write<CR>", "Write buffer" },
       ["normal.nohlsearch"] = { "<Cmd>nohlsearch<CR>", "No hlsearch" },
-      -- bufferline
-      ["bufferline.goto_next"] = {
-        "<Cmd>BufferLineCycleNext<CR>",
-        "Goto next buffer",
-      },
-      ["bufferline.goto_prev"] = {
-        "<Cmd>BufferLineCyclePrev<CR>",
-        "Goto prev buffer",
-      },
-      ["bufferline.close"] = { "<Cmd>bdelete<CR>", "Close buffer" },
-      -- nvim-tree
-      ["tree.toggle"] = { "<Cmd>NvimTreeToggle<CR>", "Toggle tree" },
-      ["tree.focus"] = { "<Cmd>NvimTreeFocus<CR>", "Focus tree" },
-      -- git
-      ["git.goto_next_hunk"] = {
-        "<Cmd>Gitsigns next_hunk<CR>",
-        "Goto next hunk",
-      },
-      ["git.goto_prev_hunk"] = {
-        "<Cmd>Gitsigns prev_hunk<CR>",
-        "Goto prev hunk",
-      },
-      ["git.blame_line"] = { "<Cmd>Gitsigns blame_line<CR>", "Blame line" },
-      ["git.reset_line"] = { "<Cmd>Gitsigns reset_hunk<CR>", "Reset hunk" },
-      ["git.reset_buffer"] = {
-        "<Cmd>Gitsigns reset_buffer<CR>",
-        "Reset buffer",
-      },
-      ["git.state_hunk"] = { "<Cmd>Gitsigns stage_hunk<CR>", "Stage hunk" },
-      ["git.stage_buffer"] = {
-        "<Cmd>Gitsigns stage_buffer<CR>",
-        "Stage buffer",
-      },
-      ["git.undo_stage_hunk"] = {
-        "<Cmd>Gitsigns undo_stage_hunk<CR>",
-        "Undo stage hunk",
-      },
-      ["git.preview_hunk"] = {
-        "<Cmd>Gitsigns preview_hunk<CR>",
-        "Preview hunk",
-      },
-      -- telescope
-      ["telescope.files"] = {
-        "<Cmd>Telescope find_files<CR>",
-        "Search files",
-      },
-      ["telescope.grep"] = {
-        "<Cmd>Telescope live_grep<CR>",
-        "Search strings",
-      },
-      ["telescope.marks"] = { "<Cmd>Telescope marks<CR>", "Search marks" },
-      ["telescope.buffers"] = {
-        "<Cmd>Telescope buffers<CR>",
-        "Search buffers",
-      },
-      ["telescope.registers"] = {
-        "<Cmd>Telescope registers<CR>",
-        "Search registers",
-      },
-      ["telescope.git_commits"] = {
-        "<Cmd>Telescope git_commits<CR>",
-        "Search git commits",
-      },
-      ["telescope.recent_files"] = {
-        "<Cmd>Telescope oldfiles<CR>",
-        "Search recent files",
-      },
-      ["telescope.document_symbols"] = {
-        "<Cmd>Telescope lsp_document_symbols<CR>",
-        "Search document symbols",
-      },
-      ["telescope.workspace_symbols"] = {
-        "<Cmd>Telescope lsp_workspace_symbols<CR>",
-        "Search workspace symbols",
-      },
     },
     ["v"] = {},
     ["x"] = {},
@@ -205,7 +132,7 @@ function M.setup(minv)
     ["t"] = {},
   }
   for m, src in pairs(sources) do
-    minv.keybindings[m]:apply(true, src, { mode = m })
+    minv.keybindings[m]:apply(src, { mode = m })
   end
 end
 
