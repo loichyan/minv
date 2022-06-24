@@ -22,15 +22,14 @@ function M.preset()
     },
     theme = {
       plug = group({
-        {
-          "folke/tokyonight.nvim",
-          config = function()
-            vim.g.tokyonight_style = _MINV.plugins.theme.tokyonight.style
-            vim.cmd("colorscheme tokyonight")
-          end,
-        },
+        { "folke/tokyonight.nvim" },
       }),
       tokyonight = { style = "night" },
+      -- Setup function runs before other plugins.
+      setup = function()
+        vim.g.tokyonight_style = _MINV.plugins.theme.tokyonight.style
+        vim.cmd("colorscheme tokyonight")
+      end,
     },
     treesitter = {
       plug = group({
@@ -162,6 +161,7 @@ end
 ---@param minv MiNV
 function M.setup(minv)
   local preset = minv.plugins
+  preset.theme.setup()
   -- Setup packer.
   require("minv.core.packer").setup({
     function(use)
