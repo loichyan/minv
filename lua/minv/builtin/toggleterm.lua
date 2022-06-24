@@ -26,7 +26,9 @@ function M.setup(minv)
         sources,
         { mode = "t", buffer = term.bufnr }
       )
-      pcall(preset.on_open, term)
+      if preset.on_open ~= nil then
+        preset.on_open(term)
+      end
     end,
   }))
 
