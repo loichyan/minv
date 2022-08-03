@@ -1,7 +1,7 @@
 local M = {}
 
 ---@param options table<string,any>
----@return string?,number?,table<string,boolean>
+---@return string?,integer?,table<string,boolean>
 function M.parse_options(options)
   local mode = options.mode
   local buffer = options.buffer
@@ -42,7 +42,7 @@ function M.handler(mode, buffer, bindings, options)
   end
 end
 
----@param init_bindings?  table<string,string|any[]|table<string,string|any[]>>
+---@param init_bindings?  table<string,any>
 ---@return MiNV.Keybinding
 function M.new(init_bindings)
   ---@class MiNV.Keybinding
@@ -53,7 +53,7 @@ function M.new(init_bindings)
     _unbinded = {},
   }
 
-  ---@param bindings table<string,string|table>
+  ---@param bindings table<string,any>
   ---@param prefix? string
   ---@return MiNV.Keybinding
   function Keybinding:extend(bindings, prefix)
@@ -80,7 +80,7 @@ function M.new(init_bindings)
 
   ---@generic T
   ---@param map table<string,T>
-  ---@return table<string,T>|table<string,any>
+  ---@return table<string,T>,table<string,any>
   function Keybinding:map(map)
     local mapped = {}
     for key, src in pairs(self._unbinded) do
