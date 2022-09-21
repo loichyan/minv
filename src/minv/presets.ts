@@ -1,10 +1,20 @@
 import * as spark from "spark";
-import { Config as SparkConfig } from "spark/shared";
-import { mkHint } from "./utils";
+import { mkHint, MkUpdater, apply_updater } from "./utils";
 
-type Spark = typeof spark;
+type MkPresetsInput = { [k: string]: any };
 
-export type Presets = { [k: string]: any };
+type Table = { [k: string | number]: any };
+
+type MkPresets<T extends MkPresetsInput> = {
+  [K in keyof T]: T[K] & Table;
+};
+
+function mkPresets<T extends MkPresetsInput>(
+  this: void,
+  input: T
+): MkPresets<T> {
+  return input as any;
+}
 
 const CMP_KIND: LuaMap<string, string> = {
   Text: "",
@@ -45,8 +55,11 @@ const CMP_DUP: LuaMap<string, boolean> = {
   buffer: true,
 } as any;
 
-export const PRESETS = mkHint<Presets>()({
-  spark: <DeepParitial<SparkConfig>>{},
+// FIXME: https://github.com/microsoft/TypeScript/issues/50917
+export interface SparkConfig extends DeepParitial<spark.Config> {}
+
+const __INPUT = mkHint<MkPresetsInput>()({
+  spark: {} as SparkConfig,
   treesitter: {
     ensure_installed: {},
     highlight: {
@@ -60,6 +73,7 @@ export const PRESETS = mkHint<Presets>()({
     },
     context_commentstring: {
       enable: true,
+      enable_autocmd: false,
     },
     textobjects: {
       select: {
@@ -102,10 +116,10 @@ export const PRESETS = mkHint<Presets>()({
   surround: {},
   cmp: {
     sources: [
-      { name: "buffer" },
-      { name: "luasnip" },
-      { name: "nvim_lsp" },
-      { name: "path" },
+      { name: "nvim_lsp", priority: 3 },
+      { name: "luasnip", priority: 2 },
+      { name: "path", priority: 1 },
+      { name: "buffer", priority: 0 },
     ],
     formatting: {
       fields: ["kind", "abbr", "menu"],
@@ -126,7 +140,11 @@ export const PRESETS = mkHint<Presets>()({
     menu: CMP_MENU,
     dup: CMP_DUP,
   },
-  luasnip: {},
+  luasnip: {
+    history: false,
+    region_check_events: "InsertEnter",
+    delete_check_events: "InsertLeave",
+  },
   lspconfig: {
     server_default: {
       flags: {
@@ -215,10 +233,18 @@ export const PRESETS = mkHint<Presets>()({
       ["q", "  Quit", "<Cmd>qa<CR>"],
     ],
     footer: function (this: void) {
-      return string.format(
-        "Neovim loaded %d plugins  ",
-        (require("spark") as Spark).plugins().length
-      );
+      let count = 0;
+      for (const [_, plug] of ipairs(
+        (require("spark") as typeof spark).plugins()
+      )) {
+        if (string.sub(plug[1], 1, 1) != "$") {
+          const state = plug.__state;
+          if (state == "LOADED" || state == "LOAD" || state == "POST_LOAD") {
+            count += 1;
+          }
+        }
+      }
+      return string.format("Neovim loaded %d plugins  ", count);
     },
   },
   bufferline: {
@@ -228,7 +254,6 @@ export const PRESETS = mkHint<Presets>()({
       show_buffer_icons: true,
       show_buffer_close_icons: true,
       show_close_icon: false,
-      separator_style: "thin",
       always_show_bufferline: true,
       offsets: [
         {
@@ -271,10 +296,10 @@ export const PRESETS = mkHint<Presets>()({
   },
   nvim_tree: {
     respect_buf_cwd: true,
-    update_cwd: true,
+    sync_root_with_cwd: true,
     update_focused_file: {
       enable: true,
-      update_cwd: true,
+      update_root: true,
     },
     actions: {
       open_file: {
@@ -297,3 +322,13 @@ export const PRESETS = mkHint<Presets>()({
     },
   },
 });
+
+export type PRESETS = typeof PRESETS;
+export const PRESETS = mkPresets(__INPUT);
+
+export function update_preset(
+  this: void,
+  updater: { [K in keyof PRESETS]?: MkUpdater<PRESETS[K]> }
+) {
+  apply_updater(PRESETS, updater);
+}

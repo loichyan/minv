@@ -19,7 +19,7 @@ function ____exports.setup()
         ["cmp.confirm"] = cmp_mapping.confirm({select = true}),
         ["cmp.scroll_down"] = cmp_mapping.scroll_docs(4),
         ["cmp.scroll_up"] = cmp_mapping.scroll_docs(-4),
-        ["cmp.select_next"] = cmp_mapping(function(____, fb)
+        ["cmp.select_next"] = cmp_mapping(function(fb)
             if cmp.visible() then
                 cmp.select_next_item()
             elseif luasnip.expandable() then
@@ -30,7 +30,7 @@ function ____exports.setup()
                 fb()
             end
         end),
-        ["cmp.select_prev"] = cmp_mapping(function(____, fb)
+        ["cmp.select_prev"] = cmp_mapping(function(fb)
             if cmp.visible() then
                 cmp.select_prev_item()
             elseif locally_jumpable(-1) then
@@ -41,7 +41,17 @@ function ____exports.setup()
         end)
     })
     local bordered = cmp.config.window.bordered()
-    local cmp_opts = deep_merge("keep", {mapping = mapping}, PRESETS.cmp, {window = {completion = bordered, documentation = bordered}, confirmation = {default_behavior = cmp.ConfirmBehavior.Replace}})
+    local cmp_opts = deep_merge(
+        "keep",
+        {
+            snippet = {expand = function(args)
+                luasnip.lsp_expand(args.body)
+            end},
+            mapping = mapping
+        },
+        PRESETS.cmp,
+        {window = {completion = bordered, documentation = bordered}, confirmation = {default_behavior = cmp.ConfirmBehavior.Replace}}
+    )
     luasnip.config.setup(PRESETS.luasnip)
     cmp.setup(cmp_opts)
     require("luasnip.loaders.from_vscode").lazy_load()

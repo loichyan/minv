@@ -1,2 +1,3 @@
-import * as _shared from "./minv/shared";
-export declare function setup(this: void, custom: (this: void, minv: _shared.MINV) => void): void;
+import * as _main from "./minv/main";
+export { type MINV } from "./minv/shared";
+export declare const setup: typeof _main.setup;

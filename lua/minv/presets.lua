@@ -2,6 +2,10 @@
 local ____exports = {}
 local ____utils = require("minv.utils")
 local mkHint = ____utils.mkHint
+local apply_updater = ____utils.apply_updater
+local function mkPresets(input)
+    return input
+end
 local CMP_KIND = {
     Text = "",
     Method = "",
@@ -31,14 +35,14 @@ local CMP_KIND = {
 }
 local CMP_MENU = {buffer = "[BUF]", luasnip = "[SNIP]", nvim_lsp = "[LSP]", path = "[PATH]"}
 local CMP_DUP = {buffer = true}
-____exports.PRESETS = mkHint()({
+local __INPUT = mkHint()({
     spark = {},
     treesitter = {
         ensure_installed = {},
         highlight = {enable = true},
         incremental_selection = {enable = true},
         indent = {enable = true},
-        context_commentstring = {enable = true},
+        context_commentstring = {enable = true, enable_autocmd = false},
         textobjects = {select = {enable = true, lookahead = true, keymaps = {af = "@function.outer", ["if"] = "@function.inner", ac = "@class.outer", ic = "@class.inner"}, include_surrounding_whitespace = false}, move = {
             enable = true,
             set_jumps = true,
@@ -51,7 +55,7 @@ ____exports.PRESETS = mkHint()({
     comment = {sticky = true, padding = true},
     surround = {},
     cmp = {
-        sources = {{name = "buffer"}, {name = "luasnip"}, {name = "nvim_lsp"}, {name = "path"}},
+        sources = {{name = "nvim_lsp", priority = 3}, {name = "luasnip", priority = 2}, {name = "path", priority = 1}, {name = "buffer", priority = 0}},
         formatting = {
             fields = {"kind", "abbr", "menu"},
             format = function(entry, vim_item)
@@ -67,7 +71,7 @@ ____exports.PRESETS = mkHint()({
         }
     },
     cmp_formatting = {kind = CMP_KIND, menu = CMP_MENU, dup = CMP_DUP},
-    luasnip = {},
+    luasnip = {history = false, region_check_events = "InsertEnter", delete_check_events = "InsertLeave"},
     lspconfig = {server_default = {flags = {debounce_text_changes = 250}}, servers = {}, border = "rounded"},
     null_ls = {debounce = 250},
     null_ls_sources = {formatters = {prettierd = {}}, linters = {}},
@@ -114,10 +118,16 @@ ____exports.PRESETS = mkHint()({
             {"q", "  Quit", "<Cmd>qa<CR>"}
         },
         footer = function()
-            return string.format(
-                "Neovim loaded %d plugins  ",
-                #require("spark").plugins()
-            )
+            local count = 0
+            for _, plug in ipairs(require("spark").plugins()) do
+                if string.sub(plug[1], 1, 1) ~= "$" then
+                    local state = plug.__state
+                    if state == "LOADED" or state == "LOAD" or state == "POST_LOAD" then
+                        count = count + 1
+                    end
+                end
+            end
+            return string.format("Neovim loaded %d plugins  ", count)
         end
     },
     bufferline = {options = {
@@ -126,7 +136,6 @@ ____exports.PRESETS = mkHint()({
         show_buffer_icons = true,
         show_buffer_close_icons = true,
         show_close_icon = false,
-        separator_style = "thin",
         always_show_bufferline = true,
         offsets = {{filetype = "NvimTree", text = "File Explorer", text_align = "left"}}
     }},
@@ -146,12 +155,16 @@ ____exports.PRESETS = mkHint()({
     },
     nvim_tree = {
         respect_buf_cwd = true,
-        update_cwd = true,
-        update_focused_file = {enable = true, update_cwd = true},
+        sync_root_with_cwd = true,
+        update_focused_file = {enable = true, update_root = true},
         actions = {open_file = {resize_window = true}},
         git = {enable = true, ignore = false, timeout = 500},
         filters = {custom = {"^.git$", "^.cache$", "^node_modules$"}}
     },
     toggleterm = {direction = "float", float_opts = {border = "rounded"}}
 })
+____exports.PRESETS = mkPresets(__INPUT)
+function ____exports.update_preset(updater)
+    apply_updater(____exports.PRESETS, updater)
+end
 return ____exports

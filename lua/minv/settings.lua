@@ -32,7 +32,7 @@ ____exports.SETTINGS = {g = {mapleader = " ", markdown_fenced_languages = {
     splitbelow = true,
     splitright = true
 }}
-function ____exports.setup()
+function ____exports.setup_settings()
     for k, v in pairs(____exports.SETTINGS.g) do
         vim.g[k] = v
     end

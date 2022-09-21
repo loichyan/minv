@@ -3,15 +3,36 @@ local ____exports = {}
 local ____presets = require("minv.presets")
 local PRESETS = ____presets.PRESETS
 local ____utils = require("minv.utils")
+local merge = ____utils.merge
 local mkHint = ____utils.mkHint
-local treeistter = require("minv.plugins.treesitter")
+local treesitter = require("minv.plugins.treesitter")
 local lsp = require("minv.plugins.lsp")
 local ui = require("minv.plugins.ui")
-____exports.PLUGINS = mkHint()({
+local function mkPlugins(input)
+    local plugins = {}
+    for gname, group in pairs(input) do
+        local newplugs = {}
+        for pname, plug in pairs(group[1]) do
+            if string.sub(pname, 1, 7) == "$setup_" then
+                local refname = string.sub(pname, 8)
+                local prename = "$pre_setup_" .. refname
+                newplugs[prename] = {after = plug.after}
+                plug.after = {prename}
+                local postname = "$post_setup_" .. refname
+                newplugs[postname] = {after = {pname}}
+            end
+            newplugs[pname] = plug
+        end
+        group[1] = newplugs
+        plugins[gname] = group
+    end
+    return plugins
+end
+local __INPUT = mkHint()({
     essional = {
         [1] = {
             impatient = {[1] = "lewis6991/impatient.nvim", priority = 1},
-            ["$setup_impatien"] = {
+            ["$setup_impatient"] = {
                 after = {"impatient"},
                 setup = function(self)
                     require("impatient")
@@ -25,15 +46,15 @@ ____exports.PLUGINS = mkHint()({
         start = true,
         disable = false
     },
-    treeistter = {[1] = {
-        treesitter = {[1] = "nvim-treesitter/nvim-treesitter"},
-        ["$setup_treesitter"] = {after = {"treesitter"}, setup = treeistter.setup_treesitter},
+    treesitter = {[1] = {
+        treesitter = {[1] = "nvim-treesitter/nvim-treesitter", priority = 11},
+        ["$setup_treesitter"] = {after = {"treesitter"}, setup = treesitter.setup_treesitter},
         ts_context_commentstring = {[1] = "JoosepAlviste/nvim-ts-context-commentstring"},
         comment = {[1] = "numToStr/Comment.nvim"},
-        ["$setup_comment"] = {after = {"$setup_treesitter", "ts_context_commentstring", "comment"}, setup = treeistter.setup_comment},
+        ["$setup_comment"] = {after = {"$setup_treesitter", "ts_context_commentstring", "comment"}, setup = treesitter.setup_comment},
         ts_textobjects = {[1] = "nvim-treesitter/nvim-treesitter-textobjects"},
         surround = {[1] = "kylechui/nvim-surround"},
-        ["$setup_surround"] = {after = {"$setup_treesitter", "ts_textobjects", "surround"}, setup = treeistter.setup_surround}
+        ["$setup_surround"] = {after = {"$setup_treesitter", "ts_textobjects", "surround"}, setup = treesitter.setup_surround}
     }, priority = 15, start = true, disable = false},
     cmp = {
         [1] = {
@@ -88,6 +109,7 @@ ____exports.PLUGINS = mkHint()({
     },
     extra = {[1] = {}, priority = 95, start = true, disable = false}
 })
+____exports.PLUGINS = mkPlugins(__INPUT)
 function ____exports.collect_plugins()
     local plugs = {}
     for _, group in pairs(____exports.PLUGINS) do
@@ -100,5 +122,22 @@ function ____exports.collect_plugins()
         end
     end
     return plugs
+end
+function ____exports.extend_plugins(input)
+    for gname, group in pairs(input) do
+        local oldgroup = ____exports.PLUGINS[gname]
+        local plugs = oldgroup[1]
+        if group[1] ~= nil then
+            for pname, plug in pairs(group[1]) do
+                local oldplug = plugs[pname]
+                if oldplug ~= nil then
+                    merge("force", oldplug, plug)
+                else
+                    plugs[pname] = plug
+                end
+            end
+        end
+        merge("force", oldgroup, group, {[1] = plugs})
+    end
 end
 return ____exports

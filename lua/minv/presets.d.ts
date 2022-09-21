@@ -1,9 +1,20 @@
-import { Config as SparkConfig } from "spark/shared";
-export declare type Presets = {
+/// <reference types="spark/types" />
+import * as spark from "spark";
+import { MkUpdater } from "./utils";
+declare type MkPresetsInput = {
     [k: string]: any;
 };
-export declare const PRESETS: {
-    spark: DeepParitial<SparkConfig>;
+declare type Table = {
+    [k: string | number]: any;
+};
+declare type MkPresets<T extends MkPresetsInput> = {
+    [K in keyof T]: T[K] & Table;
+};
+export interface SparkConfig extends DeepParitial<spark.Config> {
+}
+export declare type PRESETS = typeof PRESETS;
+export declare const PRESETS: MkPresets<{
+    spark: SparkConfig;
     treesitter: {
         ensure_installed: {};
         highlight: {
@@ -17,6 +28,7 @@ export declare const PRESETS: {
         };
         context_commentstring: {
             enable: boolean;
+            enable_autocmd: boolean;
         };
         textobjects: {
             select: {
@@ -60,6 +72,7 @@ export declare const PRESETS: {
     cmp: {
         sources: {
             name: string;
+            priority: number;
         }[];
         formatting: {
             fields: string[];
@@ -71,7 +84,11 @@ export declare const PRESETS: {
         menu: LuaMap<string, string>;
         dup: LuaMap<string, boolean>;
     };
-    luasnip: {};
+    luasnip: {
+        history: boolean;
+        region_check_events: string;
+        delete_check_events: string;
+    };
     lspconfig: {
         server_default: {
             flags: {
@@ -157,7 +174,6 @@ export declare const PRESETS: {
             show_buffer_icons: boolean;
             show_buffer_close_icons: boolean;
             show_close_icon: boolean;
-            separator_style: string;
             always_show_bufferline: boolean;
             offsets: {
                 filetype: string;
@@ -205,10 +221,10 @@ export declare const PRESETS: {
     };
     nvim_tree: {
         respect_buf_cwd: boolean;
-        update_cwd: boolean;
+        sync_root_with_cwd: boolean;
         update_focused_file: {
             enable: boolean;
-            update_cwd: boolean;
+            update_root: boolean;
         };
         actions: {
             open_file: {
@@ -230,4 +246,8 @@ export declare const PRESETS: {
             border: string;
         };
     };
-};
+}>;
+export declare function update_preset(this: void, updater: {
+    [K in keyof PRESETS]?: MkUpdater<PRESETS[K]>;
+}): void;
+export {};

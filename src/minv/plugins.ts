@@ -1,28 +1,71 @@
 import { PRESETS } from "./presets";
-import { Spec } from "spark/shared";
-import { mkHint } from "./utils";
-import * as treeistter from "./plugins/treesitter";
+import * as spark from "spark";
+import { merge, mkHint } from "./utils";
+import * as treesitter from "./plugins/treesitter";
 import * as lsp from "./plugins/lsp";
 import * as ui from "./plugins/ui";
 
-export interface Plug extends Omit<Spec, "from"> {
-  1: string;
-}
+export interface Plug extends Partial<Omit<spark.Spec, "from">> {}
 
-export interface PlugGroup {
-  1: { [k: string]: DeepParitial<Plug> };
+export interface GroupSpec {
   priority: number;
   start: boolean;
   disable: boolean;
 }
 
-export type Plugins = { [k: string]: PlugGroup };
+export interface PlugGroup extends GroupSpec {
+  1: { [k: string]: Plug };
+}
 
-export const PLUGINS = mkHint<Plugins>()({
+type MkSetupHook<T> = {
+  [K in keyof T as K extends `$setup_${infer P}`
+    ? `$pre_setup_${P}` | `$post_setup_${P}`
+    : never]: Plug;
+};
+
+type MkPlugGroup<T extends PlugGroup> = {
+  1: {
+    [K in keyof T[1]]: Plug;
+  } & MkSetupHook<T[1]> & { [k: string]: Plug | undefined };
+} & GroupSpec;
+
+type MkPluginsInput = { [k: string]: PlugGroup };
+
+type MkPlugins<T extends MkPluginsInput> = {
+  [K in keyof T]: MkPlugGroup<T[K]>;
+};
+
+function mkPlugins<T extends MkPluginsInput>(
+  this: void,
+  input: T
+): MkPlugins<T> {
+  const plugins = {} as LuaTable<string, PlugGroup>;
+  for (const [gname, group] of pairs(input)) {
+    const newplugs = {} as LuaTable<string, Plug>;
+    for (const [pname, plug] of pairs(group[1])) {
+      // Insert `$pre_setup_*` and `$post_setup_` hook.
+      if (string.sub(pname as any, 1, 7) == "$setup_") {
+        const refname = string.sub(pname as any, 8);
+        const prename = "$pre_setup_" + refname;
+        newplugs.set(prename, { after: plug.after });
+        // Correct load order.
+        plug.after = [prename];
+        const postname = "$post_setup_" + refname;
+        newplugs.set(postname, { after: [pname as any] });
+      }
+      newplugs.set(pname as any, plug);
+    }
+    group[1] = newplugs as any;
+    plugins.set(gname as any, group);
+  }
+  return plugins as any;
+}
+
+const __INPUT = mkHint<MkPluginsInput>()({
   essional: {
     1: {
       impatient: { 1: "lewis6991/impatient.nvim", priority: 1 },
-      $setup_impatien: {
+      $setup_impatient: {
         after: ["impatient"],
         setup() {
           require("impatient");
@@ -36,12 +79,12 @@ export const PLUGINS = mkHint<Plugins>()({
     start: true,
     disable: false,
   },
-  treeistter: {
+  treesitter: {
     1: {
-      treesitter: { 1: "nvim-treesitter/nvim-treesitter" },
+      treesitter: { 1: "nvim-treesitter/nvim-treesitter", priority: 11 },
       $setup_treesitter: {
         after: ["treesitter"],
-        setup: treeistter.setup_treesitter,
+        setup: treesitter.setup_treesitter,
       },
       ts_context_commentstring: {
         1: "JoosepAlviste/nvim-ts-context-commentstring",
@@ -49,13 +92,13 @@ export const PLUGINS = mkHint<Plugins>()({
       comment: { 1: "numToStr/Comment.nvim" },
       $setup_comment: {
         after: ["$setup_treesitter", "ts_context_commentstring", "comment"],
-        setup: treeistter.setup_comment,
+        setup: treesitter.setup_comment,
       },
       ts_textobjects: { 1: "nvim-treesitter/nvim-treesitter-textobjects" },
       surround: { 1: "kylechui/nvim-surround" },
       $setup_surround: {
         after: ["$setup_treesitter", "ts_textobjects", "surround"],
-        setup: treeistter.setup_surround,
+        setup: treesitter.setup_surround,
       },
     },
     priority: 15,
@@ -164,9 +207,12 @@ export const PLUGINS = mkHint<Plugins>()({
   },
 });
 
-export function collect_plugins(this: void): Partial<Plug>[] {
-  const plugs: Partial<Plug>[] = [];
-  for (const [_, group] of pairs(PLUGINS as Plugins)) {
+export type PLUGINS = typeof PLUGINS;
+export const PLUGINS = mkPlugins(__INPUT);
+
+export function collect_plugins(this: void): Plug[] {
+  const plugs: Plug[] = [];
+  for (const [_, group] of pairs(PLUGINS)) {
     const gSpec = {
       priority: group.priority,
       start: group.start,
@@ -185,4 +231,33 @@ export function collect_plugins(this: void): Partial<Plug>[] {
     }
   }
   return plugs;
+}
+
+export function extend_plugins(
+  this: void,
+  input: {
+    [K in keyof PLUGINS]?: Partial<
+      {
+        1: Record<string, Plug> & Partial<MkSetupHook<PLUGINS[K][1]>>;
+      } & GroupSpec
+    >;
+  }
+) {
+  for (const [gname, group] of pairs(input)) {
+    const oldgroup = PLUGINS[gname];
+    const plugs = oldgroup[1];
+    if (group[1] != undefined) {
+      // Update/extend plugins.
+      for (const [pname, plug] of pairs(group[1])) {
+        const oldplug = plugs[pname as string];
+        if (oldplug != undefined) {
+          merge("force", oldplug, plug);
+        } else {
+          plugs[pname as string] = plug;
+        }
+      }
+    }
+    // Update group spec.
+    merge("force", oldgroup, group, { 1: plugs });
+  }
 }

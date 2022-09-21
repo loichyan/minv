@@ -8,6 +8,17 @@ type AnyTbl = {
 declare namespace vim {
   const g: { [k: string]: any };
   const o: { [k: string]: any };
+  const env: { [k: string]: string };
+  const lsp: AnyTbl;
+  const diagnostic: AnyTbl;
+
+  const list_extend: <T>(
+    this: void,
+    dst: T[],
+    src: T[],
+    start?: number,
+    finish?: number
+  ) => T[];
 
   interface keymap_opts {
     noremap?: boolean;
@@ -57,6 +68,10 @@ declare namespace vim {
 
     const nvim_create_autocmd: Lua.MkFn<
       (this: void, event: string | string[], opts: autocmd_opts) => number
+    >;
+
+    const nvim_set_hl: Lua.MkFn<
+      (ns_id: number, name: string, val: { [k: string]: string }) => void
     >;
   }
 }

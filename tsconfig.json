@@ -5,6 +5,7 @@
     "lib": ["esnext"],
     "declaration": true,
     "moduleResolution": "nodenext",
+    "rootDir": "src",
     "outDir": "lua",
     "strict": true
   },
@@ -16,7 +17,6 @@
       "cmp",
       "cmp_nvim_lsp",
       "Comment",
-      "Comment.utils",
       "gitsigns",
       "impatient",
       "lspconfig",
@@ -31,12 +31,12 @@
       "nvim-treesitter.configs",
       "telescope",
       "toggleterm",
-      "ts_context_commentstring.internal",
-      "ts_context_commentstring.utils",
+      "ts_context_commentstring.integrations.comment_nvim",
       "vim.highlight",
       "which-key"
     ],
+    "luaTarget": "JIT",
     "buildMode": "library"
   },
-  "include": ["src/**/*", "global.d.ts"]
+  "include": ["src/**/*", "src/globals.d.ts"]
 }

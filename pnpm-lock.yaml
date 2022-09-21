@@ -9,7 +9,7 @@ specifiers:
 
 dependencies:
   lua-types: 2.13.0
-  spark: github.com/loichyan/spark.nvim/c022210a85578a6f0953790b990d0dce15bd6d0c
+  spark: github.com/loichyan/spark.nvim/c8b12a0f23c2c97dc7db4e1dc54f1e6a24f76bc2
 
 devDependencies:
   prettier: 2.7.1
@@ -109,8 +109,8 @@ packages:
     hasBin: true
     dev: true
 
-  github.com/loichyan/spark.nvim/c022210a85578a6f0953790b990d0dce15bd6d0c:
-    resolution: {tarball: https://codeload.github.com/loichyan/spark.nvim/tar.gz/c022210a85578a6f0953790b990d0dce15bd6d0c}
+  github.com/loichyan/spark.nvim/c8b12a0f23c2c97dc7db4e1dc54f1e6a24f76bc2:
+    resolution: {tarball: https://codeload.github.com/loichyan/spark.nvim/tar.gz/c8b12a0f23c2c97dc7db4e1dc54f1e6a24f76bc2}
     name: spark.nvim
     version: 0.0.0
     dependencies:

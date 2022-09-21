@@ -1,91 +1,89 @@
-import { apply_mappings, Mappings } from "../keybindings";
+import { apply_extra, apply_mappings, Mappings } from "../keybindings";
 import { PRESETS } from "../presets";
-import { deep_merge } from "../utils";
-
-declare global {
-  namespace vim {
-    const lsp: AnyTbl;
-  }
-}
+import { autocmd, deep_merge } from "../utils";
 
 const MAPPINGS: Mappings = {
   "lsp.formatting": {
-    cmd: "<Cmd>lua vim.lsp.buf.formatting()<CR>",
+    cmd: () => vim.lsp.buf.formatting(),
     desc: "Formatting",
   },
   "lsp.goto_declaration": {
-    cmd: "<Cmd>lua vim.lsp.buf.declaration()<CR>",
+    cmd: () => vim.lsp.buf.declaration(),
     desc: "Goto declaration",
   },
   "lsp.goto_definition": {
-    cmd: "<Cmd>lua vim.lsp.buf.definition()<CR>",
+    cmd: () => vim.lsp.buf.definition(),
     desc: "Goto definition",
   },
   "lsp.goto_next_diagnostic": {
-    cmd: "<Cmd>lua vim.diagnostic.goto_next()<CR>",
+    cmd: () => vim.diagnostic.goto_next(),
     desc: "Goto next diagnostic",
   },
   "lsp.goto_next_error": {
-    cmd: "<Cmd>lua vim.diagnostic.goto_next({ severity : vim.diagnostic.severity.ERROR })<CR>",
+    cmd: () =>
+      vim.diagnostic.goto_next({ severity: vim.diagnostic.severity.ERROR }),
     desc: "Goto next error",
   },
   "lsp.goto_prev_diagnostic": {
-    cmd: "<Cmd>lua vim.diagnostic.goto_prev()<CR>",
+    cmd: () => vim.diagnostic.goto_prev(),
     desc: "Goto prev diagnostic",
   },
   "lsp.goto_prev_error": {
-    cmd: "<Cmd>lua vim.diagnostic.goto_prev({ severity : vim.diagnostic.severity.ERROR })<CR>",
+    cmd: () =>
+      vim.diagnostic.goto_prev({ severity: vim.diagnostic.severity.ERROR }),
     desc: "Goto prev error",
   },
   "lsp.hover": {
-    cmd: "<Cmd>lua vim.lsp.buf.hover()<CR>",
+    cmd: () => vim.lsp.buf.hover(),
     desc: "Hover",
   },
   "lsp.rename": {
-    cmd: "<Cmd>lua vim.lsp.buf.rename()<CR>",
+    cmd: () => vim.lsp.buf.rename(),
     desc: "Rename",
   },
   "lsp.show_code_action": {
-    cmd: "<Cmd>lua vim.lsp.buf.code_action()<CR>",
+    cmd: () => vim.lsp.buf.code_action(),
     desc: "Show code action",
   },
   "lsp.show_diagnostic": {
-    cmd: "<Cmd>lua vim.diagnostic.open_float()<CR>",
+    cmd: () => vim.diagnostic.open_float(),
     desc: "Show diagnostic",
   },
   "lsp.show_document_diagnostics": {
-    cmd: "<Cmd>lua vim.diagnostic.setloclist()<CR>",
+    cmd: () => vim.diagnostic.setloclist(),
     desc: "Show document diagnostics",
   },
   "lsp.show_implementation": {
-    cmd: "<Cmd>lua vim.lsp.buf.implementation()<CR>",
+    cmd: () => vim.lsp.buf.implementation(),
     desc: "Show implementation",
   },
   "lsp.show_references": {
-    cmd: "<Cmd>lua vim.lsp.buf.references()<CR>",
+    cmd: () => vim.lsp.buf.references(),
     desc: "Show references",
   },
   "lsp.show_signature_help": {
-    cmd: "<Cmd>lua vim.lsp.buf.signature_help()<CR>",
+    cmd: () => vim.lsp.buf.signature_help(),
     desc: "Show signature help",
   },
   "lsp.show_workspace_diagnostics": {
-    cmd: "<Cmd>lua vim.diagnostic.setqflist()<CR>",
+    cmd: () => vim.diagnostic.setqflist(),
     desc: "Show workspace diagnostics",
   },
 };
 
 function on_attach(this: void, client: AnyTbl, buffer: number) {
   if ((client.resolved_capabilities.document_highlight as any) == true) {
-    vim.cmd(`
-      augroup lsp_document_highlight
-        autocmd! * <buffer>
-        autocmd CursorHold,CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()
-        autocmd CursorMoved,CursorMovedI,InsertEnter <buffer> lua vim.lsp.buf.clear_references()
-      augroup END
-    `);
+    autocmd("CursorHold,CursorHoldI", () => vim.lsp.buf.document_highlight(), {
+      buffer,
+    });
+    autocmd(
+      "CursorMoved,CursorMovedI,InsertEnter",
+      () => vim.lsp.buf.clear_references(),
+      { buffer }
+    );
   }
   apply_mappings(MAPPINGS, { buffer });
+  apply_extra("lsp.extra", { mode: "n", buffer });
 }
 
 export function setup_lspconfig(this: void) {
@@ -104,7 +102,7 @@ export function setup_lspconfig(this: void) {
         on_attach: function (this: void, client: AnyTbl, buffer: number) {
           on_attach(client, buffer);
           if (conf.on_attach != undefined) {
-            conf.on_attach();
+            conf.on_attach(client, buffer);
           }
         },
         capabilities,
@@ -114,19 +112,21 @@ export function setup_lspconfig(this: void) {
     (require("lspconfig") as AnyTbl)[name].setup(opts);
   }
   // Set border of popup windows.
+  const border = preset.border;
   const open_floating_preview = vim.lsp.util.open_floating_preview;
-  (vim.lsp.util.open_floating_preview as any) = (
+  (vim.lsp.util.open_floating_preview as any) = function (
+    this: void,
     contents: any,
     syntax: any,
     opts: AnyTbl,
     ...args: any[]
-  ) => {
+  ) {
     opts = opts ?? {};
-    opts.border = opts.border ?? preset.border;
+    opts.border = border == undefined ? opts.border : (border as any);
     return open_floating_preview(contents, syntax, opts, ...args);
   };
   // Set border of `LspInfo`.
-  require("lspconfig.ui.windows").default_options.border = "single";
+  require("lspconfig.ui.windows").default_options.border = border;
 }
 
 export function setup_null_ls(this: void) {

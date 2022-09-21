@@ -1,7 +1,8 @@
 {
   "name": "minv",
   "version": "0.1.0",
-  "license": "GPL-2.0",
+  "license": "MIT OR Apache-2.0",
+  "private": true,
   "main": "lua/minv",
   "types": "lua/minv.d.ts",
   "exports": {
@@ -14,12 +15,12 @@
       "default": "./lua/minv/*"
     },
     "./types": {
-      "types": "./src/global.d.ts"
+      "types": "./src/globals.d.ts"
     }
   },
   "files": [
     "lua/*",
-    "src/global.d.ts"
+    "src/globals.d.ts"
   ],
   "scripts": {
     "fmt": "prettier --write .",

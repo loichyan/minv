@@ -1,4 +1,9 @@
-import { apply_mappings, Source, mkPlugKeySrc } from "../keybindings";
+import {
+  apply_mappings,
+  Source,
+  mkPlugKeySrc,
+  apply_extra,
+} from "../keybindings";
 import { PRESETS } from "../presets";
 import { deep_merge } from "../utils";
 
@@ -32,32 +37,7 @@ function mkMappingsForComment(
   return mappings as any;
 }
 
-function pre_hook(this: void, ctx: any) {
-  const comment_utils = require("Comment.utils") as AnyTbl;
-  const cmstring_utils = require("ts_context_commentstring.utils") as AnyTbl;
-  let key = "__default";
-  if (ctx.ctype != comment_utils.ctype.line) {
-    key = "__multiline";
-  }
-  let location;
-  if (ctx.ctype == comment_utils.ctype.block) {
-    location = cmstring_utils.get_cursor_location();
-  } else if (
-    ctx.cmotion == comment_utils.cmotion.v ||
-    ctx.motion == comment_utils.cmotion.V
-  ) {
-    location = cmstring_utils.get_visual_start_location();
-  }
-  return (
-    require("ts_context_commentstring.internal") as AnyTbl
-  ).calculate_commentstring({
-    key,
-    location,
-  });
-}
-
 const COMMENT_DEFAULT = {
-  pre_hook,
   toggler: mkMappingsForComment("toggle"),
   opleader: mkMappingsForComment("oplead"),
   extra: mkMappingsForComment("insert"),
@@ -73,12 +53,17 @@ export function setup_treesitter(this: void) {
 }
 
 export function setup_comment(this: void) {
+  const pre_hook = (
+    require("ts_context_commentstring.integrations.comment_nvim") as AnyTbl
+  ).create_pre_hook();
   (require("Comment") as AnyTbl).setup(
-    deep_merge("keep", {}, COMMENT_DEFAULT, PRESETS.comment)
+    deep_merge("keep", { pre_hook }, COMMENT_DEFAULT, PRESETS.comment)
   );
   apply_mappings(MAPPINGS.toggle, { noremap: false });
   apply_mappings(MAPPINGS.oplead, { mode: "x", noremap: false });
+  apply_mappings(MAPPINGS.oplead, { noremap: false });
   apply_mappings(MAPPINGS.insert, { noremap: false });
+  apply_extra("comment.extra", { mode: "n" });
 }
 
 export function setup_surround(this: void) {

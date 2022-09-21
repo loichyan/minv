@@ -30,4 +30,4 @@ export declare const SETTINGS: {
         splitright: boolean;
     };
 };
-export declare function setup(this: void): void;
+export declare function setup_settings(this: void): void;

@@ -1,6 +1,11 @@
-import { apply_mappings, Mappings, mkPlugKeySrc } from "../keybindings";
+import {
+  apply_extra,
+  apply_mappings,
+  Mappings,
+  mkPlugKeySrc,
+} from "../keybindings";
 import { PRESETS } from "../presets";
-import { deep_merge } from "../utils";
+import { autocmd, deep_merge } from "../utils";
 
 const MAPPINGS_GIT: Mappings = {
   "git.blame_line": {
@@ -81,28 +86,28 @@ const MAPPINGS_TELESCOPE: Mappings = {
 };
 
 const MAPPINGS_BUFFER: Mappings = {
-  "buffer.close": {
+  "bufferline.close": {
     cmd: "<Cmd>bdelete<CR>",
     desc: "Close buffer",
   },
-  "buffer.goto_next": {
+  "bufferline.goto_next": {
     cmd: "<Cmd>BufferLineCycleNext<CR>",
     desc: "Goto next buffer",
   },
-  "buffer.goto_prev": {
+  "bufferline.goto_prev": {
     cmd: "<Cmd>BufferLineCyclePrev<CR>",
     desc: "Goto prev buffer",
   },
 };
 
 const MAPPINGS_TREE: Mappings = {
-  "explorer.toggle": {
+  "tree.toggle": {
     cmd: "<Cmd>NvimTreeToggle<CR>",
-    desc: "Toggle explorer",
+    desc: "Toggle tree",
   },
-  "explorer.focus": {
+  "tree.focus": {
     cmd: "<Cmd>NvimTreeFocus<CR>",
-    desc: "Focus explorer",
+    desc: "Focus tree",
   },
 };
 
@@ -124,6 +129,7 @@ export function setup_which_key(this: void) {
 export function setup_gitsigns(this: void) {
   (require("gitsigns") as AnyTbl).setup(PRESETS.gitsigns);
   apply_mappings(MAPPINGS_GIT);
+  apply_extra("git.extra", { mode: "n" });
 }
 
 export function setup_telescope(this: void) {
@@ -131,6 +137,7 @@ export function setup_telescope(this: void) {
   telescope.setup(PRESETS.telescope);
   telescope.load_extension("fzf");
   apply_mappings(MAPPINGS_TELESCOPE);
+  apply_extra("telescope.extra", { mode: "n" });
 }
 
 export function setup_alpha(this: void) {
@@ -155,11 +162,21 @@ export function setup_alpha(this: void) {
   footer.val = preset.footer() as any;
   footer.opts.hl = "DashboardFooter" as any;
   (require("alpha") as AnyTbl).setup(dashboard.config);
+  // Auto hide tabline.
+  autocmd(
+    "User",
+    ({ buf }) => {
+      vim.cmd("set showtabline=0");
+      autocmd("BufUnload", "set showtabline=2", { once: true, buffer: buf });
+    },
+    { pattern: "AlphaReady" }
+  );
 }
 
 export function setup_bufferline(this: void) {
   (require("bufferline") as AnyTbl).setup(PRESETS.bufferline);
   apply_mappings(MAPPINGS_BUFFER);
+  apply_extra("bufferline.extra", { mode: "n" });
 }
 
 export function setup_lualine(this: void) {
@@ -169,6 +186,7 @@ export function setup_lualine(this: void) {
 export function setup_nvim_tree(this: void) {
   (require("nvim-tree") as AnyTbl).setup(PRESETS.nvim_tree);
   apply_mappings(MAPPINGS_TREE);
+  apply_extra("tree.extra", { mode: "n" });
 }
 
 export function setup_toggleterm(this: void) {
@@ -184,6 +202,10 @@ export function setup_toggleterm(this: void) {
           apply_mappings(MAPPINGS_TOGGLETERM, {
             mode: "t",
             noremap: false,
+            buffer: term.bufnr as any,
+          });
+          apply_extra("terminal.extra", {
+            mode: "t",
             buffer: term.bufnr as any,
           });
           const on_open = (preset as any as AnyTbl).on_open;

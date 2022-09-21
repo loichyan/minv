@@ -1,90 +1,193 @@
-/// <reference types="spark/types" />
-export declare type Binding = string[];
-export declare type Keybindgs = {
-    [k: string]: Binding;
-};
-export declare type KEYBINDINGS = typeof KEYBINDINGS;
-export declare const KEYBINDINGS: {
-    "normal.nohlsearch": string[];
-    "normal.save": string[];
-    "insert.escape": string[];
-    "explorer.toggle": string[];
-    "explorer.focus": string[];
-    "buffer.close": string[];
-    "buffer.goto_next": string[];
-    "buffer.goto_prev": string[];
-    "telescope.buffers": string[];
-    "telescope.document_symbols": string[];
-    "telescope.files": string[];
-    "telescope.git_commits": string[];
-    "telescope.grep": string[];
-    "telescope.marks": string[];
-    "telescope.recent_files": string[];
-    "telescope.registers": string[];
-    "telescope.workspace_symbols": string[];
-    "git.blame_line": string[];
-    "git.goto_next_hunk": string[];
-    "git.goto_prev_hunk": string[];
-    "git.preview_hunk": string[];
-    "git.reset_buffer": string[];
-    "git.reset_line": string[];
-    "git.stage_buffer": string[];
-    "git.state_hunk": string[];
-    "git.undo_stage_hunk": string[];
-    "comment.insert_above": string[];
-    "comment.insert_below": string[];
-    "comment.insert_eol": string[];
-    "comment.oplead_block": string[];
-    "comment.oplead_line": string[];
-    "comment.toggle_block": string[];
-    "comment.toggle_line": string[];
-    "terminal.toggle": string[];
-    "lsp.formatting": string[];
-    "lsp.goto_declaration": string[];
-    "lsp.goto_definition": string[];
-    "lsp.goto_next_diagnostic": string[];
-    "lsp.goto_next_error": string[];
-    "lsp.goto_prev_diagnostic": string[];
-    "lsp.goto_prev_error": string[];
-    "lsp.hover": string[];
-    "lsp.rename": string[];
-    "lsp.show_code_action": string[];
-    "lsp.show_diagnostic": string[];
-    "lsp.show_document_diagnostics": string[];
-    "lsp.show_implementation": string[];
-    "lsp.show_references": string[];
-    "lsp.show_signature_help": string[];
-    "lsp.show_workspace_diagnostics": string[];
-    "cmp.close": string[];
-    "cmp.complete": string[];
-    "cmp.confirm": string[];
-    "cmp.scroll_down": string[];
-    "cmp.scroll_up": string[];
-    "cmp.select_next": string[];
-    "cmp.select_prev": string[];
-};
-export interface KeybindingOpts extends Omit<vim.keymap_opts, "callback" | "desc"> {
+import { KeymapCmd, KeymapOpts, MkUpdater } from "./utils";
+export interface Source extends KeymapOpts {
+    cmd: KeymapCmd;
 }
-export declare type BindingCmd = string | Lua.MkFn<() => void>;
-declare let binding_handler: (this: void, mode: string, buffer: number | undefined, lhs: string, cmd: BindingCmd, desc: string, options: KeybindingOpts) => void;
-export declare function set_handler(this: void, new_handler: typeof binding_handler): void;
-export declare type SourceOpts = Partial<KeybindingOpts> & {
-    mode?: string;
-    buffer?: number;
+declare type ConcatKey<K, Pref extends string> = K extends string ? `${Pref}.${K}` : "12";
+declare type MkBindingsKey<T, K extends keyof T> = K extends string ? ConcatKey<keyof T[K], K> : never;
+declare type MkExtraKey<K> = K extends string ? ConcatKey<"extra", K> : never;
+declare type MkKeybindigsInput = {
+    [k: string]: {
+        [k: string]: string[];
+    };
 };
-export declare type Source = SourceOpts & {
-    cmd: BindingCmd;
-    desc: string;
+declare type MkKeybindigs<T extends MkKeybindigsInput> = {
+    [K in MkBindingsKey<T, keyof T>]: string[];
+} & {
+    [K in MkExtraKey<keyof T>]: {
+        [k: string]: Source;
+    };
 };
+declare const __INPUT: {
+    normal: {
+        nohlsearch: string[];
+        save: string[];
+    };
+    insert: {
+        escape: string[];
+    };
+    tree: {
+        toggle: string[];
+        focus: string[];
+    };
+    bufferline: {
+        close: string[];
+        goto_next: string[];
+        goto_prev: string[];
+    };
+    telescope: {
+        buffers: string[];
+        document_symbols: string[];
+        files: string[];
+        git_commits: string[];
+        grep: string[];
+        marks: string[];
+        recent_files: string[];
+        registers: string[];
+        workspace_symbols: string[];
+    };
+    git: {
+        blame_line: string[];
+        goto_next_hunk: string[];
+        goto_prev_hunk: string[];
+        preview_hunk: string[];
+        reset_buffer: string[];
+        reset_line: string[];
+        stage_buffer: string[];
+        state_hunk: string[];
+        undo_stage_hunk: string[];
+    };
+    comment: {
+        insert_above: string[];
+        insert_below: string[];
+        insert_eol: string[];
+        oplead_block: string[];
+        oplead_line: string[];
+        toggle_block: string[];
+        toggle_line: string[];
+    };
+    terminal: {
+        toggle: string[];
+    };
+    lsp: {
+        formatting: string[];
+        goto_declaration: string[];
+        goto_definition: string[];
+        goto_next_diagnostic: string[];
+        goto_next_error: string[];
+        goto_prev_diagnostic: string[];
+        goto_prev_error: string[];
+        hover: string[];
+        rename: string[];
+        show_code_action: string[];
+        show_diagnostic: string[];
+        show_document_diagnostics: string[];
+        show_implementation: string[];
+        show_references: string[];
+        show_signature_help: string[];
+        show_workspace_diagnostics: string[];
+    };
+    cmp: {
+        close: string[];
+        complete: string[];
+        confirm: string[];
+        scroll_down: string[];
+        scroll_up: string[];
+        select_next: string[];
+        select_prev: string[];
+    };
+};
+declare type BindingKeys = MkBindingsKey<typeof __INPUT, keyof typeof __INPUT>;
+declare type ExtraKeys = MkExtraKey<keyof typeof __INPUT>;
+export declare type KEYBINDINGS = typeof KEYBINDINGS;
+export declare const KEYBINDINGS: MkKeybindigs<{
+    normal: {
+        nohlsearch: string[];
+        save: string[];
+    };
+    insert: {
+        escape: string[];
+    };
+    tree: {
+        toggle: string[];
+        focus: string[];
+    };
+    bufferline: {
+        close: string[];
+        goto_next: string[];
+        goto_prev: string[];
+    };
+    telescope: {
+        buffers: string[];
+        document_symbols: string[];
+        files: string[];
+        git_commits: string[];
+        grep: string[];
+        marks: string[];
+        recent_files: string[];
+        registers: string[];
+        workspace_symbols: string[];
+    };
+    git: {
+        blame_line: string[];
+        goto_next_hunk: string[];
+        goto_prev_hunk: string[];
+        preview_hunk: string[];
+        reset_buffer: string[];
+        reset_line: string[];
+        stage_buffer: string[];
+        state_hunk: string[];
+        undo_stage_hunk: string[];
+    };
+    comment: {
+        insert_above: string[];
+        insert_below: string[];
+        insert_eol: string[];
+        oplead_block: string[];
+        oplead_line: string[];
+        toggle_block: string[];
+        toggle_line: string[];
+    };
+    terminal: {
+        toggle: string[];
+    };
+    lsp: {
+        formatting: string[];
+        goto_declaration: string[];
+        goto_definition: string[];
+        goto_next_diagnostic: string[];
+        goto_next_error: string[];
+        goto_prev_diagnostic: string[];
+        goto_prev_error: string[];
+        hover: string[];
+        rename: string[];
+        show_code_action: string[];
+        show_diagnostic: string[];
+        show_document_diagnostics: string[];
+        show_implementation: string[];
+        show_references: string[];
+        show_signature_help: string[];
+        show_workspace_diagnostics: string[];
+    };
+    cmp: {
+        close: string[];
+        complete: string[];
+        confirm: string[];
+        scroll_down: string[];
+        scroll_up: string[];
+        select_next: string[];
+        select_prev: string[];
+    };
+}>;
 export declare type Mappings = {
-    [K in keyof KEYBINDINGS]?: Source;
+    [K in BindingKeys]?: Source;
 };
 export declare function map_bindings(this: void, mappings: {
-    [K in keyof KEYBINDINGS]?: any;
+    [K in BindingKeys]?: any;
 }): {
     [k: string]: any;
 };
-export declare function apply_mappings(this: void, mappings: Mappings, gOpts?: SourceOpts): void;
+export declare function apply_mappings(this: void, mappings: Mappings, gopts?: KeymapOpts): void;
+export declare function apply_extra(this: void, key: ExtraKeys, gopts?: KeymapOpts): void;
 export declare function mkPlugKeySrc<TNames extends keyof KEYBINDINGS>(this: void, descs: {
     [K in TNames]: string;
 }): {
@@ -105,5 +208,6 @@ export declare const COMMON_MAPPINGS: {
         desc: string;
     };
 };
-export declare function setup(this: void): void;
+export declare function setup_keybindings(this: void): void;
+export declare function update_keybindings(this: void, updater: MkUpdater<KEYBINDINGS, true>): void;
 export {};

@@ -4,19 +4,19 @@ export type Autocmds = typeof AUTOCMDS;
 export const AUTOCMDS = {
   hl_yank: {
     enable: true,
-    pat: "*",
+    pattern: "*",
     highgroup: "Search",
     timeout: 200,
   },
   format_on_save: {
     enable: true,
-    pat: "*",
+    pattern: "*",
     timeout: undefined,
   },
   close: {
     enable: true,
     key: "q",
-    ft: [
+    filetype: [
       "vim",
       "help",
       "man",
@@ -29,12 +29,13 @@ export const AUTOCMDS = {
   },
   trim_spaces: {
     enable: true,
-    pat: "*",
+    pattern: "*",
   },
   auto_resize: {
     enable: true,
-    pat: "*",
+    pattern: "*",
   },
+  // TODO: ruler
 };
 
 // TODO: add descriptions
@@ -44,39 +45,43 @@ const ARGS: {
     opts: Autocmds[K]
   ) => Parameters<typeof autocmd>;
 } = {
-  hl_yank: ({ pat, highgroup, timeout }) => [
+  hl_yank: ({ pattern, highgroup, timeout }) => [
     "TextYankPost",
-    pat,
     () => {
       (require("vim.highlight") as AnyTbl).on_yank({ highgroup, timeout });
     },
+    { pattern },
   ],
-  format_on_save: ({ pat, timeout }) => [
+  format_on_save: ({ pattern, timeout }) => [
     "BufWritePre",
-    pat,
     () => {
       vim.lsp.buf.formatting_sync(undefined, timeout);
     },
+    { pattern },
   ],
-  close: ({ key, ft }) => [
+  close: ({ key, filetype }) => [
     "FileType",
-    ft,
     ({ buf }) => {
-      vim.api.nvim_buf_set_keymap(buf, "", key, "close!", {
+      vim.api.nvim_buf_set_keymap(buf, "", key, "<Cmd>q!<CR>", {
         silent: true,
         noremap: true,
       });
     },
+    { pattern: filetype },
   ],
-  trim_spaces: ({ pat }) => ["BufWritePre", pat, `silent s/\s+$//e`],
-  auto_resize: ({ pat }) => ["VimResized", pat, "wincmd ="],
+  trim_spaces: ({ pattern }) => [
+    "BufWritePre",
+    `silent s/\s+$//e`,
+    { pattern },
+  ],
+  auto_resize: ({ pattern }) => ["VimResized", "wincmd =", { pattern }],
 };
 
-export function setup(this: void) {
+export function setup_autocmds(this: void) {
   for (const [name, opts] of pairs(AUTOCMDS)) {
     if (opts.enable) {
-      const [event, pat, cmd, o] = unpack(ARGS[name](opts as any));
-      autocmd(event, pat, cmd, o);
+      const [event, cmd, o] = unpack(ARGS[name](opts as any));
+      autocmd(event, cmd, o);
     }
   }
 }

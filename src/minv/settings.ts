@@ -31,7 +31,7 @@ export const SETTINGS = {
   },
 };
 
-export function setup(this: void) {
+export function setup_settings(this: void) {
   for (const [k, v] of pairs(SETTINGS.g)) {
     vim.g[k] = v;
   }

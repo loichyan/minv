@@ -16,7 +16,7 @@ export function setup(this: void) {
     "cmp.confirm": cmp_mapping.confirm({ select: true }),
     "cmp.scroll_down": cmp_mapping.scroll_docs(4),
     "cmp.scroll_up": cmp_mapping.scroll_docs(-4),
-    "cmp.select_next": cmp_mapping((fb: AnyTbl) => {
+    "cmp.select_next": cmp_mapping(function (this: void, fb: AnyTbl) {
       if (cmp.visible()) {
         cmp.select_next_item();
       } else if (luasnip.expandable()) {
@@ -27,7 +27,7 @@ export function setup(this: void) {
         fb();
       }
     }),
-    "cmp.select_prev": cmp_mapping((fb: AnyTbl) => {
+    "cmp.select_prev": cmp_mapping(function (this: void, fb: AnyTbl) {
       if (cmp.visible()) {
         cmp.select_prev_item();
       } else if (locally_jumpable(-1)) {
@@ -39,15 +39,27 @@ export function setup(this: void) {
   });
   // Collect options for nvim-cmp.
   const bordered = cmp.config.window.bordered();
-  const cmp_opts = deep_merge("keep", { mapping }, PRESETS.cmp, {
-    window: {
-      completion: bordered,
-      documentation: bordered,
+  const cmp_opts = deep_merge(
+    "keep",
+    {
+      snippet: {
+        expand: function (this: void, args: any) {
+          luasnip.lsp_expand(args.body);
+        },
+      },
+      mapping,
     },
-    confirmation: {
-      default_behavior: cmp.ConfirmBehavior.Replace,
-    },
-  });
+    PRESETS.cmp,
+    {
+      window: {
+        completion: bordered,
+        documentation: bordered,
+      },
+      confirmation: {
+        default_behavior: cmp.ConfirmBehavior.Replace,
+      },
+    }
+  );
   // Setup `luasnip`.
   luasnip.config.setup(PRESETS.luasnip);
   // Setup `nvim-cmp`

@@ -3,9 +3,9 @@ local ____exports = {}
 local ____utils = require("minv.utils")
 local autocmd = ____utils.autocmd
 ____exports.AUTOCMDS = {
-    hl_yank = {enable = true, pat = "*", highgroup = "Search", timeout = 200},
-    format_on_save = {enable = true, pat = "*", timeout = nil},
-    close = {enable = true, key = "q", ft = {
+    hl_yank = {enable = true, pattern = "*", highgroup = "Search", timeout = 200},
+    format_on_save = {enable = true, pattern = "*", timeout = nil},
+    close = {enable = true, key = "q", filetype = {
         "vim",
         "help",
         "man",
@@ -15,46 +15,45 @@ ____exports.AUTOCMDS = {
         "TelescopePrompt",
         "null-ls-info"
     }},
-    trim_spaces = {enable = true, pat = "*"},
-    auto_resize = {enable = true, pat = "*"}
+    trim_spaces = {enable = true, pattern = "*"},
+    auto_resize = {enable = true, pattern = "*"}
 }
 local ARGS = {
     hl_yank = function(____bindingPattern0)
         local timeout
         local highgroup
-        local pat
-        pat = ____bindingPattern0.pat
+        local pattern
+        pattern = ____bindingPattern0.pattern
         highgroup = ____bindingPattern0.highgroup
         timeout = ____bindingPattern0.timeout
         return {
             "TextYankPost",
-            pat,
             function()
                 require("vim.highlight").on_yank({highgroup = highgroup, timeout = timeout})
-            end
+            end,
+            {pattern = pattern}
         }
     end,
     format_on_save = function(____bindingPattern0)
         local timeout
-        local pat
-        pat = ____bindingPattern0.pat
+        local pattern
+        pattern = ____bindingPattern0.pattern
         timeout = ____bindingPattern0.timeout
         return {
             "BufWritePre",
-            pat,
             function()
                 vim.lsp.buf.formatting_sync(nil, timeout)
-            end
+            end,
+            {pattern = pattern}
         }
     end,
     close = function(____bindingPattern0)
-        local ft
+        local filetype
         local key
         key = ____bindingPattern0.key
-        ft = ____bindingPattern0.ft
+        filetype = ____bindingPattern0.filetype
         return {
             "FileType",
-            ft,
             function(____bindingPattern0)
                 local buf
                 buf = ____bindingPattern0.buf
@@ -62,28 +61,29 @@ local ARGS = {
                     buf,
                     "",
                     key,
-                    "close!",
+                    "<Cmd>q!<CR>",
                     {silent = true, noremap = true}
                 )
-            end
+            end,
+            {pattern = filetype}
         }
     end,
     trim_spaces = function(____bindingPattern0)
-        local pat
-        pat = ____bindingPattern0.pat
-        return {"BufWritePre", pat, "silent s/s+$//e"}
+        local pattern
+        pattern = ____bindingPattern0.pattern
+        return {"BufWritePre", "silent s/s+$//e", {pattern = pattern}}
     end,
     auto_resize = function(____bindingPattern0)
-        local pat
-        pat = ____bindingPattern0.pat
-        return {"VimResized", pat, "wincmd ="}
+        local pattern
+        pattern = ____bindingPattern0.pattern
+        return {"VimResized", "wincmd =", {pattern = pattern}}
     end
 }
-function ____exports.setup()
+function ____exports.setup_autocmds()
     for name, opts in pairs(____exports.AUTOCMDS) do
         if opts.enable then
-            local event, pat, cmd, o = unpack(ARGS[name](opts))
-            autocmd(event, pat, cmd, o)
+            local event, cmd, o = unpack(ARGS[name](opts))
+            autocmd(event, cmd, o)
         end
     end
 end

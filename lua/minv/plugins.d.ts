@@ -1,30 +1,44 @@
-/// <reference types="spark/types" />
-import { Spec } from "spark/shared";
-import * as treeistter from "./plugins/treesitter";
+import * as spark from "spark";
+import * as treesitter from "./plugins/treesitter";
 import * as lsp from "./plugins/lsp";
 import * as ui from "./plugins/ui";
-export interface Plug extends Omit<Spec, "from"> {
-    1: string;
+export interface Plug extends Partial<Omit<spark.Spec, "from">> {
 }
-export interface PlugGroup {
-    1: {
-        [k: string]: DeepParitial<Plug>;
-    };
+export interface GroupSpec {
     priority: number;
     start: boolean;
     disable: boolean;
 }
-export declare type Plugins = {
+export interface PlugGroup extends GroupSpec {
+    1: {
+        [k: string]: Plug;
+    };
+}
+declare type MkSetupHook<T> = {
+    [K in keyof T as K extends `$setup_${infer P}` ? `$pre_setup_${P}` | `$post_setup_${P}` : never]: Plug;
+};
+declare type MkPlugGroup<T extends PlugGroup> = {
+    1: {
+        [K in keyof T[1]]: Plug;
+    } & MkSetupHook<T[1]> & {
+        [k: string]: Plug | undefined;
+    };
+} & GroupSpec;
+declare type MkPluginsInput = {
     [k: string]: PlugGroup;
 };
-export declare const PLUGINS: {
+declare type MkPlugins<T extends MkPluginsInput> = {
+    [K in keyof T]: MkPlugGroup<T[K]>;
+};
+export declare type PLUGINS = typeof PLUGINS;
+export declare const PLUGINS: MkPlugins<{
     essional: {
         1: {
             impatient: {
                 1: string;
                 priority: number;
             };
-            $setup_impatien: {
+            $setup_impatient: {
                 after: string[];
                 setup(this: void): void;
             };
@@ -42,14 +56,15 @@ export declare const PLUGINS: {
         start: true;
         disable: false;
     };
-    treeistter: {
+    treesitter: {
         1: {
             treesitter: {
                 1: string;
+                priority: number;
             };
             $setup_treesitter: {
                 after: string[];
-                setup: typeof treeistter.setup_treesitter;
+                setup: typeof treesitter.setup_treesitter;
             };
             ts_context_commentstring: {
                 1: string;
@@ -59,7 +74,7 @@ export declare const PLUGINS: {
             };
             $setup_comment: {
                 after: string[];
-                setup: typeof treeistter.setup_comment;
+                setup: typeof treesitter.setup_comment;
             };
             ts_textobjects: {
                 1: string;
@@ -69,7 +84,7 @@ export declare const PLUGINS: {
             };
             $setup_surround: {
                 after: string[];
-                setup: typeof treeistter.setup_surround;
+                setup: typeof treesitter.setup_surround;
             };
         };
         priority: number;
@@ -210,5 +225,11 @@ export declare const PLUGINS: {
         start: true;
         disable: false;
     };
-};
-export declare function collect_plugins(this: void): Partial<Plug>[];
+}>;
+export declare function collect_plugins(this: void): Plug[];
+export declare function extend_plugins(this: void, input: {
+    [K in keyof PLUGINS]?: Partial<{
+        1: Record<string, Plug> & Partial<MkSetupHook<PLUGINS[K][1]>>;
+    } & GroupSpec>;
+}): void;
+export {};
