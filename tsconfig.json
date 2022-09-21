@@ -1,0 +1,42 @@
+{
+  "$schema": "https://github.com/TypeScriptToLua/TypeScriptToLua/raw/master/tsconfig-schema.json",
+  "compilerOptions": {
+    "target": "esnext",
+    "lib": ["esnext"],
+    "declaration": true,
+    "moduleResolution": "nodenext",
+    "outDir": "lua",
+    "strict": true
+  },
+  "tstl": {
+    "noResolvePaths": [
+      "alpha",
+      "alpha.themes.dashboard",
+      "bufferline",
+      "cmp",
+      "cmp_nvim_lsp",
+      "Comment",
+      "Comment.utils",
+      "gitsigns",
+      "impatient",
+      "lspconfig",
+      "lspconfig.ui.windows",
+      "lualine",
+      "luasnip",
+      "luasnip.loaders.from_vscode",
+      "nightfox",
+      "null-ls",
+      "nvim-surround",
+      "nvim-tree",
+      "nvim-treesitter.configs",
+      "telescope",
+      "toggleterm",
+      "ts_context_commentstring.internal",
+      "ts_context_commentstring.utils",
+      "vim.highlight",
+      "which-key"
+    ],
+    "buildMode": "library"
+  },
+  "include": ["src/**/*", "global.d.ts"]
+}

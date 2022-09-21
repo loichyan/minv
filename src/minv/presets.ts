@@ -1,0 +1,299 @@
+import * as spark from "spark";
+import { Config as SparkConfig } from "spark/shared";
+import { mkHint } from "./utils";
+
+type Spark = typeof spark;
+
+export type Presets = { [k: string]: any };
+
+const CMP_KIND: LuaMap<string, string> = {
+  Text: "",
+  Method: "",
+  Function: "",
+  Constructor: "",
+  Field: "ﰠ",
+  Variable: "",
+  Class: "ﴯ",
+  Interface: "",
+  Module: "",
+  Property: "ﰠ",
+  Unit: "塞",
+  Value: "",
+  Enum: "",
+  Keyword: "",
+  Snippet: "",
+  Color: "",
+  File: "",
+  Reference: "",
+  Folder: "",
+  EnumMember: "",
+  Constant: "",
+  Struct: "פּ",
+  Event: "",
+  Operator: "",
+  TypeParameter: "",
+} as any;
+
+const CMP_MENU: LuaMap<string, string> = {
+  buffer: "[BUF]",
+  luasnip: "[SNIP]",
+  nvim_lsp: "[LSP]",
+  path: "[PATH]",
+} as any;
+
+const CMP_DUP: LuaMap<string, boolean> = {
+  buffer: true,
+} as any;
+
+export const PRESETS = mkHint<Presets>()({
+  spark: <DeepParitial<SparkConfig>>{},
+  treesitter: {
+    ensure_installed: {},
+    highlight: {
+      enable: true,
+    },
+    incremental_selection: {
+      enable: true,
+    },
+    indent: {
+      enable: true,
+    },
+    context_commentstring: {
+      enable: true,
+    },
+    textobjects: {
+      select: {
+        enable: true,
+        lookahead: true,
+        keymaps: {
+          ["af"]: "@function.outer",
+          ["if"]: "@function.inner",
+          ["ac"]: "@class.outer",
+          ["ic"]: "@class.inner",
+        },
+        include_surrounding_whitespace: false,
+      },
+      move: {
+        enable: true,
+        set_jumps: true,
+        goto_next_start: {
+          ["]m"]: "@function.outer",
+          ["]]"]: "@class.outer",
+        },
+        goto_next_end: {
+          ["]M"]: "@function.outer",
+          ["]["]: "@class.outer",
+        },
+        goto_previous_start: {
+          ["[m"]: "@function.outer",
+          ["[["]: "@class.outer",
+        },
+        goto_previous_end: {
+          ["[M"]: "@function.outer",
+          ["[]"]: "@class.outer",
+        },
+      },
+    },
+  },
+  comment: {
+    sticky: true,
+    padding: true,
+  },
+  surround: {},
+  cmp: {
+    sources: [
+      { name: "buffer" },
+      { name: "luasnip" },
+      { name: "nvim_lsp" },
+      { name: "path" },
+    ],
+    formatting: {
+      fields: ["kind", "abbr", "menu"],
+      format: function (this: void, entry: any, vim_item: any) {
+        const name: string = entry.source.name;
+        vim_item.kind = CMP_KIND.get(vim_item.kind);
+        vim_item.menu = CMP_MENU.get(name);
+        vim_item.dup = 1;
+        if (CMP_DUP.get(name) == true) {
+          vim_item.dup = 0;
+        }
+        return vim_item;
+      },
+    },
+  },
+  cmp_formatting: {
+    kind: CMP_KIND,
+    menu: CMP_MENU,
+    dup: CMP_DUP,
+  },
+  luasnip: {},
+  lspconfig: {
+    server_default: {
+      flags: {
+        debounce_text_changes: 250,
+      },
+    },
+    servers: {} as { [k: string]: AnyTbl },
+    border: "rounded",
+  },
+  null_ls: {
+    debounce: 250,
+  },
+  null_ls_sources: {
+    formatters: { prettierd: {} } as { [k: string]: {} },
+    linters: {} as { [k: string]: {} },
+  },
+  nightfox: {},
+  nightfox_style: "nightfox",
+  which_key: {
+    plugins: {
+      marks: true,
+      registers: true,
+      presets: {
+        operators: true,
+        motions: true,
+        text_objects: true,
+        windows: true,
+        nav: true,
+        z: true,
+        g: true,
+      },
+    },
+    operators: {
+      ["gc"]: "Toggle line comments",
+      ["gb"]: "Toggle block comments",
+    },
+    window: {
+      border: "rounded",
+    },
+    layout: {
+      align: "left",
+    },
+    ignore_missing: false,
+    show_help: true,
+    triggers: "auto",
+  },
+  which_key_groups: {
+    ["<Leader>l"]: "Lsp",
+    ["<Leader>f"]: "Search",
+    ["<Leader>g"]: "Git",
+  },
+  gitsigns: {
+    signcolumn: true,
+    preview_config: {
+      border: "rounded",
+    },
+  },
+  telescope: {
+    extensions: {
+      fzf: {
+        fuzzy: true,
+        override_generic_sorter: true,
+        override_file_sorter: true,
+        case_mode: "smart_case",
+      },
+    },
+  },
+  alpha: {
+    header: function (this: void) {
+      return [
+        "███╗   ██╗ ███████╗ ██████╗  ██╗   ██╗ ██╗ ███╗   ███╗",
+        "████╗  ██║ ██╔════╝██╔═══██╗ ██║   ██║ ██║ ████╗ ████║",
+        "██╔██╗ ██║ █████╗  ██║   ██║ ██║   ██║ ██║ ██╔████╔██║",
+        "██║╚██╗██║ ██╔══╝  ██║   ██║ ╚██╗ ██╔╝ ██║ ██║╚██╔╝██║",
+        "██║ ╚████║ ███████╗╚██████╔╝  ╚████╔╝  ██║ ██║ ╚═╝ ██║",
+        "╚═╝  ╚═══╝ ╚══════╝ ╚═════╝    ╚═══╝   ╚═╝ ╚═╝     ╚═╝",
+      ];
+    },
+    buttons: [
+      ["n", "  New Files", "<Cmd>ene<CR>"],
+      ["o", "  Recent Files", "<Cmd>Telescope oldfiles<CR>"],
+      ["f", "  Find Files", "<Cmd>Telescope find_files<CR>"],
+      ["w", "  Find Words", "<Cmd>Telescope live_grep<CR>"],
+      ["m", "  Find Bookmarks", "<Cmd>Telescope marks<CR>"],
+      ["h", "  Find Themes", "<Cmd>Telescope colorscheme<CR>"],
+      ["q", "  Quit", "<Cmd>qa<CR>"],
+    ],
+    footer: function (this: void) {
+      return string.format(
+        "Neovim loaded %d plugins  ",
+        (require("spark") as Spark).plugins().length
+      );
+    },
+  },
+  bufferline: {
+    options: {
+      numbers: "none",
+      diagnostics: "nvim_lsp",
+      show_buffer_icons: true,
+      show_buffer_close_icons: true,
+      show_close_icon: false,
+      separator_style: "thin",
+      always_show_bufferline: true,
+      offsets: [
+        {
+          filetype: "NvimTree",
+          text: "File Explorer",
+          text_align: "left",
+        },
+      ],
+    },
+  },
+  lualine: {
+    options: {
+      theme: "auto",
+      section_separators: "",
+      component_separators: "│",
+      globalstatus: true,
+    },
+    sections: {
+      lualine_a: [
+        {
+          1(this: void) {
+            return " ";
+          },
+        },
+      ],
+      lualine_b: [{ 1: "branch" }],
+      lualine_c: [
+        { 1: "diff" },
+        { 1: "diagnostics", sources: ["nvim_diagnostic"] },
+      ],
+      lualine_x: [
+        { 1: "encoding", fmt: string.upper },
+        { 1: "fileformat" },
+        { 1: "filetype" },
+      ],
+      lualine_y: [{ 1: "progress" }],
+      lualine_z: [{ 1: "location" }],
+    },
+    extensions: ["nvim-tree", "toggleterm", "quickfix"],
+  },
+  nvim_tree: {
+    respect_buf_cwd: true,
+    update_cwd: true,
+    update_focused_file: {
+      enable: true,
+      update_cwd: true,
+    },
+    actions: {
+      open_file: {
+        resize_window: true,
+      },
+    },
+    git: {
+      enable: true,
+      ignore: false,
+      timeout: 500,
+    },
+    filters: {
+      custom: [`^\.git$`, `^\.cache$`, `^node_modules$`],
+    },
+  },
+  toggleterm: {
+    direction: "float",
+    float_opts: {
+      border: "rounded",
+    },
+  },
+});

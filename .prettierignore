@@ -1,0 +1,8 @@
+# Bundle files
+/lua
+
+# Node.js
+node_modules
+
+# Pnpm
+pnpm-lock.yaml

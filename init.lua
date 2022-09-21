@@ -1,1 +1,1 @@
-pcall(require, "custom")
+require("custom")

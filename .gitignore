@@ -1,5 +1,9 @@
 # Custom configs.
-/lua/custom
-/lua/custom.lua
-# Generate by packer.
-/plugin
+/lua/custom*
+/src/custom*
+
+# Node.js
+node_modules
+
+# Editor
+.vscode

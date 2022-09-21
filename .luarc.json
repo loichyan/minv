@@ -3,6 +3,6 @@
   "diagnostics.globals": ["vim"],
   "runtime": {
     "path": ["lua/?/init.lua", "lua/?.lua"],
-    "version": "Lua 5.1"
+    "version": "LuaJIT"
   }
 }
