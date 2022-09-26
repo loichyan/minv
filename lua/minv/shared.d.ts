@@ -565,6 +565,10 @@ export declare const MINV: {
             enable: boolean;
             pattern: string;
         };
+        ruler: {
+            enable: boolean;
+            offsets: Record<string, number>;
+        };
     };
     get_plugin(name: string): Plug | undefined;
     set_keymap: (lhs: string, cmd: import("./utils").KeymapCmd, opts: import("./utils").KeymapOpts) => void;

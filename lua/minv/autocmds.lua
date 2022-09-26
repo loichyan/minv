@@ -16,7 +16,8 @@ ____exports.AUTOCMDS = {
         "null-ls-info"
     }},
     trim_spaces = {enable = true, pattern = "*"},
-    auto_resize = {enable = true, pattern = "*"}
+    auto_resize = {enable = true, pattern = "*"},
+    ruler = {enable = true, offsets = {}}
 }
 local ARGS = {
     hl_yank = function(____bindingPattern0)
@@ -26,33 +27,33 @@ local ARGS = {
         pattern = ____bindingPattern0.pattern
         highgroup = ____bindingPattern0.highgroup
         timeout = ____bindingPattern0.timeout
-        return {
+        return autocmd(
             "TextYankPost",
             function()
                 require("vim.highlight").on_yank({highgroup = highgroup, timeout = timeout})
             end,
             {pattern = pattern}
-        }
+        )
     end,
     format_on_save = function(____bindingPattern0)
         local timeout
         local pattern
         pattern = ____bindingPattern0.pattern
         timeout = ____bindingPattern0.timeout
-        return {
+        return autocmd(
             "BufWritePre",
             function()
                 vim.lsp.buf.formatting_sync(nil, timeout)
             end,
             {pattern = pattern}
-        }
+        )
     end,
     close = function(____bindingPattern0)
         local filetype
         local key
         key = ____bindingPattern0.key
         filetype = ____bindingPattern0.filetype
-        return {
+        return autocmd(
             "FileType",
             function(____bindingPattern0)
                 local buf
@@ -66,24 +67,34 @@ local ARGS = {
                 )
             end,
             {pattern = filetype}
-        }
+        )
     end,
     trim_spaces = function(____bindingPattern0)
         local pattern
         pattern = ____bindingPattern0.pattern
-        return {"BufWritePre", "silent s/s+$//e", {pattern = pattern}}
+        return autocmd("BufWritePre", "silent s/s+$//e", {pattern = pattern})
     end,
     auto_resize = function(____bindingPattern0)
         local pattern
         pattern = ____bindingPattern0.pattern
-        return {"VimResized", "wincmd =", {pattern = pattern}}
+        return autocmd("VimResized", "wincmd =", {pattern = pattern})
+    end,
+    ruler = function(____bindingPattern0)
+        local offsets
+        offsets = ____bindingPattern0.offsets
+        for ft, offs in pairs(offsets) do
+            autocmd(
+                "FileType",
+                string.format("setlocal colorcolumn=%d", offs),
+                {pattern = ft}
+            )
+        end
     end
 }
 function ____exports.setup_autocmds()
     for name, opts in pairs(____exports.AUTOCMDS) do
         if opts.enable then
-            local event, cmd, o = unpack(ARGS[name](opts))
-            autocmd(event, cmd, o)
+            ARGS[name](opts)
         end
     end
 end

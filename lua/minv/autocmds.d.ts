@@ -24,5 +24,9 @@ export declare const AUTOCMDS: {
         enable: boolean;
         pattern: string;
     };
+    ruler: {
+        enable: boolean;
+        offsets: Record<string, number>;
+    };
 };
 export declare function setup_autocmds(this: void): void;
