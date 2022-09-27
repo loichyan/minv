@@ -1,55 +1,32 @@
-# MiNV
+# 🌱 MiNV
 
-Super lightweight collections of configs and plugins for
-[NeoVim](https://github.com/neovim/neovim), inspired by
-[NvChad](https://github.com/NvChad/NvChad) and
-[LunarVim](https://github.com/LunarVim/LunarVim).
+Extendable lightweight Neovim configuration framework written in TypeScript.
 
-## Setup
+![startscreen](./assets/startscreen.png)
 
-### Pre-requisites
+## 📌 Notice
 
-- Neovim 0.7.0+
-- Use a [Nerd Font](https://www.nerdfonts.com/) in your terminal emulator
-- [ripgrep](https://github.com/BurntSushi/ripgrep) is required for grep
-  searching with [Telescope](https://github.com/nvim-telescope/telescope.nvim)
+This project was recently rewritten in TypeScript and transpiled to Lua using
+[TypeScriptToLua](https://github.com/TypeScriptToLua/TypeScriptToLua), but I
+found it a bit of a pain because I had to fight with the type system and it
+often lead to hidden bugs when dealing with language differences, especially
+`this` and `self`. Also, I don't want to bring in external code and take
+advantage of Lua's built-in features as much as possible. Secondly, this project
+deprecates [packer.nvim](https://github.com/wbthomason/packer.nvim) in favor of
+[spark.nvim](https://github.com/loichyan/spark.nvim), because we need a dynamic
+and sequential loading plugin manager but packer will compile your profile and
+load it in parallel with `init.lua`. Therefore, the development of this project
+will be suspended until [js2lua](https://github.com/loicyan/js2lua) is
+available.
 
-### Try within Docker
+## 📝 Todo
 
-```sh
-docker build -t minv .
-docker run -it minv
-```
+- [x] Rewritten in TypeScript
+- [ ] Extendable layers
+- [ ] Core layer
+- [ ] More layers
 
-### Install
+## ⚖️ License
 
-```sh
-# Make a backup if necessary
-mv ~/.config/nvim ~/.config/nvim.bak
-# Install MiNV
-git clone https://github.com/loichyan/minv ~/.config/nvim
-# Install plugins
-nvim --headless -c "autocmd User PackerComplete quitall" -c PackerSync &> /dev/null
-```
-
-### Uninstall
-
-```sh
-# Remove MiNV and plugins
-rm -rf ~/.cache/nvim ~/.local/share/nvim ~/.config/nvim
-# Restore the backup if any
-mv ~/.config/nvim.bak ~/.config/nvim
-```
-
-## Custom config
-
-```sh
-# Copy example file
-cp ~/.config/nvim/examples/example_init.lua ~/.config/nvim/lua/custom.lua
-# Install plugins
-nvim +PackerSync
-```
-
-## License
-
-This project is released under the [GPL-3.0 License](./LICENSE).
+This software is released under the either of [MIT License](LICENSE-MIT) or
+[Apache License 2.0](LICENSE-APACHE) at your option.
